@@ -135,6 +135,7 @@ export default {
 <style lang="stylus">
 .dropdown-wrapper
   cursor pointer
+  color #062604
   .dropdown-title
     display block
     font-size 0.9rem
