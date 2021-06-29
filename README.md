@@ -53,6 +53,14 @@ events: [
         ]
     }
 ]
+footer:
+    - text: A footer text
+    - links: [
+        {
+            text: 'Footer link',
+            link: /
+        }
+    ]
 ---
 
 ```

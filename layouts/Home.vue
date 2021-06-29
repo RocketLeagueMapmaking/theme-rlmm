@@ -8,9 +8,8 @@
           :style="
             heroProp('background')
               ? {
-                  'background-image': `linear-gradient(180deg, rgba(0, 134, 29, 0.33) 0%, #000000 100%), url(${heroProp(
-                    'background'
-                  )})`,
+                  'background-image': `linear-gradient(180deg, rgba(0, 134, 29, 0.33) 0%, #000000 100%),
+                   url(${heroProp('background')})`,
                   'background-position': 'center',
                   'background-repeat': 'no-repeat',
                   'background-size': 'cover',
@@ -23,7 +22,7 @@
           <p>{{ heroProp("description") }}</p>
           <a
             v-for="(action, i) in heroProp('actions')"
-            :key="i.toString()"
+            :key="i"
             class="hero-actions"
             :href="Object.values(action)[0][1]"
           >
@@ -65,6 +64,19 @@
         </div>
       </div>
     </template>
+
+    <template #page-footer>
+      <div class="home-footer" v-if="fm && fm.footer">
+        <div class="home-footer-links">
+          <img :src="fm.footer.logo" alt="" />
+          <a v-for="(path, i) in fm.footer.links" :key="i" :href="path.link">
+            {{ path.text }}
+          </a>
+        </div>
+
+        <p v-if="fm.footer.text">{{ fm.footer.text }}</p>
+      </div>
+    </template>
   </Layout>
 </template>
 
@@ -84,10 +96,11 @@ export default {
 
   methods: {
     heroProp(prop) {
-      if (this.fm.hero.some((x) => x[prop])) {
-        return this.fm.hero.find((x) => x[prop])[prop];
-      } else return ''
+      return this.fm.hero.some((x) => x[prop])
+        ? this.fm.hero.find((x) => x[prop])[prop]
+        : "";
     },
+    windowWindth: () => window.innerWidth,
   },
 
   mounted() {
@@ -173,11 +186,22 @@ button.border {
   flex-direction: column;
 }
 
+.hero-actions {
+  display: inline-block;
+  margin-bottom: 24px;
+}
+
+.hero-actions button {
+  margin-left: 0px;
+  margin-right: 24px;
+}
+
 .event {
   padding-top: 50px;
   display: flex;
   flex-direction: row;
   justify-content: center;
+  width: 100%;
 }
 
 .event-text div {
@@ -214,25 +238,46 @@ button.border {
   font-size: 26px;
 }
 
+.home-footer-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-footer-links a {
+  margin: 15px;
+}
+
+.home-footer img {
+  max-width: 40px;
+  margin: 0px 20px;
+}
+
+.home-footer p {
+  text-align: center;
+}
+
 @media screen and (max-width: 600px) {
-  .event-image,
-  .event-text h1 {
+  .event-image {
     padding-left: 5vw;
-  }
-  .event {
-    flex-direction: column;
   }
   .event-image img {
     max-width: 90vw !important;
   }
   .home-hero h1 {
     font-size: 48px;
+    line-height: 60px;
+  }
+  .home-footer-links {
+    flex-wrap: wrap;
   }
 }
 
 @media screen and (max-width: 1000px) {
   .event-image {
     width: 90vw;
+    align-items: center;
+    justify-content: center;
   }
 }
 
