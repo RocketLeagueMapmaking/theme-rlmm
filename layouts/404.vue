@@ -6,7 +6,7 @@
         <blockquote>{{ getMsg() }}</blockquote>
 
         <router-link v-bind:to="site.base">
-          {{ theme.backToHome }}
+          {{ theme.backToHome || backToHome }}
         </router-link>
 
         <br /><br />
@@ -14,8 +14,18 @@
         <div>
           <div v-if="enabledSuggestedPages()">
             <p>{{ suggestionTitle }}</p>
-            <li v-for="page in getRecommendedPages()" :key="page.url">
-              <a :href="page.link">{{ page.text }}</a>
+
+            <div v-if="autoSuggestPages">
+              <li v-for="(page, i) in autoSuggestPage()" :key="i">
+                <a :href="origin.concat(page.path)">{{ page.title }}</a>
+              </li>
+              <br v-if="autoSuggestPage().length > 0" />
+            </div>
+
+            <li v-for="(page, i) in getRecommendedPages()" :key="page.url">
+              <a :href="page.link" v-if="i < maxRecommendedPages">{{
+                page.text
+              }}</a>
             </li>
           </div>
 
@@ -25,6 +35,7 @@
               <a :href="githubIssuesUrl()">
                 {{ getReportText()[1] }}
               </a>
+              <OutboundLink />
             </p>
           </div>
         </div>
@@ -34,36 +45,79 @@
 </template>
 
 <script>
+import { findBestMatch } from "../util/index.js";
+
 export default {
   data() {
     return {
-      theme: this.$site.themeConfig,
-      site: this.$site,
+      theme: "",
+      site: "",
+
+      path: "",
+      origin: "",
+
       // local notFound settings
-      notFoundSettings: this.$site.themeConfig.local.notFound,
+      notFoundSettings: "",
+
       // default titles
       title: "404",
       suggestionTitle: "Suggested pages:",
+      backToHome: "Back to home",
+
       // default recommended pages
+      maxRecommendedPages: 2,
       recommendedPages: [
         {
           text: "Home",
           link: "/",
         },
       ],
+      
+      defaultQuotes: [
+        "There's nothing here.",
+        "How did we get here?",
+        "That's a Four-Oh-Four.",
+        "Looks like we've got some broken links.",
+      ],
+
+      autoSuggestPages: true,
+      autoSuggestThreshold: 0.3,
+      maxAutoSuggestions: 3,
     };
+  },
+
+  created() {
+    this.theme = this.$themeConfig;
+    this.site = this.$site;
+
+    this.path = window.location.pathname;
+    this.origin = window.location.origin;
+
+    const ThemeExtension = "local";
+
+    if (this.theme) {
+      const ExtendedTheme = this["theme"][ThemeExtension];
+
+      if (ExtendedTheme) {
+        this.notFoundSettings = ExtendedTheme.notFound;
+      }
+    }
   },
 
   methods: {
     getMsg() {
-      const { notFound } = this.theme;
+      let { notFound } = this.theme;
+
+      if (!notFound) notFound = this.defaultQuotes;
 
       const index = Math.floor(Math.random() * notFound.length);
       return notFound[index];
     },
 
     getBackground() {
-      const backgroundImage = this.theme.local.notFound.background;
+      if (!this.notFoundSettings) return {};
+
+      const backgroundImage = this.notFoundSettings.background;
 
       return backgroundImage
         ? {
@@ -78,9 +132,11 @@ export default {
     },
 
     getRecommendedPages() {
+      if (!this.notFoundSettings) return this.recommendedPages;
+
       const pages = this.notFoundSettings.suggestedPages;
 
-      return pages || this.recommendedPages;
+      return pages ? pages : this.recommendedPages;
     },
 
     getReportText() {
@@ -95,15 +151,39 @@ export default {
     },
 
     enabledReport() {
-      const isReportEnabled = this.notFoundSettings.report;
+      if (!this.notFoundSettings) return !!this.theme.repo;
 
-      return this.theme.repo && (isReportEnabled || true);
+      return this.theme.repo && !!this.notFoundSettings.report;
     },
 
     enabledSuggestedPages() {
-      const showSuggestedPages = this.notFoundSettings.showSuggestedPages;
+      if (!this.notFoundSettings) return true;
 
-      return showSuggestedPages || true;
+      return !!this.notFoundSettings.showSuggestedPages;
+    },
+
+    autoSuggestPage() {
+      if (this.notFoundSettings) {
+        if (!this.notFoundSettings.autoSuggestPages) return [];
+      }
+      const pages = this.site.pages;
+      const paths = pages.map((page) => page.path);
+
+      const matches = findBestMatch(this.path, paths);
+
+      const sortedMatches = matches.ratings.sort((a, b) =>
+        a.rating < b.rating ? 1 : a.rating > b.rating ? -1 : 0
+      );
+
+      const suggestions = sortedMatches
+        .filter((x, i) => {
+          return (
+            i < this.maxAutoSuggestions && x.rating > this.autoSuggestThreshold
+          );
+        })
+        .map((result) => pages.find((x) => x.path === result.target));
+
+      return suggestions;
     },
   },
 };
