@@ -1,6 +1,6 @@
 # vuepress-theme-rlmm
 
-> theme for [the Rocket League map making guide](https://github.com/rocketleaguemapmaking/rl-docs)
+> (future) theme for [the Rocket League map making guide](https://github.com/rocketleaguemapmaking/rl-docs)
 
 ## Layouts
 
@@ -65,6 +65,55 @@ footer:
 
 ```
 
+## ThemeConfig
+
+Extra options are available for the theme configuration:
+
+```js
+// config.js
+
+module.exports = {
+    themeConfig: {
+        // default quotes
+        notFound: [
+            'There\'s nothing here.',
+            'How did we get here?',
+            'That\'s a Four-Oh-Four.',
+            'Looks like we\'ve got some broken links.',
+        ],
+
+        rlmm: {
+            navbar: {
+                title: 'Title' // <string>. Replace the navbar title with a custom title
+            },
+
+            // Settings for the 404 page
+            notFound: {
+                background: '/image.png', // <string>. Url or path
+
+                // Enable reporting the issue
+                report: true,
+
+                // Default suggestions for pages. Limit: 2
+                suggestedPages: [
+                    {
+                        text: 'Home',
+                        link: '/'
+                    }
+                ],
+
+                // Enable page suggestions
+                showSuggestedPages: true,
+                // Auto suggest (max. 3) pages based on the entered url
+                autoSuggestPages: true,
+
+            }
+        }
+    }
+}
+
+```
+
 ## Plugins
 
 This theme has no pre-installed plugins
@@ -76,3 +125,12 @@ This theme has no global components
 ## Local development
 
 Place `index.js`, the `layouts` folder and all other folders in `.vuepress/theme/` and run the guide locally
+
+## Roadmap
+
+- cache responses from GitHub API
+- add a bell icon when changes are made
+- option to hide the GitHub link from the navbar
+- more layouts (cheatsheets, lists, etc.)
+- individual page watching
+- improve dark mode

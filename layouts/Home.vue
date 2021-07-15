@@ -1,5 +1,5 @@
 <template>
-  <Layout>
+  <Layout :enable-watching="false">
     <template #page-header>
       <div v-if="fm && (fm.hero || fm.events)">
         <div
@@ -8,13 +8,13 @@
           :style="
             heroProp('background')
               ? {
-                  'background-image': `linear-gradient(180deg, rgba(0, 134, 29, 0.33) 0%, #000000 100%),
+                'background-image': `linear-gradient(180deg, rgba(0, 134, 29, 0.33) 0%, #000000 100%),
                    url(${heroProp('background')})`,
-                  'background-position': 'center',
-                  'background-repeat': 'no-repeat',
-                  'background-size': 'cover',
-                  display: 'flow-root',
-                }
+                'background-position': 'center',
+                'background-repeat': 'no-repeat',
+                'background-size': 'cover',
+                display: 'flow-root',
+              }
               : {}
           "
         >
@@ -32,17 +32,24 @@
           </a>
         </div>
 
-        <div v-if="fm.events" class="home-events">
-          <div v-for="(event, index) in fm.events" :key="index" class="event">
+        <div
+          v-if="fm.events"
+          class="home-events"
+        >
+          <div
+            v-for="(event, index) in fm.events"
+            :key="index"
+            class="event"
+          >
             <div class="event-text">
               <h1>{{ event.title }}</h1>
               <div>
                 <p>{{ event.description }}</p>
               </div>
               <a
-                :href="action.link"
                 v-for="(action, i) in event.actions"
                 :key="i"
+                :href="action.link"
               >
                 <button
                   :class="{
@@ -58,7 +65,10 @@
             </div>
 
             <div class="event-image">
-              <img :src="event.image" :alt="event.title" />
+              <img
+                :src="event.image"
+                :alt="event.title"
+              >
             </div>
           </div>
         </div>
@@ -66,22 +76,34 @@
     </template>
 
     <template #page-footer>
-      <div class="home-footer" v-if="fm && fm.footer">
+      <div
+        v-if="fm && fm.footer"
+        class="home-footer"
+      >
         <div class="home-footer-links">
-          <img :src="fm.footer.logo" alt="" />
-          <a v-for="(path, i) in fm.footer.links" :key="i" :href="path.link">
+          <img
+            :src="fm.footer.logo"
+            alt=""
+          >
+          <a
+            v-for="(path, i) in fm.footer.links"
+            :key="i"
+            :href="path.link"
+          >
             {{ path.text }}
           </a>
         </div>
 
-        <p v-if="fm.footer.text">{{ fm.footer.text }}</p>
+        <p v-if="fm.footer.text">
+          {{ fm.footer.text }}
+        </p>
       </div>
     </template>
   </Layout>
 </template>
 
 <script>
-import Layout from "@theme/layouts/Layout.vue";
+import Layout from '@theme/layouts/Layout.vue'
 
 export default {
   components: {
@@ -90,34 +112,27 @@ export default {
 
   data() {
     return {
-      fm: "",
-    };
+      fm: '',
+    }
+  },
+
+  mounted() {
+    this.fm = this.$page.frontmatter
+    document.getElementsByClassName('last-updated')[0].style.display = 'none'
   },
 
   methods: {
     heroProp(prop) {
       return this.fm.hero.some((x) => x[prop])
         ? this.fm.hero.find((x) => x[prop])[prop]
-        : "";
+        : ''
     },
     windowWindth: () => window.innerWidth,
   },
-
-  mounted() {
-    this.fm = this.$page.frontmatter;
-    document.getElementsByClassName("last-updated")[0].style.display = "none";
-  },
-};
+}
 </script>
 
 <style scoped>
-body {
-  --accent: #3eaf7c;
-  --border: #eaecef;
-  --bg: #fff;
-  --text: #2c3e50;
-}
-
 button {
   padding: 10px 18px;
   margin: 0px 12px;
@@ -130,17 +145,17 @@ button:hover {
 }
 
 button.primary {
-  background-color: #3eaf7c !important;
-  color: white;
+  background-color: var(--c-brand);
+  color: var(--c-text);
 }
 
-button.secondary a {
-  background-color: var(--bg);
-  color: var(--text);
+button.secondary {
+  background-color: var(--c-bg);
+  color: var(--c-text);
 }
 
 button.border {
-  border: 2px solid var(--border);
+  border: 2px solid var(--c-border);
 }
 
 .event-buttons:not(:first-of-type) {
@@ -152,7 +167,7 @@ button.border {
 }
 
 .home-hero {
-  height: calc(100vh - 3.6rem);
+  height: calc(100vh - var(--navbar-height));
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -234,7 +249,7 @@ button.border {
 }
 
 .event-text h1 span {
-  color: var(--accent);
+  color: var(--c-accent);
   font-size: 26px;
 }
 
