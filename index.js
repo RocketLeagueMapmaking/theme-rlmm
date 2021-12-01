@@ -1,4 +1,4 @@
 module.exports = {
-    name: 'vuepress-rlmm-theme',
+    name: 'vuepress-theme-rlmm',
     extend: '@vuepress/theme-default'
 }
