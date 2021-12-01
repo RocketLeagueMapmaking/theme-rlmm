@@ -1,0 +1,121 @@
+
+html, body {
+    background-color: var(--c-bg) !important;
+    color: var(--c-text) !important;
+}
+  
+h2 {
+    border-bottom: 1px solid var(--c-border);
+}
+  
+.theme-default-content code {
+    color: var(--c-text-lighter);
+    padding: 0.25rem 0.5rem;
+    font-size: .85em;
+    background-color: var(--c-bg-light);
+    border-radius: 3px;
+    overflow-wrap: break-word;
+    transition: background-color var(--t-color),color var(--t-color);
+}
+
+blockquote {
+    color: var(--c-text-quote);
+    border-left: 0.2rem solid var(--c-border-dark);
+}
+  
+.dropdown-title, .page-edit .edit-link a, .sidebar-link, .sidebar-heading, .navbar .site-name {
+    color: var(--c-text) !important
+}
+  
+.dropdown-wrapper .nav-dropdown {
+    border: 1px solid var(--c-border);
+}
+  
+.dropdown-wrapper .nav-dropdown .dropdown-item h4 {
+    border-top: 1px solid var(--c-border);
+}
+  
+.sidebar-link .active {
+    color: var(--c-brand) !important
+}
+  
+.nav-links a:hover, .nav-links a.router-link-active {
+    color: var(--c-text)
+}
+  
+.custom-block.tip {
+    border-color: var(--c-tip);
+    background-color: var(--c-tip-bg)
+}
+  
+.custom-block.warning {
+    border-color: var(--c-warning);
+    background-color: var(--c-warning-bg);
+    color: var(--c-warning-text);
+}
+
+.custom-block.details {
+    background-color: var(--c-details-bg);
+}
+
+.custom-block.danger {
+    border-color: var(--c-danger);
+    background-color: var(--c-danger-bg);
+    color: var(--c-danger-text);
+}
+
+.custom-block.danger .custom-block-title {
+    color: var(--c-danger-title);
+}
+  
+.custom-block.warning .custom-block-title {
+    color: var(--c-warning-title);
+}
+  
+.page-nav .inner {
+    border-top: 1px solid var(--c-border);
+}
+  
+.page-edit .last-updated .prefix {
+    color: var(--c-text-lighter) !important
+}
+  
+.page-edit .last-updated .time {
+    color: var(--c-text-quote) !important;
+}
+  
+.navbar {
+    border-color: var(--c-border);
+}
+  
+.sidebar {
+    border-right: 1px solid var(--c-border);
+}
+  
+a.sidebar-link.active, a.sidebar-link:hover {
+      color: var(--c-text-accent) !important; 
+}
+  
+.sidebar::-webkit-scrollbar {
+    width: 7px;
+}
+  
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: var(--c-brand);
+}
+  
+.sidebar::-webkit-scrollbar-track {
+      background-color: var(--c-border);
+}
+  
+tr {
+    border-top: 1px solid var(--c-border-dark);
+}
+  
+tr:nth-child(2n) {
+      background-color: var(--c-bg-light);
+}
+  
+td, th {
+    border: 1px solid var(--c-border-dark);
+}

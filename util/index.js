@@ -18,7 +18,10 @@ function compareTwoStrings(t, r) {
 }
 
 function findBestMatch(t, r) {
-    if (!areArgsValid(t, r)) throw new Error("Bad arguments: First argument should be a string, second should be an array of strings");
+    if (!areArgsValid(t, r)) {
+        const errorText = "Bad arguments: First argument should be a string, second should be an array of strings"
+        throw new Error(errorText);
+    }
     const e = [];
     let n = 0;
     for (let s = 0; s < r.length; s++) {
@@ -29,11 +32,22 @@ function findBestMatch(t, r) {
 }
 
 function areArgsValid(t, r) {
-    return "string" == typeof t && (!!Array.isArray(r) && (!!r.length && !r.find((function (t) { return "string" != typeof t }))))
+    const isString = (text) => typeof text === 'string'
+    const isArray = !!Array.isArray(r) && !!r.length 
+    return isString(t) && isArray && !r.find((t) => isString(t))
+}
 
+/**
+ * Gets the boolean value from a string or boolean. Used for reading localStorage items
+ * @param {string|boolean} value 
+ * @returns {boolean}
+ */
+function getBooleanValue (value) {
+    if (typeof value === 'boolean') return value
+    if (typeof value === 'string') return value === 'true'
 }
 
 module.exports = {
-    compareTwoStrings,
+    getBooleanValue,
     findBestMatch
 };
