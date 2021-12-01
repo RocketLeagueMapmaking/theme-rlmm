@@ -1,32 +1,41 @@
-const modals = [
+const settingsType = {
+  DARK_THEME: 0,
+  PAGE_WATCHING_ENABLED: 1,
+  PAGE_OVERVIEW_ENABLED: 2,
+  WIP_PAGES: 3,
+}
+
+// Default settings
+// TODO: add configuration to theme options
+// TODO: convert to id to settingsType
+const settings = [
   {
-    title: 'Preferences',
-    options: [
-      {
-        text: 'Dark theme',
-        id: 'settingsAppDarkTheme',
-      },
-      {
-        text: 'Expiremental features',
-        id: 'settingsAppBeta'
-      }
-    ],
+    text: 'Dark theme',
+    id: 'settingsAppDarkTheme',
   },
   {
-    title: 'Changelog',
-    options: [
-      {
-        text: 'Hide changelog',
-        id: 'settingsAppInbox'
-      },
-      {
-        text: 'Watch all pages',
-        id: 'settingsAppAllPages'
-      }
-    ]
+    text: 'Hide page overview',
+    id: 'settingsAppOverview'
+  }
+]
+
+const options = [
+  {
+    name: 'Notifications',
+    icon: 'bell'
   },
+  {
+    name: 'Help and feedback',
+    icon: 'bug'
+  },
+  {
+    name: 'Advanced',
+    icon: 'flask'
+  }
 ]
 
 module.exports = {
-  modals
+  settings,
+  options,
+  settingsType
 }
