@@ -4,7 +4,7 @@
       class="nav-settings"
       @click="toggleSettings()"
     >
-      <span class="iconify" data-icon="fa-solid:sliders-h" data-width="19"></span>
+      <span class="iconify settings-icon" data-icon="fa-solid:sliders-h" data-width="19"></span>
     </div>
 
     <div
@@ -25,20 +25,30 @@
           @click="setItem(option.id, !getItem(option.id, 'boolean'))"
           name=""
         >
+        <p v-else-if="option.type === 'icon'" @click="updateOption(option)" class="modal-icon-box">
+          <span
+            :data-icon="_data.__ob__.value.themeIcon"
+            class="iconify"
+            data-width="24" 
+            style="padding: 2px"
+          ></span>
+        </p>
       </div>
 
         <hr>
 
-      <div class="modal-column" v-if="modals.length > 1">
-        <p
+      <div class="modal-column" v-if="modals.length > 0">
+        <a
           v-for="(modal, i) in modals"
+          :href="modal.link"
           :key="i"
           class="modal-title"
           style="display: flex; align-items:center;"
         >
-        <span class="iconify" :data-icon="'fa-solid:' + modal.icon" v-if="modal.icon"></span>
+        <span class="iconify" :data-icon="'fa-solid:' + modal.icon" v-if="modal.icon" style="color: var(--c-brand)"
+        ></span>
           {{ modal.name }}
-        </p>
+      </a>
       </div>
     </div>
 
@@ -56,6 +66,7 @@ export default {
     return {
       showSettings: false,
       modals: options,
+      themeIcon: '',
       settings
     }
   },
@@ -63,6 +74,8 @@ export default {
   mounted () {
     // this.activeModal = this.modals[0].name.toLowerCase()
     this.storage = Object.entries(localStorage)
+
+    this.themeIcon = this.getThemeIcon()
   },
 
   watch: {
@@ -74,12 +87,26 @@ export default {
   },
 
   methods: {
+    getThemeIcon: function () {
+      const option = this.settings[0];
+      const checked = this.getItem(option.id, 'boolean')
+      return option.getIcon(checked)
+    },
     toggleSettings() {
       this.showSettings = !this.showSettings
     },
 
     showModal(id) {
       this.activeModal = id
+    },
+
+    updateOption (option) {
+      if ('icon' in option) {
+        const value = !this.getItem(option.id, 'boolean')
+        this.setItem(option.id, value)
+        document.getElementsByClassName('modal-icon-box').item(0).children.item(0)
+          .setAttribute('data-icon', this.getThemeIcon())
+      }
     },
 
     getItem (id, type) {
@@ -120,9 +147,14 @@ export default {
   padding-right: 6px;
 }
 
+.iconify {
+  color: var(--c-text);
+}
+
 svg {
   width: 19px !important;
   padding-right: 8px;
+  color: var(--c-text);
 }
 
 input {
@@ -157,16 +189,31 @@ input {
   justify-content: space-evenly;
 }
 
+.modal-icon-box {
+  border: 2px solid var(--c-border); 
+  border-radius: 8px; 
+  padding: 2px 4px; 
+  display: flex; 
+  justify-items: center; 
+  align-items: center;
+}
+
+.modal-icon-box:hover {
+  background-color: var(--c-bg-light);
+}
+
 .modal-title {
+  color: var(--c-text);
   margin: 2px 1px;
-  padding: 3px 0px;
+  padding: 3px 8px;
+  border-radius: 4px;
 }
 
 .modal-title:hover {
   background-color: var(--c-bg-lighter);
 }
 
-.modal-title:hover {
+.modal-title:hover, .settings-icon, .modal-icon-box, input {
   cursor: pointer;
 }
 

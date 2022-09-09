@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { findBestMatch } from '../util/index.js'
+import { findBestMatch } from '@theme/util/index.js'
 
 export default {
   data() {
@@ -102,13 +102,11 @@ export default {
     this.path = window.location.pathname
     this.origin = window.location.origin
 
-    const ThemeExtension = 'rlmm'
-
     if (this.theme) {
-      const ExtendedTheme = this['theme'][ThemeExtension]
+      const notFoundSettings = this.theme.notFoundSettings
 
-      if (ExtendedTheme) {
-        this.notFoundSettings = ExtendedTheme.notFound
+      if (notFoundSettings) {
+        this.notFoundSettings = notFoundSettings
       }
     }
   },
@@ -175,9 +173,10 @@ export default {
       if (this.notFoundSettings) {
         if (this.notFoundSettings.autoSuggestPages === false) return []
       }
-      const pages = this.site.pages
+      const pages = this.$site.pages
       const paths = pages.map((page) => page.path)
 
+      console.log(this.path, paths)
       const matches = findBestMatch(this.path, paths)
 
       const sortedMatches = matches.ratings.sort((a, b) =>

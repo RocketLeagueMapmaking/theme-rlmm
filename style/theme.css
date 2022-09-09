@@ -39,7 +39,7 @@ blockquote {
     color: var(--c-brand) !important
 }
   
-.nav-links a:hover, .nav-links a.router-link-active {
+.nav-links a:hover, .nav-links a.router-link-active,.dropdown-wrapper .dropdown-title, .dropdown-wrapper .mobile-dropdown-title {
     color: var(--c-text)
 }
   
@@ -118,4 +118,16 @@ tr:nth-child(2n) {
   
 td, th {
     border: 1px solid var(--c-border-dark);
+}
+
+@media screen and (max-width: 719px) {
+    .search-box input {
+        left: -1rem;
+    }
+}
+
+@media screen and (min-width: 959px) {
+    .theme-default-content:not(.custom) {
+        padding-right: 8rem;
+    }
 }

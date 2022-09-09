@@ -1,9 +1,9 @@
 <template>
     <div class="base">
-        <div class="page-overview"  @click="showPageSettingsModal = !showPageSettingsModal">
+        <!-- <div class="page-overview"  @click="showPageSettingsModal = !showPageSettingsModal">
             <span class="iconify" data-icon="fa-solid:ellipsis-h" style="width: 19px;"></span>
-        </div>
-        <div class="page-overview-modal" v-if="showPageSettingsModal">
+        </div> -->
+        <div class="page-overview-modal">
             <span v-for="action in actions" :key="action.text" :class="{ hidden: ('path' in action) && !action.path }" @click="action.handler">
                 <a :href="action.path" v-if="action.path">{{ action.text }}</a>
                 {{ !('path' in action) ? action.text : '' }}
@@ -16,15 +16,15 @@
 export default {
     data() {
         return {
-            showPageSettingsModal: false,
+            // showPageSettingsModal: false,/
             frontmatter: '',
             actions: [
-                {
-                    text: 'Watch page changes',
-                    handler: () => {
-                        alert('Watching')
-                    }
-                },
+                // {
+                //     text: 'Watch page changes',
+                //     handler: () => {
+                //         alert('Watching')
+                //     }
+                // },
                 {
                     text: 'Cheat sheet',
                     path: this.frontmatterPage('cheatsheet')

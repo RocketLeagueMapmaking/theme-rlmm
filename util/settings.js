@@ -1,17 +1,17 @@
-const settingsType = {
-  DARK_THEME: 0,
-  PAGE_WATCHING_ENABLED: 1,
-  PAGE_OVERVIEW_ENABLED: 2,
-  WIP_PAGES: 3,
-}
-
 // Default settings
 // TODO: add configuration to theme options
-// TODO: convert to id to settingsType
 const settings = [
   {
-    text: 'Dark theme',
+    text: 'Display theme',
     id: 'settingsAppDarkTheme',
+    type: 'icon',
+    getIcon (checked) {
+      return `fa-solid:cloud-${checked ? 'moon' : 'sun'}`
+    },
+    setIcon (checked) {
+      this.icon = this.getIcon(checked)
+    },
+    icon: undefined
   },
   {
     text: 'Hide page overview',
@@ -21,21 +21,13 @@ const settings = [
 
 const options = [
   {
-    name: 'Notifications',
-    icon: 'bell'
-  },
-  {
-    name: 'Help and feedback',
-    icon: 'bug'
-  },
-  {
-    name: 'Advanced',
-    icon: 'flask'
+    name: 'Changelog',
+    icon: 'bullhorn',
+    link: '/changelog'
   }
 ]
 
 module.exports = {
   settings,
-  options,
-  settingsType
+  options
 }

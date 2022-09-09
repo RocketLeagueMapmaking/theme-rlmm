@@ -3,6 +3,8 @@
     <ParentLayout>
       <!-- Layout slots -->
       <template #page-top>
+        <BetaHeader v-if="$frontmatter.beta != undefined" :enabled="$frontmatter.beta" :message="$themeConfig.betaMessage" />
+        <PageSidebar header="Contents" />
         <slot name="page-header" />
       </template>
 
@@ -30,11 +32,15 @@ import { getBooleanValue } from '@theme/util/index.js'
 
 export const themeEvents = new Vue()
 
+import PageSidebar from '@theme/components/PageSidebar.vue'
 import PageSettings from '@theme/components/PageSettings.vue'
+import BetaHeader from '@theme/components/BetaHeader.vue'
 
 export default {
   components: {
+    BetaHeader,
     ParentLayout,
+    PageSidebar,
     PageUpdate,
     PageSettings
   },

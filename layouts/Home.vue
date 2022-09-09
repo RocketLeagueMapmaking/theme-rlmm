@@ -8,7 +8,7 @@
           :style="
             heroProp('background')
               ? {
-                'background-image': `linear-gradient(180deg, rgba(0, 134, 29, 0.33) 0%, #000000 100%),
+                'background-image': `linear-gradient(180deg, rgba(0, 134, 29, 0.33) 0%, var(--c-bg) 200%),
                    url(${heroProp('background')})`,
                 'background-position': 'center',
                 'background-repeat': 'no-repeat',
@@ -24,10 +24,10 @@
             v-for="(action, i) in heroProp('actions')"
             :key="i"
             class="hero-actions"
-            :href="Object.values(action)[0][1]"
+            :href="action.link"
           >
             <button :class="'primary' in action ? 'primary' : 'secondary'">
-              {{ Object.values(action)[0][0] }}
+              {{ action.name }}
             </button>
           </a>
         </div>
@@ -59,7 +59,7 @@
                   }"
                   class="event-buttons"
                 >
-                  {{ action.text }}
+                  {{ action.name }}
                 </button>
               </a>
             </div>
@@ -72,6 +72,7 @@
             </div>
           </div>
         </div>
+        <SteamRecentMaps v-if="fm.recentSteamMaps" />
       </div>
     </template>
 
@@ -104,11 +105,13 @@
 
 <script>
 import Layout from '@theme/layouts/Layout.vue'
+import SteamRecentMaps from '@theme/components/SteamRecentMaps.vue'
 
 export default {
   components: {
     Layout,
-  },
+    SteamRecentMaps
+},
 
   data() {
     return {
@@ -118,14 +121,11 @@ export default {
 
   mounted() {
     this.fm = this.$page.frontmatter
-    document.getElementsByClassName('last-updated')[0].style.display = 'none'
   },
 
   methods: {
     heroProp(prop) {
-      return this.fm.hero.some((x) => x[prop])
-        ? this.fm.hero.find((x) => x[prop])[prop]
-        : ''
+      return this.fm.hero[prop]
     },
     windowWindth: () => window.innerWidth,
   },
@@ -133,6 +133,10 @@ export default {
 </script>
 
 <style scoped>
+.home {
+  max-width: 100%;
+  margin: 0px; padding: 0px;
+}
 button {
   padding: 10px 18px;
   margin: 0px 12px;
@@ -146,7 +150,7 @@ button:hover {
 
 button.primary {
   background-color: var(--c-brand);
-  color: var(--c-text);
+  color: white;
 }
 
 button.secondary {

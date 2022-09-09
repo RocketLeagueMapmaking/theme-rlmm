@@ -36,6 +36,11 @@
       <!-- <NavInbox /> -->
 
       <NavLinks class="can-hide" />
+
+      <div style="padding-left: 20px" v-if="icons.length > 0"></div>
+      <a :href="icon.link"  v-for="icon in icons" :key="icon.name" class="navbar-icon">
+        <span class="iconify" :data-icon="icon.name" data-width="24"></span>
+      </a>
     </div>
   </header>
 </template>
@@ -75,6 +80,11 @@ export default {
 
     isAlgoliaSearch () {
       return this.algolia && this.algolia.apiKey && this.algolia.indexName
+    },
+
+    icons () {
+      const navbar = this.$themeConfig.navbar
+      return navbar ? navbar.icons || [] : []
     }
   },
 
@@ -96,8 +106,8 @@ export default {
   methods: {
     navbarTitle () {
       const theme = this.$themeConfig
-      if (theme['rlmm'] && theme['rlmm']['navbar']) {
-        return theme['rlmm']['navbar']['title'] || this.$siteTitle
+      if (theme && theme['navbar']) {
+        return theme['navbar']['title'] || this.$siteTitle
       } else return this.$siteTitle
     }
   }
@@ -114,6 +124,13 @@ function css (el, property) {
 <style lang="stylus">
 $navbar-vertical-padding = 0.7rem
 $navbar-horizontal-padding = 1.5rem
+
+.navbar-icon
+  display flex !important
+  align-items center
+  color var(--c-text)
+  :hover
+    color var(--c-brand)
 
 .navbar
   padding $navbar-vertical-padding $navbar-horizontal-padding
@@ -145,6 +162,11 @@ $navbar-horizontal-padding = 1.5rem
       vertical-align top
 
 @media (max-width: $MQMobile)
+  .nav-item > a:not(.external):hover
+    border-bottom none !important
+    color $brandColor
+  .nav-item > a:not(.external).router-link-active
+    color $brandColor
   .navbar
     padding-left 4rem
     .can-hide
