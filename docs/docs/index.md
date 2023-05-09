@@ -2,5 +2,5 @@
 
 - [configuration](configuration.md)
 - [frontmatter](frontmatter.md)
-- components: this theme has no global components
+- [components](components.md)
 - plugins: this theme has no pre-installed plugins

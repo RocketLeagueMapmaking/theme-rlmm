@@ -4,7 +4,7 @@
 
 ## Documentation
 
-See the [`docs`](https://github.com/rocketleaguemapmaking/theme-rlmm/tree/master/docs) folder for the WIP documentation.
+See the [sandbox website][docs] folder for the documentation.
 
 ## Local development
 
@@ -15,10 +15,9 @@ See the [`docs`](https://github.com/rocketleaguemapmaking/theme-rlmm/tree/master
 
 ## Roadmap
 
-> [Roadmap project](https://github.com/RocketLeagueMapmaking/theme-rlmm/projects/1)
-
 When this theme has the requested features and is stable enough, this repo will be merged in to the main repo.
 
 Note: this repo is only intended to be used in the [map making guide][docs_repo]
 
 [docs_repo]: https://github.com/rocketleaguemapmaking/rl-docs
+[docs]: https://theme.rocketleaguemapmaking.pages.dev/

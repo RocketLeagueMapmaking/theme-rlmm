@@ -3,6 +3,22 @@ html, body {
     background-color: var(--c-bg) !important;
     color: var(--c-text) !important;
 }
+
+.navbar-notification .page, .navbar-notification .sidebar {
+    margin-top: var(--navbar-notification-height);
+}
+
+.layout-rlmm-theme-wrapper {
+    margin-top: var(--navbar-height);
+}
+
+.navbar-notification .layout-rlmm-theme-wrapper {
+    margin-top: calc(var(--navbar-height) + var(--navbar-notification-height));
+}
+
+.hidden-sidebardepth .sidebar-sub-header {
+    display: none;
+}
   
 h2 {
     border-bottom: 1px solid var(--c-border);
@@ -127,7 +143,7 @@ td, th {
 }
 
 @media screen and (min-width: 959px) {
-    .theme-default-content:not(.custom) {
+    .theme-default-content:not(.custom), .page-edit, .page-nav, .not-finished-banner {
         padding-right: 8rem;
     }
 }

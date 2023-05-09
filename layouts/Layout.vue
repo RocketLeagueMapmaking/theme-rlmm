@@ -3,8 +3,8 @@
     <ParentLayout>
       <!-- Layout slots -->
       <template #page-top>
-        <BetaHeader v-if="$frontmatter.beta != undefined" :enabled="$frontmatter.beta" :message="$themeConfig.betaMessage" />
-        <PageSidebar header="Contents" />
+        <BetaHeader v-if="$frontmatter.finished != undefined" :enabled="!$frontmatter.finished" :message="notFinishedMessage" />
+        <PageSidebar header="Contents" v-if="!disableSidemenu" />
         <slot name="page-header" />
       </template>
 
@@ -26,14 +26,21 @@
 import Vue from 'vue'
 
 import ParentLayout from '@parent-theme/layouts/Layout.vue'
-import PageUpdate from '@theme/components/PageWatch.vue'
 
 import { getBooleanValue } from '@theme/util/index.js'
 
 export const themeEvents = new Vue()
+export const minWidthSidemenu = 1400
+
+var MarkdownIt = require('markdown-it'),
+    md = new MarkdownIt();
+
+export const renderMd = (content) => md.render(content)
 
 import PageSidebar from '@theme/components/PageSidebar.vue'
 import PageSettings from '@theme/components/PageSettings.vue'
+import PageUpdate from '@theme/components/PageWatch.vue'
+
 import BetaHeader from '@theme/components/BetaHeader.vue'
 
 export default {
@@ -49,8 +56,16 @@ export default {
     enableWatching: {
       type: Boolean,
       default: true
-    }
+    },
+    disableSidemenu: {
+      type: Boolean,
+      default: false
+    },
   },
+
+    beforeDestroy() { 
+        window.removeEventListener('resize', this.onResize); 
+    },
 
   mounted () {
     const headers = document.getElementsByTagName('H1')
@@ -67,16 +82,28 @@ export default {
       }
     }
 
+    this.$nextTick(() => {
+        window.addEventListener('resize', this.onResize);
+    })
+
+    themeEvents.$on('notification-change', newDisplayValue => {
+      console.log(newDisplayValue)
+      this.toggleNotification(newDisplayValue)
+    })
+
     themeEvents.$on('setting-change', (event) => {
       const { id, value } = JSON.parse(event)
       console.log(event)
 
       if (id === 'settingsAppDarkTheme') this.setDarkTheme(getBooleanValue(value))
       if (id === 'settingsAppUpdates') this.showPageWatching = this.watchingEnabled()
-      
+      if (id === 'settingsAppOverview') this.toggleSidebarDepth(!getBooleanValue(value))
+
     })
 
     const darkThemeEnabled = localStorage.getItem('settingsAppDarkTheme') 
+
+    this.toggleSidebarDepth(!getBooleanValue(localStorage.getItem('settingsAppOverview')))
 
     if (getBooleanValue(darkThemeEnabled)) this.setDarkTheme(true)
     this.showPageWatching = this.watchingEnabled()
@@ -96,8 +123,16 @@ export default {
     return {
       darkTheme: null,
       showPageWatching: false,
-      showPageSettingsModal: false
+      showPageSettingsModal: false,
+      windowWidth: window.innerWidth,
+      minWidthSidemenu,
     }
+  },
+
+  computed: {
+    notFinishedMessage () {
+      return this.$themeConfig.betaMessage
+    },
   },
 
   methods: {
@@ -109,14 +144,36 @@ export default {
       return localValue
     },
 
-    setDarkTheme (enabled) {
-      this.darkTheme = enabled
-
-      const name = 'dark' 
+    toggleClass (className, enabled) {
       const { classList } = document.documentElement
 
-      this.darkTheme ? classList.add(name) : classList.remove(name)
-    }
+      enabled ? classList.add(className) : classList.remove(className)
+    },
+
+    toggleSidebarDepth (enabled) {
+      this.toggleClass('hidden-sidebardepth', enabled)
+    },
+
+    toggleNotification (enabled) {
+      this.toggleClass('navbar-notification', enabled)
+    },  
+
+    setDarkTheme (enabled) {
+      this.darkTheme = enabled
+      this.toggleClass('dark', enabled)
+    },
+
+    onResize() {
+        this.windowWidth = window.innerWidth
+
+        if (this.windowWidth >= this.minWidthSidemenu) {
+          this.toggleSidebarDepth(true)
+        } else {
+          this.toggleSidebarDepth(false)
+        }
+
+        themeEvents.$emit('window-resize', this.windowWidth)
+    },
   }
 }
 </script>

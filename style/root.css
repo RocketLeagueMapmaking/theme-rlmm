@@ -55,6 +55,10 @@ THE SOFTWARE.
     --c-tip-title: var(--c-text);
     --c-tip-text: var(--c-text);
     --c-tip-text-accent: var(--c-text-accent);
+    /** TODO: add more colors for tip, also for dark theme */
+    --c-info: #007497;
+    --c-info-text: var(--c-text);
+
     --c-warning: #e7c000;
     --c-warning-bg: #fffae3;
     --c-warning-title: #ad9000;
@@ -85,6 +89,7 @@ THE SOFTWARE.
   
     /* // layout vars */
     --navbar-height: 3.6rem;
+    --navbar-notification-height: 2.2rem;
     --navbar-padding-v: 0.7rem;
     --navbar-padding-h: 1.5rem;
     --sidebar-width: 20rem;

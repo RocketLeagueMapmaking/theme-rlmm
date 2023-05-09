@@ -1,5 +1,17 @@
 <template>
-  <header class="navbar">
+  <header class="navbar" :class="{ 'notification-display': notification != null }">
+    <NotificationBanner
+      v-if="notification"
+      :message="notification.message"
+      :storageKey="notification.storageKey"
+      :dismisseable="notification.dismisseable"
+      :pages="notification.pages"
+      :color="notification.color"
+      :textColor="notification.textColor"
+      :startDate="notification.startDate"
+      :endDate="notification.endDate"
+      :once="notification.once"
+    />
     <SidebarButton @toggle-sidebar="$emit('toggle-sidebar')" />
 
     <RouterLink
@@ -37,10 +49,11 @@
 
       <NavLinks class="can-hide" />
 
-      <div style="padding-left: 20px" v-if="icons.length > 0"></div>
-      <a :href="icon.link"  v-for="icon in icons" :key="icon.name" class="navbar-icon">
-        <span class="iconify" :data-icon="icon.name" data-width="24"></span>
-      </a>
+      <div class="navbar-icons" v-if="icons.length > 0">
+        <a :href="icon.link" v-for="icon in icons" :key="icon.name" class="navbar-icon">
+          <span class="iconify" :data-icon="icon.name" data-width="24"></span>
+        </a>
+      </div>
     </div>
   </header>
 </template>
@@ -55,6 +68,8 @@ import NavLinks from '@parent-theme/components/NavLinks.vue'
 import NavSettings from '@theme/components/NavSettings.vue'
 import NavInbox from '@theme/components/NavInbox.vue'
 
+import NotificationBanner from '@theme/components/NotificationBanner.vue'
+
 export default {
   name: 'Navbar',
 
@@ -64,12 +79,14 @@ export default {
     SearchBox,
     AlgoliaSearchBox,
     NavSettings,
-    NavInbox
-  },
+    NavInbox,
+    NotificationBanner,
+},
 
   data () {
     return {
-      linksWrapMaxWidth: null
+      linksWrapMaxWidth: null,
+      notification: null,
     }
   },
 
@@ -82,9 +99,12 @@ export default {
       return this.algolia && this.algolia.apiKey && this.algolia.indexName
     },
 
+    navbarConfig () {
+      return this.$themeConfig.navbar || {}
+    },
+
     icons () {
-      const navbar = this.$themeConfig.navbar
-      return navbar ? navbar.icons || [] : []
+      return this.navbarConfig.icons || []
     }
   },
 
@@ -101,6 +121,12 @@ export default {
     }
     handleLinksWrapWidth()
     window.addEventListener('resize', handleLinksWrapWidth, false)
+
+    if (this.$themeConfig.navbar) {
+        const notifications = this.$themeConfig.navbar.notifications || []
+        // TODO: pick first one
+        this.notification = notifications[0] || null
+    }
   },
 
   methods: {
@@ -124,6 +150,20 @@ function css (el, property) {
 <style lang="stylus">
 $navbar-vertical-padding = 0.7rem
 $navbar-horizontal-padding = 1.5rem
+$navbar-height = 3.5rem
+$navbar-notification-height = 2.2rem
+
+.navbar.notification-display
+  height $navbar-notification-height + $navbar-height !important
+  .sidebar-button, .sidebar-mask, .home-link, .links
+    margin-top $navbar-notification-height !important
+
+.navbar-icons
+  padding-left 20px
+  display flex
+  flex-direction: row
+  :not(:first-child)
+    margin-left 14px
 
 .navbar-icon
   display flex !important
@@ -162,6 +202,8 @@ $navbar-horizontal-padding = 1.5rem
       vertical-align top
 
 @media (max-width: $MQMobile)
+  .navbar-icons
+    padding-left 0px
   .nav-item > a:not(.external):hover
     border-bottom none !important
     color $brandColor

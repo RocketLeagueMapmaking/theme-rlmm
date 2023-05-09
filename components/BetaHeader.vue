@@ -1,18 +1,15 @@
 <template>
-    <div class="beta-header-box">
-        <div v-if="enabled" class="beta-header">
-            <span 
-                class="iconify" 
-                :data-icon="iconName" 
-                :data-width="iconWidth"
-            ></span>
-
-            <p>{{ message }}</p>
-        </div>
-    </div>
+    <Banner 
+        :enabled="enabled" 
+        :message="message" 
+        type="warning" 
+        class="not-finished-banner" 
+    />
 </template>
 
 <script>
+import Banner from './Banner.vue';
+
 export default {
     props: {
         enabled: {
@@ -20,44 +17,21 @@ export default {
             type: Boolean
         },
         message: {
-            required: true,
-            type: String
-        }
+            required: false,
+            type: String,
+            default: 'This page is not finished yet, check back later or contribute to this page!'
+        },
     },
-    data() {
-        return {
-            iconWidth: 24,
-            iconName: 'ant-design:warning-outlined'
-        }
-    }
+
+    components: {
+        Banner,
+    },
 }
 </script>
 
 <style scoped>
-.iconify {
-    color: var(--c-warning-text);
-}
-.beta-header-box, .beta-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-}
-.beta-header {
-    justify-content: space-between;
-    background-color: var(--c-warning);
-    /* margin: 2rem 2rem;  */
-    margin-top: calc(var(--navbar-height) + var(--navbar-padding-h));
+.not-finished-banner {
     margin-bottom: -3rem;
-    max-width: 500px;
-    padding: 2px;
-    border: 6px solid var(--c-warning-title);
-    border-radius: 8px;
-}
-
-.beta-header p {
-    color: var(--c-warning-text);
-    padding: 0 12px;
-    margin: 6px 0px;
+    margin-top: calc(var(--navbar-height) + var(--navbar-padding-h));
 }
 </style>

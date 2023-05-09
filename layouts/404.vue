@@ -66,7 +66,7 @@ export default {
       origin: '',
 
       // local notFound settings
-      notFoundSettings: '',
+      notFoundSettings: {},
 
       // default titles
       title: '404',
@@ -113,7 +113,7 @@ export default {
 
   methods: {
     getMsg() {
-      let { notFound } = this.theme
+      let notFound = this.theme.notFound || this.notFoundSettings.quotes
 
       if (!notFound) notFound = this.defaultQuotes
 
