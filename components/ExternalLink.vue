@@ -1,7 +1,7 @@
 <template>
     <a :href="url" target="_blank" rel="noopener noreferrer">
         <slot></slot>
-        {{ name }} 
+        <span v-if="name.length > 0">{{ name }}</span>
         <OutboundLink v-if="icon" />
     </a>
 </template>
@@ -11,7 +11,8 @@ export default {
     props: {
         name: {
             type: String,
-            required: true,
+            required: false,
+            default: '',
         },
         href: {
             type: String,

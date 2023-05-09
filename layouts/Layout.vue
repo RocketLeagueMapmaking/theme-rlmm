@@ -82,6 +82,7 @@ export default {
       }
     }
 
+    this.windowWidth = window.innerWidth
     this.$nextTick(() => {
         window.addEventListener('resize', this.onResize);
     })
@@ -124,7 +125,7 @@ export default {
       darkTheme: null,
       showPageWatching: false,
       showPageSettingsModal: false,
-      windowWidth: window.innerWidth,
+      windowWidth: 0,
       minWidthSidemenu,
     }
   },

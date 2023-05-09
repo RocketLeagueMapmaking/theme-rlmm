@@ -39,7 +39,7 @@ export default {
             onThisPageTitle: 'On this page',
             enabled: true,
             minWidthSidemenu,
-            windowWidth: window.innerWidth,
+            windowWidth: 0,
             renderMd,
         }
     },
@@ -59,6 +59,7 @@ export default {
             }
         })
 
+        this.windowWidth = window.innerWidth
         themeEvents.$on('window-resize', (event) => {
             this.windowWidth = event
         })

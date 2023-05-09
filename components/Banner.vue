@@ -41,7 +41,7 @@ export default {
             validator: (value) => {
                 const allowedTypes = ['info', 'warning', 'danger', 'tip']
 
-                return allowedTypes.some(item => item.type === value)
+                return allowedTypes.some(item => item === value)
             },
         },
         icon: {
