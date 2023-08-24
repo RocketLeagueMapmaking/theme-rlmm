@@ -1,223 +1,204 @@
 <template>
-  <div>
-    <div
-      class="nav-settings"
-      @click="toggleSettings()"
-    >
-      <span class="iconify settings-icon" data-icon="fa-solid:sliders-h" data-width="19"></span>
+    <div class="text-center" v-if="!disableSettings">
+        <v-menu :close-on-content-click="false" :nudge-width="200" offset-y style="background-color: var(--c-bg-lighter);">
+            <template v-slot:activator="activator">
+                <v-btn v-on="activator.on" v-bind="activator.attrs" color="var(--c-text)" icon rounded
+                    class="mr-4 d-flex align-center justify-center">
+                    <tooltip-text :tooltip="configuration.tooltip">
+                        <Icon :icon="configuration.icon" width="1.5em" />
+                    </tooltip-text>
+                </v-btn>
+            </template>
+
+            <v-card flat tile style="background-color: var(--c-bg-lighter) !important;">
+                <v-card-title>Settings</v-card-title>
+                <v-card-subtitle>Theme</v-card-subtitle>
+                <v-card-actions>
+                    <v-btn-toggle :value="theme"
+                        @change="(value) => setItem('settingsAppDarkTheme', getDarkThemeValue(value), { raw: value })"
+                        mandatory group>
+                        <v-container>
+                            <v-row :class="{ 'mb-n1 mt-n8': index === 0 }" v-for="(themes, index) in availableThemes"
+                                :key="index">
+                                <v-btn v-for="(themeData, j) in themes" :key="themeData.value" :value="themeData.value"
+                                    :color="theme === themeData.value ? 'primary' : 'var(--c-bg)'"
+                                    :block="themes.length === 1"
+                                    :class="{ 'py-3 px-4': true, 'mr-1': themes.length > 1 && j === 0, 'ml-1': themes.length > 1 && j === 1 }"
+                                    large depressed rounded-lg>
+                                    {{ themeData.text }}
+                                    <Icon :icon="themeData.icon" width="1.4em" />
+                                </v-btn>
+                            </v-row>
+                        </v-container>
+                    </v-btn-toggle>
+                </v-card-actions>
+            </v-card>
+
+            <v-card style="background-color: var(--c-bg-lighter) !important;">
+                <v-list flat rounded style="background-color: var(--c-bg-lighter) !important;">
+                    <v-list-item v-if="isOptionEnabled('sidemenu')">
+                        <v-list-item-action>
+                            <v-switch :value="!disableSideMenu" :disabled="windowWidth < minWidthSidemenu"
+                                @click="toggleSidemenu()" inset color="primary"></v-switch>
+                        </v-list-item-action>
+                        <v-list-item-title>
+                            <tooltip-text tooltip="On large pages, move the sidebar to the right">
+                                Use new layout
+                            </tooltip-text>
+                        </v-list-item-title>
+                    </v-list-item>
+                    <v-list-item v-if="isOptionEnabled('tooltips')">
+                        <v-list-item-action>
+                            <v-switch :value="enableTooltips" @click="toggleTooltips()" inset color="primary"></v-switch>
+                        </v-list-item-action>
+                        <v-list-item-title>
+                            <tooltip-text tooltip="Show tooltips when hovering options and text">
+                                Enable tooltips
+                            </tooltip-text>
+                        </v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-card>
+        </v-menu>
     </div>
-
-    <div
-      v-if="showSettings"
-      class="settings-modal"
-    >
-
-      <div
-        v-for="(option, j) in settings"
-        :key="j"
-        class="modal-row"
-      >
-        <p>{{ option.text }}</p>
-        <input v-if="!option.type || option.type === 'checkbox'"
-          id=""
-          type="checkbox"
-          :checked="getItem(option.id, 'boolean')"
-          @click="setItem(option.id, !getItem(option.id, 'boolean'))"
-          name=""
-        >
-        <p v-else-if="option.type === 'icon'" @click="updateOption(option)" class="modal-icon-box">
-          <span
-            :data-icon="_data.__ob__.value.themeIcon"
-            class="iconify"
-            data-width="24" 
-            style="padding: 2px"
-          ></span>
-        </p>
-      </div>
-
-        <hr>
-
-      <div class="modal-column" v-if="modals.length > 0">
-        <a
-          v-for="(modal, i) in modals"
-          :href="modal.link"
-          :key="i"
-          class="modal-title"
-          style="display: flex; align-items:center;"
-        >
-        <span class="iconify" :data-icon="'fa-solid:' + modal.icon" v-if="modal.icon" style="color: var(--c-brand)"
-        ></span>
-          {{ modal.name }}
-      </a>
-      </div>
-    </div>
-
-  </div>
 </template>
 
 <script>
-import { themeEvents } from '@theme/layouts/Layout.vue'
+import { themeEvents, minWidthSidemenu } from '@theme/layouts/Layout.vue'
 
-import { options, settings } from '@theme/util/settings.js'
 import { getBooleanValue } from '@theme/util/index.js'
 
 export default {
-  data() {
-    return {
-      showSettings: false,
-      modals: options,
-      themeIcon: '',
-      settings
-    }
-  },
+    data() {
+        const enableTooltips = this.getItem('settingsAppTooltips', 'boolean')
+        const disableSideMenu = this.getItem('settingsAppOverview', 'boolean')
 
-  mounted () {
-    // this.activeModal = this.modals[0].name.toLowerCase()
-    this.storage = Object.entries(localStorage)
+        console.log({
+            enableTooltips,
+            disableSideMenu,
+        })
 
-    this.themeIcon = this.getThemeIcon()
-  },
+        return {
+            configuration: {
+                icon: 'fa-solid:sliders-h',
+                tooltip: 'Settings',
+            },
+            // Default theme, not exposed in themeConfig
+            theme: 'system',
+            availableThemes: [
+                [
+                    { text: 'Light', value: 'light', icon: 'fa-solid:sun' },
+                    { text: 'Dark', value: 'dark', icon: 'fa:moon-o' },
+                ],
+                [
+                    { text: 'System', value: 'system', icon: 'fa6-solid:computer' },
+                ],
+            ],
+            disableSideMenu,
+            enableTooltips,
 
-  watch: {
-    storage: function () {
-      const items = Object.entries(localStorage)
-
-      return items
-    }
-  },
-
-  methods: {
-    getThemeIcon: function () {
-      const option = this.settings[0];
-      const checked = this.getItem(option.id, 'boolean')
-      return option.getIcon(checked)
-    },
-    toggleSettings() {
-      this.showSettings = !this.showSettings
-    },
-
-    showModal(id) {
-      this.activeModal = id
-    },
-
-    updateOption (option) {
-      if ('icon' in option) {
-        const value = !this.getItem(option.id, 'boolean')
-        this.setItem(option.id, value)
-        document.getElementsByClassName('modal-icon-box').item(0).children.item(0)
-          .setAttribute('data-icon', this.getThemeIcon())
-      }
-    },
-
-    getItem (id, type) {
-      const items = this.storage
-
-      if (items.some(x => x[0] === id)) {
-        const value = items.find(x => x[0] === id)[1]
-        if (typeof value === 'boolean') return value
-        if (typeof value === 'string') {
-          return type === 'boolean' ? getBooleanValue(value) : value
+            showSettings: false,
+            disableSettings: false,
+            disabledOptions: [],
+            minWidthSidemenu,
+            windowWidth: 0,
         }
-      } else {
-        if (type === 'boolean') return false
-        return null
-      }
     },
 
-    setItem (id, value) {
-      if (this.storage.some(x => x[0] === id)) {
-        this.storage.find(x => x[0] === id)[1] = value
-      }
+    mounted () {
+        this.storage = Object.entries(localStorage)
 
-      localStorage.setItem(id, value)
-      
-      themeEvents.$emit('setting-change', JSON.stringify({id, value}))
+        if (this.$themeConfig.navbar) {
+            const { icon, tooltip, settings } = this.$themeConfig.navbar
+
+            if (icon) this.configuration.icon = icon
+            if (tooltip) this.configuration.tooltip = tooltip
+            if (typeof (settings || {}).enabled === 'boolean') this.disableSettings = !settings.enabled
+            if ((settings || {}).disabledOptions) this.disabledOptions = settings.disabledOptions
+        }
+
+        themeEvents.$on('mounted', (data) => {
+            this.windowWidth = data.windowWidth
+        })
+
+        themeEvents.$on('window-resize', (windowWidth) => {
+            this.windowWidth = windowWidth
+        })
+
+        this.theme = this.getItemWithMetadata('settingsAppDarkTheme', 'boolean').metadata.raw
+    },
+
+    watch: {
+        storage: function () {
+            const items = Object.entries(localStorage)
+
+            return items
+        }
+    },
+
+    methods: {
+        isOptionEnabled: function (key) {
+            return !this.disabledOptions.includes(key)
+        },
+
+        getDarkThemeValue: function (value) {
+            this.theme = value
+            const usesDarkSystem = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+
+            return value === 'system' ? usesDarkSystem : value === 'dark'
+        },
+        toggleSettings() {
+            this.showSettings = !this.showSettings
+        },
+
+        tryParseLocalItem(value) {
+            try {
+                return JSON.parse(value)
+            } catch (e) {
+                return { value }
+            }
+        },
+
+        getItem(id, type) {
+            return this.getItemWithMetadata(id, type).value
+        },
+
+        getItemWithMetadata(id, type) {
+            const items = Object.entries(localStorage)
+
+            if (items.some(x => x[0] === id)) {
+                const rawValue = items.find(x => x[0] === id)[1]
+                const { value, metadata } = this.tryParseLocalItem(rawValue)
+                const combine = (newValue) => ({ value: newValue, metadata })
+
+                if (typeof value === 'boolean') return combine(value)
+                if (typeof value === 'string') {
+                    return combine(type === 'boolean' ? getBooleanValue(value) : value)
+                }
+            } else {
+                return { value: type === 'boolean' ? false : null, metadata: undefined }
+            }
+        },
+
+        setItem(id, value, metadata) {
+            if (this.storage.some(x => x[0] === id)) {
+                this.storage.find(x => x[0] === id)[1] = value
+            }
+
+            localStorage.setItem(id, JSON.stringify({ metadata, value }))
+            console.log(`Updated setting ${id}`)
+            themeEvents.$emit('setting-change', JSON.stringify({ id, value, metadata }))
+        },
+
+        toggleTooltips() {
+            this.setItem('settingsAppTooltips', !this.enableTooltips, undefined)
+            this.enableTooltips = !this.enableTooltips
+        },
+
+        toggleSidemenu() {
+            this.setItem('settingsAppOverview', !this.disableSideMenu, undefined)
+            this.disableSideMenu = !this.disableSideMenu
+        },
     }
-  }
 }
 </script>
-
-<style scoped>
-.nav-settings {
-  width: 30px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-right: 6px;
-}
-
-.iconify {
-  color: var(--c-text);
-}
-
-svg {
-  width: 19px !important;
-  padding-right: 8px;
-  color: var(--c-text);
-}
-
-input {
-  margin: 6px;
-}
-
-.settings-modal {
-  position: fixed;
-  transform: translateX(-50%);
-  background-color: var(--c-bg);
-  border: 1px solid var(--c-border);
-  padding: 4px 12px;
-  margin-top: 12px;
-  border-radius: 4px;
-  min-width: 200px;
-}
-
-.modal-row {
-  max-height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.modal-row p {
-  padding-right: 6px;
-}
-
-.modal-column {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-}
-
-.modal-icon-box {
-  border: 2px solid var(--c-border); 
-  border-radius: 8px; 
-  padding: 2px 4px; 
-  display: flex; 
-  justify-items: center; 
-  align-items: center;
-}
-
-.modal-icon-box:hover {
-  background-color: var(--c-bg-light);
-}
-
-.modal-title {
-  color: var(--c-text);
-  margin: 2px 1px;
-  padding: 3px 8px;
-  border-radius: 4px;
-}
-
-.modal-title:hover {
-  background-color: var(--c-bg-lighter);
-}
-
-.modal-title:hover, .settings-icon, .modal-icon-box, input {
-  cursor: pointer;
-}
-
-.modal-title.active {
-  color: var(--c-brand);
-}
-</style>

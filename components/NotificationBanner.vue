@@ -1,7 +1,10 @@
 <template>
-    <div v-if="enabled" class="notifications-banner" :style="color ? { 'background-color': color} : {}">
-        <span v-html="displayedMessage" class="notification-message"></span>
-        <span v-if="dismisseable" class="iconify notification-dismiss" data-icon="fa-solid:times"></span>
+    <div v-if="!sessionDismissed" class="notifications-banner" :style="color ? { 'background-color': color } : {}">
+        <span v-html="displayedMessage" class="notification-message" :style="{ color: textColor }"></span>
+        <span @click="dismiss" class="notification-dismiss iconify d-flex align-center">
+            <Icon icon="fa-solid:times" v-if="dismisseable" class="iconify">
+            </Icon>
+        </span>
     </div>
 </template>
 
@@ -60,37 +63,38 @@ export default {
         },
     },
 
-    mounted () {
-        if (this.enabled) {
-            themeEvents.$emit('notification-change', true)
+    data () {
+        return {
+            sessionDismissed: false,
         }
     },
 
-    computed: {
-        enabled () {
-            const compareNeg = (prop, check) => (typeof prop === 'number' ? prop : prop.length) > 0 ? check : true
-
-            return compareNeg(this.pages, this.pages.some(slug => this.$page.slug === slug))
-                && compareNeg(this.startDate, this.startDate < Date.now())
-                && compareNeg(this.endDate, this.endDate > Date.now())
-                && (this.once ? !this.isDismissed : true)
-
-        },
-
-        displayedMessage () {
-            return renderMd(this.message).replace('<p>', `<p style="margin: 0px; color: ${this.textColor}">`)
-        },
-
-        isDismissed () {
-            return localStorage.getItem('notification-banner-' + this.storageKey) === 'true'
+    mounted () {
+        // send event to toggle the notification on the first time
+        if (!this.sessionDismissed) {
+            themeEvents.$emit('notification-change', true)
         }
+
+        themeEvents.$on('notification-after-dismissed', (notification) => {
+            console.log(`Got new notification: ${notification}`)
+        })
+    },
+
+    computed: {
+        displayedMessage () {
+            const message = !this.shortMessage ? this.message : (window.innerWidth > 900 ? this.message : this.shortMessage)
+
+            return renderMd(message).replace('<p>', `<p style="margin: 0px; color: ${this.textColor}">`)
+        },
     },
 
     methods: {
         dismiss () {
-            if (this.isDismissed) return;
-            localStorage.setItem('notification-banner-' + this.storageKey, 'true')
-            themeEvents.$emit('notification-change', false)
+            const dismissed = themeEvents.getLocalStorageItem('notifications-dismissed').value || []
+            localStorage.setItem('notifications-dismissed', JSON.stringify({ value: dismissed.concat(this.storageKey) }))
+            themeEvents.$emit('notification-dismissed', this.storageKey)
+
+            console.log(`Dismissed notification ${this.storageKey}`)
         }
     },
 }
@@ -101,9 +105,10 @@ export default {
     width: 100%;
     background-color: var(--c-bg-light);
     top: 0;
+    left: 0;
     position: fixed;
     margin-bottom: 1rem;
-    margin-left: -1.5rem !important;
+    /* margin-left: -1.5rem !important; */
     padding: 0.3rem 1rem;
     display: flex;
     align-items: center;

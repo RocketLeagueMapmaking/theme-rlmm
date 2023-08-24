@@ -2,8 +2,13 @@
 actions:
     - text: Cheatsheet
       link: https://rocketleaguemapmaking.com/cheatsheets/
-    - text: Simple shark tutorial
+      external: false
+      type: tip
+    - text: Video tutorial
       link: /videos/
+      banner: false
+related:
+    - /docs/constants
 ---
 # Frontmatter
 
@@ -30,6 +35,7 @@ hero:
           link: /guide/
 recentSteamMaps:
     enabled: true
+    amount: 3
     type: expanded
 items:
     - title: Map contest
@@ -75,10 +81,17 @@ Item blocks to render in the right side menu, if enabled.
 
 ### actions
 
-- Type: `Array<LinkData>`
+- Type: `Array<ActionLinkData>`
 - Default: `[]`
 
 Add links to other pages / external websites to the right side menu, if enabled.
+
+### related
+
+- Type: `string[]`
+- Default: `[]`
+
+Related path(s), the part between `https://website` and `.html`, of pages that are displayed at the bottom of the page
 
 ## Typescript
 

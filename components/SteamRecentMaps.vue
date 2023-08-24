@@ -14,12 +14,15 @@
             </div>
         </div>
         <div v-else-if="type === 'list'">
-            <ItemList :items="convertToList()" :maxWidth="400" />
+            <ItemList :items="convertToList()" :maxWidth="400" :center="false" />
         </div>
         <div v-else-if="type === 'gallery'">
             <div v-for="map in maps" :key="map.id">
                 <img :src="map.preview.url" :alt="`Preview image for map: ${map.title}`">
             </div>
+        </div>
+        <div v-else-if="type === 'custom'">
+            <slot :maps="maps"></slot>
         </div>
     </div>
 </template>
@@ -43,11 +46,11 @@ export default {
             },
         },
         type: {
-            typee: String,
+            type: String,
             required: false,
             default: 'list',
             validator: function (value) {
-                return ['gallery', 'list', 'expanded'].indexOf(value) !== -1
+                return ['gallery', 'list', 'expanded', 'custom'].indexOf(value) !== -1
             },
         }
     },

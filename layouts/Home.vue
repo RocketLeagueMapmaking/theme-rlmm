@@ -26,9 +26,10 @@
             class="hero-actions"
             :href="action.link"
           >
-            <button :class="'primary' in action ? 'primary' : 'secondary'">
+            <v-btn :color="'primary' in action ? 'primary' : 'secondary'">
+              <Icon :icon="action.icon"/>
               {{ action.text }}
-            </button>
+            </v-btn>
           </a>
         </div>
 
@@ -77,7 +78,7 @@ export default {
 </style>
 
 <style scoped>
-@import '../style/shared/button.css';
+/* @import '../style/shared/button.css'; */
 
 .home-hero {
   height: calc(100vh - var(--navbar-height));

@@ -2,16 +2,9 @@ module.exports = {
     title: 'RLMM - theme',
     description: 'Website theme documentation for rocketleaguemapmaking.com',
     theme: '..',
-    icon: '',
+    icon: 'https://github.com/RocketLeagueMapmaking/RL-docs/blob/master/docs/.vuepress/public/icons/logo_rlmm_round_512.png?raw=true',
     evergreen: true,
     port: 8086,
-    head: [
-        ['script',
-            {
-                src: 'https://code.iconify.design/2/2.1.0/iconify.min.js'
-            }
-        ],
-    ],
     additionalPages: [
         {
             path: '/changelog.html',
@@ -20,7 +13,7 @@ module.exports = {
         }
     ],
     themeConfig: {
-        logo: '',
+        logo: 'https://github.com/RocketLeagueMapmaking/RL-docs/blob/master/docs/.vuepress/public/icons/logo_rlmm_round_512.png?raw=true',
         lastUpdated: 'Last updated',
         searchPlaceholder: 'Search...',
         repo: 'RocketLeagueMapmaking/theme-rlmm',
@@ -40,23 +33,33 @@ module.exports = {
         navbar: {
             title: 'RLMM',
             notifications: [
-                { 
-                    storageKey: 'guide0', 
-                    message: 'This is not the RLMM guide! [Visit the guide here](https://rocketleaguemapmaking.com).',
+                {
+                    storageKey: 'guide0',
+                    message: 'You are visiting the theme documentation. [Visit the guide here](https://rocketleaguemapmaking.com).',
                     shortMessage: '[Go to the RLMM guide](https://rocketleaguemapmaking.com).',
-                    color: 'var(--c-danger)',
-                    dismisseable: false,
-                    once: false,
+                    color: '#002E0C',
+                    dismisseable: true,
+                    once: true,
+                },
+                {
+                    storageKey: 'event0',
+                    message: 'Participate in the new mapmaking contest: Assymetry!',
+                    color: '#002E0C',
+                    dismisseable: true,
+                    once: true,
+                    priority: 1,
                 },
             ],
             icons: [
                 {
                     name: 'fa-brands:discord',
                     link: 'https://discord.gg/PWu3ZWa',
+                    tooltip: 'Discord',
                 },
                 {
                     name: 'fa-brands:github',
                     link: 'https://github.com/RocketLeagueMapmaking/theme-rlmm',
+                    tooltip: 'GitHub',
                 },
             ],
         },
@@ -68,9 +71,35 @@ module.exports = {
             {
                 text: 'Guide',
                 link: 'https://rocketleaguemapmaking.com'
-            }
+            },
+            {
+                text: 'Resources',
+                items: [
+                    {
+                        text: 'Roadmap',
+                        link: '/docs/'
+                    },
+                    {
+                        text: 'Contribute',
+                        items: [
+                            {
+                                text: 'Contributing guide',
+                                link: 'https://github.com/rocketleaguemapmaking/RL-Docs/'
+                            },
+                            {
+                                text: 'Discussions',
+                                link: 'https://github.com/rocketleaguemapmaking/RL-Docs/discussions'
+                            },
+                            {
+                                text: 'Patreon',
+                                link: 'https://www.patreon.com/rocketleaguemapmaking'
+                            }
+                        ]
+                    }
+                ],
+            },
         ],
-        sidebarDepth: 3,
+        sidebarDepth: 2,
         sidebar: {
             '/docs/': [
                 {

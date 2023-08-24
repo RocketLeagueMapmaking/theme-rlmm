@@ -1,6 +1,6 @@
 {
   "name": "vuepress-theme-rlmm",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "private": true,
   "description": "Theme for rocketleaguemapmaking.com",
   "homepage": "https://github.com/RocketLeagueMapmaking/theme-rlmm",
@@ -13,11 +13,16 @@
   },
   "scripts": {
     "docs:build": "vuepress build docs",
-    "docs:dev": "vuepress dev docs"
+    "docs:dev": "vuepress dev docs",
+    "scripts:dev": "node ./scripts/dev.js"
   },
   "main": "index.js",
   "devDependencies": {
-    "node-fetch": "2.6.10",
+    "@iconify/vue2": "^2.1.0",
+    "node-fetch": "2.6.11",
     "vuepress": "1.9.9"
+  },
+  "dependencies": {
+    "vuetify": "^2.6.15"
   }
 }

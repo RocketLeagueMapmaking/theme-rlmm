@@ -81,6 +81,9 @@ Change the position of the banner message
 <Banner message="This is a tip banner with a lot of content in the banner. So much that it overflows on the new line. Useful if you want to write a lot of text, but at this point make it a seperate paragraph" />
 <Banner message="This is no banner" :enabled="false" />
 
+<Banner type="warning" backgroundHoverColor="var(--c-warning-bg)"><p>Test</p>
+</Banner>
+
 ## ExternalLink
 
 Opens a link in a new window
@@ -101,7 +104,7 @@ The visible text in the hyperlink
 
 The name of [constant](constants.md) to use on this page. Assumes that the variable is a url.
 
-#### icon
+#### anchor
 
 - Type: `boolean`
 - Default: `true`
@@ -125,12 +128,12 @@ The link to open.
 <ExternalLink href="https://github.com/RocketLeagueMapMaking/theme-rlmm" name="Repo" />
 
 <!-- Without icon -->
-<ExternalLink global="DISCORD_INVITE" name="Discord" :icon=false />
+<ExternalLink global="DISCORD_INVITE" name="Discord" :anchor=false />
 <!-- Can also be local links -->
-<ExternalLink href="constants" name="Same site" :icon=false />
+<ExternalLink href="constants" name="Same site" :anchor=false />
 
 <!-- Use the default slot to place custom content in the link -->
-<ExternalLink global="DISCORD_INVITE" :icon=false>
+<ExternalLink global="DISCORD_INVITE" :anchor=false>
 <Banner message="Join the Discord server" type="info" icon="fa-brands:discord" />
 </ExternalLink>
 ```
@@ -139,10 +142,10 @@ The link to open.
 
 <ExternalLink global="DISCORD_INVITE" name="Discord" /><br>
 <ExternalLink href="https://github.com/RocketLeagueMapMaking/theme-rlmm" name="Repo" /><br>
-<ExternalLink global="DISCORD_INVITE" name="Discord" :icon=false /><br>
-<ExternalLink href="constants" name="Same site" :icon=false />
+<ExternalLink global="DISCORD_INVITE" name="Discord" :anchor=false /><br>
+<ExternalLink href="constants" name="Same site" :anchor=false />
 
-<ExternalLink global="DISCORD_INVITE" :icon=false>
+<ExternalLink global="DISCORD_INVITE" :anchor=false>
 <Banner message="Join the Discord server" type="info" icon="fa-brands:discord" />
 </ExternalLink>
 
@@ -157,7 +160,45 @@ Display items in a grid like style
 - Type: `Array<ItemListItem>`
 - Required: `true`
 
+## PatreonBanner
+
+<patreon-banner />
+
+### props
+
+#### message
+
+- Type: `string`
+- Required: `false`
+
 ## SteamRecentMaps
+
+### props
+
+- Type: `SteamRecentMapsProps`
+
+Show recent maps from the steam workshop in a component. Can also be configured in the YAML of the home screen.
+
+## TooltipText
+
+### props
+
+#### tooltip
+
+- Type: `string`
+- Required: `true`
+
+### Examples
+
+<tooltip-text tooltip="Surprise">
+<p>Hover over this text</p>
+</tooltip-text>
+
+```ts
+<tooltip-text tooltip="[redacted]">
+<p>Hover over this text</p>
+</tooltip-text>
+```
 
 ## Typescript
 

@@ -4,7 +4,7 @@
 
 ## Documentation
 
-See the [sandbox website][docs] folder for the documentation.
+See the [sandbox website][docs] for the documentation.
 
 ## Local development
 
@@ -20,4 +20,4 @@ When this theme has the requested features and is stable enough, this repo will 
 Note: this repo is only intended to be used in the [map making guide][docs_repo]
 
 [docs_repo]: https://github.com/rocketleaguemapmaking/rl-docs
-[docs]: https://theme.rocketleaguemapmaking.pages.dev/
+[docs]: https://theme-rlmm.pages.dev/

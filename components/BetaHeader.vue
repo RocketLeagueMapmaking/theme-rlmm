@@ -3,7 +3,7 @@
         :enabled="enabled" 
         :message="message" 
         type="warning" 
-        class="not-finished-banner" 
+        class="layout-rlmm-theme-wrapper not-finished-banner" 
     />
 </template>
 
@@ -32,6 +32,11 @@ export default {
 <style scoped>
 .not-finished-banner {
     margin-bottom: -3rem;
-    margin-top: calc(var(--navbar-height) + var(--navbar-padding-h));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 90vw;
+    margin-left: 20px;
 }
+
 </style>

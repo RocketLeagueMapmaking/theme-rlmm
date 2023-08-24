@@ -7,7 +7,9 @@ interface ItemListItem {
 
 interface SteamRecentMapsProps {
     enabled: boolean
+    // Default: Recent Steam maps
     title?: string
+    // Default: 3
     amount?: number
     type?: 'gallery' | 'list' | 'expanded'
 }

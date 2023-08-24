@@ -47,7 +47,17 @@ function getBooleanValue (value) {
     if (typeof value === 'string') return value === 'true'
 }
 
+function isNotificationEnabled (notification, pages, $page, isDismissed) {
+    const compareNeg = (prop, check) => (typeof prop === 'number' ? prop : (prop || { length: 0 }).length) > 0 ? check : true
+
+    return compareNeg(notification.pages, pages.some(slug => $page.slug === slug))
+        && compareNeg(notification.startDate, notification.startDate < Date.now())
+        && compareNeg(notification.endDate, notification.endDate > Date.now())
+        && (notification.once ? !isDismissed : true)
+}
+
 module.exports = {
     getBooleanValue,
-    findBestMatch
+    findBestMatch,
+    isNotificationEnabled,
 };

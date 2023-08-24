@@ -1,6 +1,6 @@
 <template>
-    <div class="page-sidebar" v-if="show">
-        <p v-if="headers.length > 0" style="margin: 0; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 2px solid var(--c-border); text-transform: uppercase; font-weight: 500;">{{ onThisPageTitle }}</p>
+    <div class="navbar-notification layout-rlmm-theme-wrapper page-sidebar" v-if="show">
+        <p v-if="headers.length > 0" class="page-sidebar-title">{{ onThisPageTitle }}</p>
         <div class="page-sidebar-headers" v-if="headers.length > 0">
             <div class="page-sidebar-header" v-for="header in headers" :key="header.slug">
                 <a 
@@ -23,7 +23,10 @@
         </div>
 
         <div class="page-sidebar-actions" v-for="item in ($page.frontmatter.actions || [])" :key="item.text">
-            <p><a :href="item.link">{{ item.text }}</a> <OutboundLink /></p>
+            <Banner :iconEnabled="false" :icon="item.icon" :type="item.type || 'info'" :backgroundHoverColor="`var(--c-${item.type || 'info'}-bg)`" textColor="var(--c-text)" v-if="item.banner == undefined || item.banner">
+                <ExternalLink :href="item.link" :anchor="item.external" :useAccentColor="false">{{ item.text }}</ExternalLink>
+            </Banner>
+            <ExternalLink v-else :href="item.link" :anchor="item.external">{{ item.text }}</ExternalLink>
         </div>
     </div>
 </template>
@@ -48,7 +51,7 @@ export default {
         const slug = this.$route.hash
         if (slug) this.activeHeader = slug
 
-        this.setEnabled(localStorage.getItem('settingsAppOverview'))
+        this.setEnabled(themeEvents.getLocalStorageItem('settingsAppOverview').value)
 
         themeEvents.$on('setting-change', (event) => {
             const { id, value } = JSON.parse(event)
@@ -63,6 +66,9 @@ export default {
         themeEvents.$on('window-resize', (event) => {
             this.windowWidth = event
         })
+
+        
+        if (this.tocSettings.title) this.onThisPageTitle = this.tocSettings.title
     },
 
     props: {
@@ -85,13 +91,22 @@ export default {
         slug: function () {
             return this.$route.hash
         },
+
+        settings: function () {
+            return (((this.$themeConfig.navbar || {}).settings || {}).page || {}).sideMenu || {}
+        },
+
+        tocSettings: function () {
+            return this.settings.toc || {}
+        },
+
         show: function () {
             return this.enabled && !this.$frontmatter.hideSidemenu && this.windowWidth >= this.minWidthSidemenu && (this.$page.headers || this.$page.frontmatter.items || this.$page.frontmatter.actions)
         },
 
         headers: function () {
             const _headers = this.$page.headers || []
-            const maxLevel = this.$themeConfig.sidebarDepth || 2
+            const maxLevel = this.tocSettings.depth || this.$themeConfig.sidebarDepth || 1
 
             return _headers.filter(n => n.level <= maxLevel)
         }
@@ -100,13 +115,22 @@ export default {
 </script>
 
 <style scoped>
+.page-sidebar-title {
+    margin: 0; 
+    margin-bottom: 6px; 
+    padding-bottom: 4px; 
+    border-bottom: 2px solid var(--c-border); 
+    /* text-transform: uppercase;  */
+    font-weight: 500;
+}
+
 .page-sidebar {
     padding: 1.5rem 0.5rem;
     border-radius: 6px;
     max-width: 12rem;
     width: 100%;
     overflow-y: auto;
-    top: calc(var(--navbar-height) + var(--navbar-padding-h));
+    /* top: calc(var(--navbar-height) + var(--navbar-padding-h)); */
     right: 2rem;
     position: fixed;
 }
@@ -121,7 +145,7 @@ export default {
 
 .page-sidebar-header a {
     font-weight: normal;
-    color: var(--c-text-lightest);
+    color: var(--c-text-lighter);
     border-left: 3px solid var(--c-border);
     padding-left: 1rem;
     margin: auto 0;

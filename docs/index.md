@@ -1,19 +1,22 @@
 ---
 layout: Home
-title: Rocket League Mapmaking
+title: Home
 editLink: false
+hideSidemenu: true
 hero: 
-    title: RLMM - theme
+    title: Theme
     background: https://rocketleague.media.zestyio.com/StarbaseARC2.jpg
     description: A playground for testing the theme
     actions:
         - text: Configuration
           link: /docs/
+          icon: fa6-solid:gear
           primary: true
         - text: View the guide
           link: https://rocketleaguemapmaking.com/
+          icon: fa6-solid:book-bookmark
 recentSteamMaps:
-    enabled: false
+    enabled: true
 items: [
     {
         title: Suggestions,
@@ -27,7 +30,7 @@ items: [
             },
             {
                 text: Chat on Discord,
-                link: {{ $page.global.DISCORD_INVITE }}
+                link: https://discord.gg/PWu3ZWa
             }
         ]  
     }

@@ -1,8 +1,10 @@
 <template>
-    <a :href="url" target="_blank" rel="noopener noreferrer">
-        <slot></slot>
-        <span v-if="name.length > 0">{{ name }}</span>
-        <OutboundLink v-if="icon" />
+    <a :href="url" target="_blank" rel="noopener noreferrer" :style="{ color: !useAccentColor ? 'var(--c-text)' : 'var(--c-brand)' }">
+        <Icon :icon="icon" v-if="icon.length > 0" />
+        <slot>
+            <span v-if="name.length > 0">{{ name }}</span>
+        </slot>
+        <OutboundLink v-if="anchor" />
     </a>
 </template>
 
@@ -14,6 +16,16 @@ export default {
             required: false,
             default: '',
         },
+        icon: {
+            type: String,
+            required: false,
+            default: '',
+        },
+        useAccentColor: {
+            type: Boolean,
+            required: false,
+            default: true,
+        },
         href: {
             type: String,
             required: false,
@@ -24,11 +36,11 @@ export default {
             required: false,
             default: '',
         },
-        icon: {
+        anchor: {
             type: Boolean,
             required: false,
             default: true,
-        }
+        },
     },
 
     mounted () {

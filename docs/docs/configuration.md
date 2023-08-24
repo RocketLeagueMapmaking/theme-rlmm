@@ -116,9 +116,23 @@ Override the title to use in the navbar
 
 Add icon links in the top right of the navbar. The name property is the [iconify](https://iconify.design) icon name.
 
-### Settings
+### notifications
 
-#### enabled
+- Type: `Notification[]`
+- Default: `[]`
+
+Show banners above the navigation bar. See the type definitions for all options in a notification.
+
+### notificationsUrl
+
+- Type: `string`
+- Default: `undefined`
+
+The url to send a `GET` fetch to. The request should return `Notification[]` as a JSON body. Only used when `notifications` is empty.
+
+### settings
+
+#### settings.enabled
 
 - Type: `boolean`
 - Default: `true`
@@ -133,21 +147,35 @@ By disabling this you will lose the options:
 Other options can be added manually (more easily)
 :::
 
-#### icon
+#### settings.icon
 
 - Type: `string`
 - Default: `fa-solid:sliders-h`
 
 The icon in the navbar for the settings
 
-#### pages
+#### settings.tooltip
+
+- Type: `string`
+- Default: `Settings`
+
+The tooltip text when hovering over the settings icon
+
+#### settings.disabledOptions
+
+- Type: `('sidemenu' | 'tooltips')[]`
+- Default: `[]`
+
+Hide toggleable options from the settings menu
+
+#### settings.pages <Badge text="removed in @0.4.0" type="error" />
 
 - Type: `Array<IconLinkData>`
 - Default: `[]`
 
 Add pages with an icon at the bottom of the settings menu. Can be used for less used pages such as a changelog.
 
-#### options
+<!-- #### options -->
 
 :::details Example configuration
 
@@ -158,14 +186,8 @@ module.exports = {
             icons: [],
             title: 'RLMM',
             settings: {
-                pages: [
-                    {
-                        name: 'Changelog',
-                        icon: 'bullhorn',
-                        link: '/changelog'
-                    }
-                ]
-            }
+                tooltip: 'Show settings'
+            },
         }
     }
 }

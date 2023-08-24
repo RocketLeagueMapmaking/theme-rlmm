@@ -51,7 +51,9 @@
 
       <div class="navbar-icons" v-if="icons.length > 0">
         <a :href="icon.link" v-for="icon in icons" :key="icon.name" class="navbar-icon">
-          <span class="iconify" :data-icon="icon.name" data-width="24"></span>
+            <tooltip-text :tooltip="icon.tooltip">
+                <Icon :icon="icon.name" width="24"/>
+            </tooltip-text>          
         </a>
       </div>
     </div>
@@ -69,6 +71,9 @@ import NavSettings from '@theme/components/NavSettings.vue'
 import NavInbox from '@theme/components/NavInbox.vue'
 
 import NotificationBanner from '@theme/components/NotificationBanner.vue'
+
+import { isNotificationEnabled } from '@theme/util/index.js'
+import { themeEvents } from '@theme/layouts/Layout.vue'
 
 export default {
   name: 'Navbar',
@@ -123,13 +128,47 @@ export default {
     window.addEventListener('resize', handleLinksWrapWidth, false)
 
     if (this.$themeConfig.navbar) {
-        const notifications = this.$themeConfig.navbar.notifications || []
-        // TODO: pick first one
-        this.notification = notifications[0] || null
+        themeEvents.$on('notification-dismissed', (dismissedStorageKey) => {
+          this.fetchNotifications(dismissedStorageKey)
+        })
+
+        this.fetchNotifications()
     }
   },
 
   methods: {
+      setActiveNotification (notifications, pages, $page, dismissedKey) {
+          const dismissedNotifications = themeEvents.getLocalStorageItem('notifications-dismissed').value || [];
+
+          const active = notifications
+              .filter(n => isNotificationEnabled(n, pages, $page, dismissedNotifications.includes(n.storageKey) || (dismissedKey ? dismissedKey === n.storageKey : false)))
+              .sort((a, b) => (b.priority || 0) - (a.priority || 0))
+            
+          if (active.length === 0) this.notification = null
+          else {
+            this.notification = active[0]
+            if (dismissedKey) themeEvents.$emit('notification-after-dismissed', active[0])
+          }
+
+          return active.length > 0
+      },
+    fetchNotifications (dismissedKey = null) {
+        const notifications = this.$themeConfig.navbar.notifications || []
+        const notificationsUrl = this.$themeConfig.navbar.notificationsUrl;
+
+        if (notifications.length > 0) {
+            return this.setActiveNotification(notifications, this.$site.pages, this.$page, dismissedKey)
+        } else if (typeof notificationsUrl === 'string') {
+          fetch(notificationsUrl)
+            .then(res => res.json())
+            .then(n => this.setActiveNotification(n, this.$site.pages, this.$page, dismissedKey))
+            .catch(err => { throw new Error(`Error while fetching notifications!`) })
+        } else {
+          console.log(`No notifications configured`)
+          return false
+        }
+    },
+
     navbarTitle () {
       const theme = this.$themeConfig
       if (theme && theme['navbar']) {
@@ -163,12 +202,15 @@ $navbar-notification-height = 2.2rem
   display flex
   flex-direction: row
   :not(:first-child)
-    margin-left 14px
+    margin-left 6px
 
 .navbar-icon
   display flex !important
   align-items center
-  color var(--c-text)
+  color var(--c-text) !important
+  span
+    display flex !important
+    align-items center
   :hover
     color var(--c-brand)
 
@@ -197,6 +239,8 @@ $navbar-notification-height = 2.2rem
     right $navbar-horizontal-padding
     top $navbar-vertical-padding
     display flex
+    align-items center
+    justify-content center
     .search-box
       flex: 0 0 auto
       vertical-align top

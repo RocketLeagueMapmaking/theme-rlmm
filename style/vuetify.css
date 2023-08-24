@@ -1,0 +1,18 @@
+/* Override vuetify style */
+* {
+    padding: revert;
+    margin: revert;
+}
+
+.v-list, .v-card, .v-sheet {
+    background-color: var(--c-bg) !important;
+}
+
+.v-application {
+    color: unset !important;
+    background-color: unset !important;
+}
+
+.v-btn {
+    text-transform: none !important;
+}
