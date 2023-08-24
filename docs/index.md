@@ -40,3 +40,10 @@ items: [
 <span style="margin: 0 auto; display: flex;justify-content: center;">
 {{ $page.global.RLMM_THEME.name }}@{{ $page.global.RLMM_THEME.version }} | Testing sandbox for the RLMM website
 </span>
+
+<!-- Only needed on home page, if more content is added -->
+<style scoped>
+.theme-default-content {
+    padding-right: 0 !important;
+}
+</style>

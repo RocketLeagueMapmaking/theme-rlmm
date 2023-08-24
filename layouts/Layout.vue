@@ -116,6 +116,7 @@ export default {
                     break;
                 case 'settingsAppOverview':
                     // changing the sidebar depth is done in PageSidebar.vue
+                    this.toggleSidebarDepth(!value)
                     break;
             }
         })

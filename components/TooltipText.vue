@@ -18,13 +18,12 @@ export default {
         },
     },
     data () {
-        const enabled = themeEvents.getLocalStorageItem('settingsAppTooltips').value
-
         return {
-            enabled,
+            enabled: false,
         }
     },
     mounted () {
+        this.enabled = themeEvents.getLocalStorageItem('settingsAppTooltips').value
         themeEvents.$on('setting-change', (event) => {
             const { id, value } = JSON.parse(event)
             if (id !== 'settingsAppTooltips') return;

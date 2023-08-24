@@ -38,7 +38,7 @@
                 <v-list flat rounded style="background-color: var(--c-bg-lighter) !important;">
                     <v-list-item v-if="isOptionEnabled('sidemenu')">
                         <v-list-item-action>
-                            <v-switch :value="!disableSideMenu" :disabled="windowWidth < minWidthSidemenu"
+                            <v-switch :input-value="!disableSideMenu" :disabled="windowWidth < minWidthSidemenu"
                                 @click="toggleSidemenu()" inset color="primary"></v-switch>
                         </v-list-item-action>
                         <v-list-item-title>
@@ -49,7 +49,7 @@
                     </v-list-item>
                     <v-list-item v-if="isOptionEnabled('tooltips')">
                         <v-list-item-action>
-                            <v-switch :value="enableTooltips" @click="toggleTooltips()" inset color="primary"></v-switch>
+                            <v-switch :input-value="enableTooltips" @click="toggleTooltips()" inset color="primary"></v-switch>
                         </v-list-item-action>
                         <v-list-item-title>
                             <tooltip-text tooltip="Show tooltips when hovering options and text">
@@ -70,14 +70,6 @@ import { getBooleanValue } from '@theme/util/index.js'
 
 export default {
     data() {
-        const enableTooltips = this.getItem('settingsAppTooltips', 'boolean')
-        const disableSideMenu = this.getItem('settingsAppOverview', 'boolean')
-
-        console.log({
-            enableTooltips,
-            disableSideMenu,
-        })
-
         return {
             configuration: {
                 icon: 'fa-solid:sliders-h',
@@ -94,8 +86,8 @@ export default {
                     { text: 'System', value: 'system', icon: 'fa6-solid:computer' },
                 ],
             ],
-            disableSideMenu,
-            enableTooltips,
+            disableSideMenu: true,
+            enableTooltips: false,
 
             showSettings: false,
             disableSettings: false,
@@ -106,7 +98,18 @@ export default {
     },
 
     mounted () {
-        this.storage = Object.entries(localStorage)
+        this.storage = Object.entries(window.localStorage)
+
+        const enableTooltips = this.getItem('settingsAppTooltips', 'boolean')
+        const disableSideMenu = this.getItem('settingsAppOverview', 'boolean')
+
+        console.log({
+            enableTooltips,
+            disableSideMenu,
+        })
+
+        this.enableTooltips = enableTooltips
+        this.disableSideMenu = disableSideMenu
 
         if (this.$themeConfig.navbar) {
             const { icon, tooltip, settings } = this.$themeConfig.navbar
