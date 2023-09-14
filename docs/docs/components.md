@@ -149,6 +149,20 @@ The link to open.
 <Banner message="Join the Discord server" type="info" icon="fa-brands:discord" />
 </ExternalLink>
 
+## Icon
+
+A component for iconify icons. Use the `icon` property with the `library:name` for the icon to show.
+
+### Examples
+
+:::v-pre
+
+```md
+<Icon icon="fa-brands:discord" />
+:::
+
+<Icon icon="fa-brands:discord" />
+
 ## ItemList
 
 Display items in a grid like style
@@ -199,7 +213,3 @@ Show recent maps from the steam workshop in a component. Can also be configured 
 <p>Hover over this text</p>
 </tooltip-text>
 ```
-
-## Typescript
-
-<<< @/docs/docs/types/components.d.ts

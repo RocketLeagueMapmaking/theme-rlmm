@@ -1,8 +1,10 @@
 # Theme configuration
 
-Extra options are available for the theme configuration:
+Extra options are available for the theme configuration. See the [configuration reference](/reference/interfaces/theme.ThemeOptions.html) for the definitions of the configuration.
 
 ## Not found
+
+Configure the [not found](/404) page to make it more useful when you land there
 
 ### background
 
@@ -72,27 +74,29 @@ module.exports = {
 ## Not finished
 
 Options for displaying [the not finished banner](examples/finished.md).
-This can be shown on a page with [the `finished` frontmatter](frontmatter.md#normal-page)
+This can be shown on a page with [the `finished` frontmatter](frontmatter.md#finished)
 
-### message
+- Type: `notFinishedSettings`
 
-- Type: `string`
-- Default: `This page is not finished yet, check back later or contribute to this page!`
+:::details Example configuration
 
-The message to display in the banner
+```js
+module.exports = {
+    themeConfig: {
+        notFinished: {
+            message: 'This page is not finished'
+        }
+    }
+}
+```
 
-### hidePage
-
-- Type: `boolean`
-- Default: `false`
-
-Whether to hide pages in the navbar and sidebar that are marked as not finished.
+:::
 
 ## Navbar
 
 :::tip Hide GitHub repo link
 
-Add the following `styl` to hide the GitHub link in the navbar:
+Add the following to hide the GitHub link in the navbar to `/.vuepress/styles/index.styl`:
 
 ```css
 .nav-links .repo-link {
@@ -102,80 +106,9 @@ Add the following `styl` to hide the GitHub link in the navbar:
 
 :::
 
-### title
+To display notification banners, use the [`notifications`](/reference/interfaces/theme.NavbarOptions.html#notifications) or [`notificationsUrl`](/reference/interfaces/theme.NavbarOptions.html#notificationsurl) property.
 
-- Type: `string`
-- Default: `$siteConfig.title`
-
-Override the title to use in the navbar
-
-### icons
-
-- Type: `Array<NameLinkData>`
-- Default: `[]`
-
-Add icon links in the top right of the navbar. The name property is the [iconify](https://iconify.design) icon name.
-
-### notifications
-
-- Type: `Notification[]`
-- Default: `[]`
-
-Show banners above the navigation bar. See the type definitions for all options in a notification.
-
-### notificationsUrl
-
-- Type: `string`
-- Default: `undefined`
-
-The url to send a `GET` fetch to. The request should return `Notification[]` as a JSON body. Only used when `notifications` is empty.
-
-### settings
-
-#### settings.enabled
-
-- Type: `boolean`
-- Default: `true`
-
-Whether to show the settings menu on every page.
-
-:::danger Hidden options
-By disabling this you will lose the options:
-
-- theme switching
-
-Other options can be added manually (more easily)
-:::
-
-#### settings.icon
-
-- Type: `string`
-- Default: `fa-solid:sliders-h`
-
-The icon in the navbar for the settings
-
-#### settings.tooltip
-
-- Type: `string`
-- Default: `Settings`
-
-The tooltip text when hovering over the settings icon
-
-#### settings.disabledOptions
-
-- Type: `('sidemenu' | 'tooltips')[]`
-- Default: `[]`
-
-Hide toggleable options from the settings menu
-
-#### settings.pages <Badge text="removed in @0.4.0" type="error" />
-
-- Type: `Array<IconLinkData>`
-- Default: `[]`
-
-Add pages with an icon at the bottom of the settings menu. Can be used for less used pages such as a changelog.
-
-<!-- #### options -->
+If the url is present and no notifications are left to be displayed, the url will be used to send a `GET` request to. The request should return [`SiteNotification[]`](/reference/interfaces/theme.SiteNotification) as a JSON body.
 
 :::details Example configuration
 
@@ -183,19 +116,120 @@ Add pages with an icon at the bottom of the settings menu. Can be used for less 
 module.exports = {
     themeConfig: {
         navbar: {
-            icons: [],
             title: 'RLMM',
-            settings: {
-                tooltip: 'Show settings'
-            },
+            icons: [
+                {
+                    name: 'fa-brands:discord',
+                    link: 'https://discord.gg/PWu3ZWa',
+                    tooltip: 'Discord',
+                },
+                {
+                    name: 'fa-brands:github',
+                    link: 'https://github.com/RocketLeagueMapmaking/theme-rlmm',
+                    tooltip: 'GitHub',
+                }
+            ]
         }
     }
 }
-
 ```
 
 :::
 
-## Typescript
+### Navbar settings
 
-<<< @/docs/docs/types/theme.d.ts
+:::danger Hidden options
+By disabling the default settings this you will lose the default options:
+
+- theme switching
+- tooltips toggle
+- new layout option
+
+You also have the option to disable the default toggles and keep the theme switching.
+See the example configurations for all options.
+:::
+
+To switch from the default settings menu to only a dark/light mode switch, use the `overwriteThemeSwitcher` property:
+
+```js
+module.exports = {
+    themeConfig: {
+        navbar: {
+            settings: {
+                overwriteThemeSwitcher: false,
+            }
+        }
+    }
+}
+```
+
+:::details Example configuration
+
+```js
+// Disabled
+module.exports = {
+    themeConfig: {
+        navbar: {
+            settings: {
+                enabled: false,
+            }
+        }
+    }
+}
+
+// Configuration that changes only the appearance
+module.exports = {
+    themeConfig: {
+        navbar: {
+            settings: {
+                tooltip: 'Guide settings',
+                icon: 'fa-brands:github',
+            }
+        }
+    }
+}
+
+// Disabled default toggles
+module.exports = {
+    themeConfig: {
+        navbar: {
+            settings: {
+                disabledToggles: true,
+            }
+        }
+    }
+}
+
+module.exports = {
+    themeConfig: {
+        navbar: {
+            settings: {
+                // Only disable new layout option
+                disabledToggles: ['sidemenu'],
+            }
+        }
+    }
+}
+
+// Add a custom toggle next to the default toggles
+//Combine with `disabledToggles: true` to only have the custom toggles
+module.exports = {
+    themeConfig: {
+        navbar: {
+            settings: {
+                toggles: [
+                    {
+                        id: 'resources',
+                        storageId: 'settingsAppResources',
+                        key: 'enableResources',
+                        text: 'Hide resources',
+                        tooltip: 'Don\'t show page resources at the top',
+                        invert: true,
+                    }
+                ],
+
+            }
+        }
+    }
+}
+:::

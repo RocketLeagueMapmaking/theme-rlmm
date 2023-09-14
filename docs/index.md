@@ -42,8 +42,8 @@ items: [
 </span>
 
 <!-- Only needed on home page, if more content is added -->
-<style scoped>
+<!-- <style scoped>
 .theme-default-content {
     padding-right: 0 !important;
 }
-</style>
+</style> -->

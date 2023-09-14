@@ -72,6 +72,13 @@ finished: false
 
 Overwrite all settings for the right side menu to hide on the current page
 
+### watch
+
+- Type: `boolean`
+- Default: `true`
+
+Overwrite the setting for showing the watching banner on the bottom of the page
+
 ### items
 
 - Type: `Array<{ title: string; description: string; color?: string }>`
@@ -91,8 +98,11 @@ Add links to other pages / external websites to the right side menu, if enabled.
 - Type: `string[]`
 - Default: `[]`
 
-Related path(s), the part between `https://website` and `.html`, of pages that are displayed at the bottom of the page
+Related path(s), the part between `https://website` and `.html`, of pages that are displayed at the bottom of the page.
 
-## Typescript
+The current frontmatter of this page includes:
 
-<<< @/docs/docs/types/frontmatter.d.ts
+```yaml
+related:
+    - /docs/constants
+```

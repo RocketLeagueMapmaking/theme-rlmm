@@ -1,7 +1,10 @@
+const fs = require('fs') 
+const { resolve } = require('path')
+
 module.exports = {
     title: 'RLMM - theme',
     description: 'Website theme documentation for rocketleaguemapmaking.com',
-    theme: '..',
+    theme: resolve('.', 'theme/index.js'),
     icon: 'https://github.com/RocketLeagueMapmaking/RL-docs/blob/master/docs/.vuepress/public/icons/logo_rlmm_round_512.png?raw=true',
     evergreen: true,
     port: 8086,
@@ -9,7 +12,21 @@ module.exports = {
         {
             path: '/changelog.html',
             content: '<style>.page-edit { display: none }</style>',
-            frontmatter: { layout: 'Changelog', sidebar: 'auto' },
+            frontmatter: {
+                layout: 'Changelog',
+                title: 'Changelog',
+                sidebar: 'auto',
+            },
+        },
+        {
+            path: '/watching.html',
+            content: '<PageWatchOverview />',
+            frontmatter: {
+                title: 'Manage page watching',
+                sidebar: false,
+                watch: false,
+                hideSidemenu: true,
+            }
         }
     ],
     themeConfig: {
@@ -28,7 +45,7 @@ module.exports = {
 
         smoothScroll: true,
         changelog: {
-            items: [],
+            content: fs.readFileSync(resolve('.', 'CHANGELOG.md'), { encoding: 'utf8' }),
         },
         navbar: {
             title: 'RLMM',
@@ -62,6 +79,9 @@ module.exports = {
                     tooltip: 'GitHub',
                 },
             ],
+            settings: {
+                overwriteThemeSwitcher: false,
+            },
         },
         nav: [
             {
@@ -69,8 +89,8 @@ module.exports = {
                 link: '/docs/'
             },
             {
-                text: 'Guide',
-                link: 'https://rocketleaguemapmaking.com'
+                text: 'Reference',
+                link: '/reference/'
             },
             {
                 text: 'Resources',
@@ -78,6 +98,14 @@ module.exports = {
                     {
                         text: 'Roadmap',
                         link: '/docs/'
+                    },
+                    {
+                        text: 'Changelog',
+                        link: '/changelog'
+                    },
+                    {
+                        text: 'Watched pages',
+                        link: '/watching'
                     },
                     {
                         text: 'Contribute',
@@ -111,6 +139,7 @@ module.exports = {
                         'frontmatter',
                         'components',
                         'constants',
+                        'vuetify',
                         {
                             title: 'Examples',
                             collapsable: true,
@@ -121,6 +150,8 @@ module.exports = {
                     ]
                 }
             ],
+            // TODO: improve sidebar
+            '/reference/': 'auto',
         }
     }
 }

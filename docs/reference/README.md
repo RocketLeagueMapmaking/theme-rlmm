@@ -1,3 +1,5 @@
+vuepress-theme-rlmm / [Exports](modules.md)
+
 # vuepress-theme-rlmm
 
 > (future) theme for [the Rocket League map making guide][docs_repo]
