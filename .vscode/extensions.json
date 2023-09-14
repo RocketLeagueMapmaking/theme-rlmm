@@ -1,0 +1,14 @@
+{
+    "recommendations": [
+        "antfu.iconify",
+        "dbaeumer.vscode-eslint",
+        "hookyqr.jsdoctagcomplete",
+        "yzhang.markdown-all-in-one",
+        "davidanson.vscode-markdownlint",
+        "christian-kohler.npm-intellisense",
+        "christian-kohler.path-intellisense",
+        "octref.vetur",
+        "zixuanchen.vitest-explorer",
+        "vue.volar"
+    ]
+}
