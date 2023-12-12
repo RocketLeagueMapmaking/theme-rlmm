@@ -1,6 +1,7 @@
 {
-  "name": "vuepress-theme-rlmm",
-  "version": "0.5.0",
+  "name": "vitepress-theme-rlmm",
+  "version": "0.1.0",
+  "type": "module",
   "private": true,
   "description": "Theme for rocketleaguemapmaking.com",
   "homepage": "https://github.com/RocketLeagueMapmaking/theme-rlmm",
@@ -12,21 +13,16 @@
     "url": "git+https://github.com/rocketleaguemapmaking/theme-rlmm.git"
   },
   "scripts": {
-    "docs:build": "vuepress build docs",
-    "docs:dev": "vuepress dev docs",
-    "docs:reference": "typedoc",
-    "scripts:dev": "node ./lib/scripts/dev.js"
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
-  "main": "theme/index.js",
+  "main": "lib/index.ts",
   "devDependencies": {
-    "@iconify/vue2": "^2.1.0",
-    "@vuepress/plugin-pwa": "^1.9.10",
-    "node-fetch": "2.6.11",
-    "typedoc": "^0.25.1",
-    "typedoc-plugin-markdown": "^3.16.0",
-    "vuepress": "1.9.10"
+    "typescript": "^5.3.3"
   },
   "dependencies": {
-    "vuetify": "^2.7.1"
+    "vitepress": "1.0.0-rc.31",
+    "vue": "^3.3.11"
   }
 }

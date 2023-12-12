@@ -1,4 +1,4 @@
-# vuepress-theme-rlmm
+# vitepress-theme-rlmm
 
 > (future) theme for [the Rocket League map making guide][docs_repo]
 
@@ -8,10 +8,9 @@ See the [sandbox website][docs] for the documentation.
 
 ## Local development
 
-1. Clone this repo and the [repo of the website][docs_repo]
-2. Set the theme in `config.js` to the local path of the theme repo
-3. Start a local webserver for the website
-4. Changes made to the theme folder will be synced with the local website
+```sh
+npm run docs:dev
+```
 
 To format the `.Vue` files use the `Volar` extension as a default formatter.
 
