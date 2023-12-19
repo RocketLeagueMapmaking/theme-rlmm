@@ -98,7 +98,7 @@ html {
     z-index: var(--vp-z-index-layout-top);
     padding: 8px;
     text-align: center;
-    color: var(--vp-c-text-1);
+    color: var(--vp-c-white);
     display: flex;
     justify-content: space-between;
 }

@@ -86,6 +86,10 @@ export default defineConfigWithTheme<RLMMThemeConfig>({
                         {
                             text: 'Getting started',
                             link: '/udk/'
+                        },
+                        {
+                            text: 'References',
+                            link: '/udk/reference',
                         }
                     ]
                 }
@@ -123,6 +127,27 @@ export default defineConfigWithTheme<RLMMThemeConfig>({
                     text: 'Utilities',
                     link: '/theme/util',
                 },
+                {
+                    text: 'Windows',
+                    items: [
+                        {
+                            text: 'Overview',
+                            link: '/theme/windows/',
+                        },
+                        {
+                            text: 'Tree',
+                            link: '/theme/windows/tree',
+                        },
+                        {
+                            text: 'List',
+                            link: '/theme/windows/list',
+                        },
+                        {
+                            text: 'Rocket League',
+                            link: '/theme/windows/guide'
+                        }
+                    ],
+                }
             ]
         },
 

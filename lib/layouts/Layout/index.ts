@@ -20,8 +20,13 @@ export default function defineDefaultLayout(Layout: DefineComponent) {
         loadingComponent: h(Layout, {}, { 
             'home-features-after': () => {
                 return h('p', { 
-                    class: 'home-resources' 
-                }, 'Loading...') 
+                    class: 'home-resources' ,
+                    style: {
+                        textAlign: 'center',
+                        margin: '100px 0',
+                    },
+                    innerHTML: 'Loading...<br><br>You seem to be offline, reload the page to try again...'
+                }) 
             }
         }),
         loader: async () => {

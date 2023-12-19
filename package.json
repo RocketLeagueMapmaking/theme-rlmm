@@ -1,6 +1,6 @@
 {
   "name": "vitepress-theme-rlmm",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "private": true,
   "description": "Theme for rocketleaguemapmaking.com",
@@ -22,7 +22,8 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "vitepress": "1.0.0-rc.31",
-    "vue": "^3.3.11"
+    "@vueuse/core": "^10.7.0",
+    "vitepress": "1.0.0-rc.32",
+    "vue": "^3.3.13"
   }
 }

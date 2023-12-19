@@ -229,6 +229,11 @@ Shows the most recent published / updated maps on the Rocket League Steam worksh
 | disableClick    | `boolean`                     | `false`               | Option to disable going to the next map by clicking on the current map. Will open the map on clicking |
 | urlProtocol     | [url protocol](#url-protocol) | `setting-windows`     | Where to open Steam urls                                                                              |
 
+:::tip Colored title
+The `title` option renders as HTML making it customisable to style.
+By default any `span` element in the title will be the brand color.
+:::
+
 ### Url protocol
 
 The local storage key `rlmm-urls-steam` is used to read the user settings

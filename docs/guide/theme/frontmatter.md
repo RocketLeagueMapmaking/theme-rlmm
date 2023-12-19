@@ -38,7 +38,7 @@ The text on the support button at the bottom.
 
 #### sponsors.data
 
-The current sponsors
+The current sponsors grouped by tier
 
 ```ts
 type SponsorData = {
@@ -54,6 +54,24 @@ type SponsorData = {
 #### sponsors.dataUrl
 
 The url that returns a JSON response of `SponsorData`. This option can be used instead of [data](#sponsorsdata).
+
+### promotion
+
+#### promotion.image
+
+The image path / url for the large promotion banner
+
+#### promotion.title
+
+Type: `string | { image: string }`
+
+#### promotion.description
+
+The HTLM description
+
+#### promotion.actions
+
+Type: [`HeroAction[]`](https://vitepress.dev/reference/default-theme-home-page#hero-section)
 
 ## Normal page
 

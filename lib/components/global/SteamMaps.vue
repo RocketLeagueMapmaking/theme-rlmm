@@ -2,10 +2,11 @@
     <Suspense v-if="enabled">
         <div class="container">
             <div class="steam-maps">
-                <p class="steam-maps-title" v-if="title.length > 0">
-                    {{ title }}
+                <p class="steam-maps-title" v-if="title.length > 0" v-html="title">
                 </p>
                 <div class="steam-map" v-for="map, index in maps" :key="map.id">
+                    <VPIconChevronLeft class="steam-maps-icon" v-if="showIcon(index, 'left')"
+                        @click="goToNextMap(true, -1)" />
                     <div class="steam-map-active" v-if="index === active" @click="goToNextMap(true)">
                         <p :style="{ fontWeight: 'bold' }">
                             {{ map.title }}
@@ -23,6 +24,8 @@
                             <VPButton theme="alt" text="Download" :href="itemDownloadUrl(map)" />
                         </div>
                     </div>
+                    <VPIconChevronRight class="steam-maps-icon" v-if="showIcon(index, 'right')"
+                        @click="goToNextMap(true)" />
                 </div>
             </div>
         </div>
@@ -36,8 +39,14 @@
 <script setup lang="ts">
 import { onMounted, ref, withDefaults } from 'vue'
 
+import { VPIconChevronLeft, VPIconChevronRight } from '../theme'
+
 import { getPlatform, useStorage } from '../../data/'
 import type { SteamMap } from '../../types'
+
+type SteamMapIconType =
+    | 'left'
+    | 'right'
 
 interface Props {
     amount?: number
@@ -52,6 +61,9 @@ interface Props {
     displayTime?: number
     disableClick?: boolean
     enabled?: boolean
+    iconsEnabled?:
+    | boolean
+    | Record<SteamMapIconType, boolean>
     handleException?: (err: unknown) => void
 }
 
@@ -64,6 +76,7 @@ const props = withDefaults(defineProps<Props>(), {
     sortBy: 'created',
     urlProtocol: 'setting-windows',
     enabled: true,
+    iconsEnabled: true,
     disableClick: false,
     displayTime: 10_000,
     handleException: console.error,
@@ -113,15 +126,29 @@ async function fetchSteamMaps(options: Required<Props>) {
     }
 }
 
+function showIcon(index: number, type: SteamMapIconType) {
+    const enabled = typeof props.iconsEnabled === 'boolean'
+        ? props.iconsEnabled
+        : props.iconsEnabled[type]
+
+    return index === active.value
+        && enabled
+        && maps.value.length > 1
+}
+
 /**
  * Change the active index to move to a new map
  * @param isClick Whether the change is caused by clicking (can also be the timer)
+ * @param [dIndex=1] Control the step size. Use a negative value to go back
  */
-function goToNextMap(isClick?: boolean) {
+function goToNextMap(isClick?: boolean, dIndex = 1) {
     if (maps.value.length < 2) return
     if (isClick && props.disableClick) return
 
-    active.value = (active.value + 1 === maps.value.length) ? 0 : (active.value + 1)
+    if (dIndex > 0)
+        active.value = (active.value + dIndex >= maps.value.length) ? 0 : (active.value + dIndex)
+    else if (dIndex < 0)
+        active.value = ((active.value + dIndex) < 0) ? (maps.value.length + dIndex) : active.value + dIndex
 }
 
 onMounted(async () => {
@@ -147,9 +174,26 @@ onMounted(async () => {
 <style scoped>
 .steam-maps-title {
     font-weight: bold;
+    font-size: larger;
+    margin: 20px 30px;
+}
+
+.steam-maps-title :deep(span) {
+    color: var(--vp-c-brand-1);
+}
+
+.steam-maps-icon {
+    fill: var(--vp-c-neutral);
+    min-width: 30px;
+}
+
+.steam-map {
+    display: flex;
+    justify-content: center;
 }
 
 .steam-map-active:hover,
+.steam-maps-icon:hover,
 .VPImage:hover {
     cursor: pointer;
 }
@@ -194,6 +238,10 @@ onMounted(async () => {
     .steam-map-active {
         padding: 10px !important;
         text-align: center !important;
+    }
+
+    :deep(.steam-map-img) {
+        margin: 0px !important;
     }
 }
 </style>

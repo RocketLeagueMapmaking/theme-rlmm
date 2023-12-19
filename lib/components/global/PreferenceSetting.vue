@@ -77,11 +77,6 @@ input {
     border: 1px solid var(--vp-c-brand-3);
 }
 
-.VPSwitch.enabled:deep(.check) {
-    background-color: var(--vp-c-brand-3);
-    transform: translateX(18px);
-}
-
 .custom-block .setting {
     padding: 10px 18px !important;
 }

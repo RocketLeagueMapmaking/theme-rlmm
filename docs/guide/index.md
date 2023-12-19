@@ -15,6 +15,7 @@ hero:
       text: UDK Guide
       link: /udk/
   steam:
+    title: <span>New</span> Steam workshop
     enabled: true
     amount: 3
 
@@ -63,10 +64,12 @@ events:
 
 promotion:
     image: https://rocketleague.media.zestyio.com/rl_home_f2p-launch_cross_10656.jpg?width=1920&fit=bounds
-    titleImage: https://skillquest.io/wp-content/uploads/2022/08/Skillquest-Coding-Camps-and-Education-for-Rocket-League-Players.png
+    title:
+        image: https://skillquest.io/wp-content/uploads/2022/08/Skillquest-Coding-Camps-and-Education-for-Rocket-League-Players.png
     description: Learn map making in a video tutorial course.<br><br>Some more text about the course and why you should choose it over regular videos if you have the money for it
-    actionText: Read more
-    actionLink: https://learn.skillquest.io/landing/1699993747535x796931164922708000
+    actions:
+        - text: Read more
+          link: https://learn.skillquest.io/landing/1699993747535x796931164922708000
 
 sponsors:
   title: Patreon shoutout
