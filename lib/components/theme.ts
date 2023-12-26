@@ -5,10 +5,10 @@ import {
     VPImage,
 } from 'vitepress/theme'
 
-import VPFeatures from '../../node_modules/vitepress/dist/client/theme-default/components/VPFeatures.vue'
-import VPLink from '../../node_modules/vitepress/dist/client/theme-default/components/VPLink.vue'
-import VPSwitch from '../../node_modules/vitepress/dist/client/theme-default/components/VPSwitch.vue'
-import VPSwitchAppearance from '../../node_modules/vitepress/dist/client/theme-default/components/VPSwitchAppearance.vue'
+import VPFeatures from 'vitepress/dist/client/theme-default/components/VPFeatures.vue'
+import VPLink from 'vitepress/dist/client/theme-default/components/VPLink.vue'
+import VPSwitch from 'vitepress/dist/client/theme-default/components/VPSwitch.vue'
+import VPSwitchAppearance from 'vitepress/dist/client/theme-default/components/VPSwitchAppearance.vue'
 
 import VPIconArrowRight from "vitepress/dist/client/theme-default/components/icons/VPIconArrowRight.vue";
 import VPIconArrowLeft from "vitepress/dist/client/theme-default/components/icons/VPIconArrowLeft.vue";
