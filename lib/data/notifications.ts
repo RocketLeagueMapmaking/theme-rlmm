@@ -88,23 +88,24 @@ class NotificationsHandler {
     private getItem?: (key: string) => string | null
     public getWatchedPages: () => WatchedPages = () => []
 
-    public enabled: boolean
-
-    public constructor (window: Window, onMounted?: boolean) {
-        this.enabled = window != undefined
+    public get enabled (): boolean {
+        return window != undefined
             && 'navigator' in window 
             && window.navigator != undefined
             && "Notification" in window
             && 'PushManager' in window
             && 'serviceWorker' in window.navigator 
             && 'localStorage' in window
+    }
 
+    public constructor () {
         if (!this.enabled) {
-            if (onMounted) console.error('Missing one or more features to enable notifications!')
+            console.error('Missing one or more features to enable notifications!')
         } else {
-            this.getWatchedPages = () => useStorage().getWatchedPages()
-            this.setItem = (key, value) => window.localStorage.setItem(key, value)
-            this.getItem = (key) => window.localStorage.getItem(key)
+            const storage = useStorage()
+            this.getWatchedPages = () => storage.getWatchedPages()
+            this.setItem = (key, value) => storage.set(key, value)
+            this.getItem = (key) => storage.get(key)
         }
     }
 
@@ -125,7 +126,7 @@ class NotificationsHandler {
     }
 
     private createDeviceId () {
-        const idKey = 'device-rlmm-push-id'
+        const idKey = 'device-notifications-push-id'
         if (!this.getItem || !this.setItem) return console.error('Unable to access local storage')
 
         const id: string | null = this.getItem(idKey)
@@ -149,7 +150,7 @@ class NotificationsHandler {
 
     public async getNotifications (tag?: string) {
         return (await this.getWorker())
-            .getNotifications({ tag })
+            ?.getNotifications({ tag })
     }
 
     public async showNotification (title: string, options?: NotificationOptions) {
@@ -161,9 +162,9 @@ class NotificationsHandler {
 }
 
 export function useNotifications () {
-    const handler = ref<NotificationsHandler>(new NotificationsHandler(null))
+    const handler = ref<NotificationsHandler | null>(null)
 
-    onMounted(() => handler.value = new NotificationsHandler(window, true))
+    onMounted(() => handler.value = new NotificationsHandler())
 
     return handler
 }

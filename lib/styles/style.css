@@ -3,6 +3,10 @@
  * https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css
  */
 
+@import './theme.css';
+@import './home.css';
+@import './sponsor.css';
+
 /**
  * Colors
  *
@@ -81,10 +85,6 @@
     --vp-button-brand-active-bg: var(--vp-c-brand-1);
 }
 
-.VPButton {
-    border-radius: 6px !important;
-}
-
 /**
  * Component: Home
  * -------------------------------------------------------------------------- */
@@ -96,33 +96,6 @@
             var(--vp-c-brand-2) 70%,
             var(--vp-c-brand-1) 100%);
 }
-
-.home-resources {
-    position: relative;
-    margin: 30px 0 20px 0;
-    font-weight: bold;
-    font-size: large;
-}
-
-.home-resources p {
-    margin: 0 auto;
-    max-width: 1152px;
-}
-
-.home-resources {
-    position: relative;
-    padding: 0 24px;
-  }
-  @media (min-width: 640px) {
-  .home-resources {
-      padding: 0 48px;
-  }
-  }
-  @media (min-width: 960px) {
-  .home-resources {
-      padding: 0 64px;
-  }
-  }
 
 /**
  * Component: Custom Block
@@ -150,53 +123,4 @@
 
 :root {
     --vp-c-sponsor: var(--vp-c-yellow-1);
-}
-
-.vp-sponsor-grid-box .visually-hidden {
-    visibility: visible;
-    display: flex;
-    width: initial;
-    height: initial;
-    clip: initial;
-    clip-path: none;
-    position: relative;
-    padding: 10px;
-}
-
-.vp-sponsor-grid-item:hover {
-    color: var(--vp-c-brand-1) !important;
-}
-
-.vp-sponsor-grid-image {
-    filter: none !important
-}
-
-.vp-sponsor-grid-box {
-    /* display: flex; */
-    flex-direction: row-reverse;
-    flex-wrap: wrap;
-    align-content: center;
-    /* justify-content: center; */
-}
-
-.VPHomeSponsors {
-    margin-top: 0 !important;
-    border-top: none !important;
-}
-
-/**
- * Component: HTML
- * -------------------------------------------------------------------------- */
-
-input,
-select,
-option {
-    background-color: var(--vp-c-bg-soft);
-    border-radius: 4px;
-    padding: 4px 8px;
-}
-
-.VPSwitch.enabled .check {
-    background-color: var(--vp-c-brand-3);
-    transform: translateX(18px);
 }

@@ -1,6 +1,8 @@
 import type { PageData, DefaultTheme } from 'vitepress'
 import type { RLMMNotification } from './notification'
 
+import type { BlockPosition, BlockRenderOptions, NotFinishedOptions } from './theme/blocks'
+
 export type SponsorData = {
     tier: string
     items: {
@@ -9,6 +11,12 @@ export type SponsorData = {
         url: string
     }[]
 }[]
+
+export type {
+    BlockPosition,
+    BlockRenderOptions,
+    NotFinishedOptions,
+}
 
 export interface RLMMThemeConfig extends DefaultTheme.Config {
     /**
@@ -79,4 +87,66 @@ export interface RLMMThemeConfig extends DefaultTheme.Config {
          */
         dataUrl?: string
     }
+
+    /**
+     * Enhance a page with custom blocks placed at the top and/or bottom
+     */
+    blocks?: {
+        /**
+         * Enabled:
+         * - false: no custom blocks
+         * - true: all custom blocks
+         * - 'top': only blocks at the top of the page
+         * - 'bottom': only blocks at the bottom of the page
+         */
+        enabled?: boolean | BlockPosition
+
+        /**
+         * Blocks rendered on a page without setting the frontmatter on the page itself
+         */
+        default?:
+            | Exclude<BlockRenderOptions, false>[]
+            | ((page: PageData) => false | Exclude<BlockRenderOptions, false>[])
+
+        /**
+         * Adds custom blocks for related pages at the bottom
+         * Controls whether to enable or not on all pages if configured in the frontmatter.
+         */
+        relatedPages?: boolean
+
+        /**
+         * Mark pages as not finished with a default banner at the top of the page.
+         * Can be enabled on a page with the `finished: false` frontmatter.
+         * Set to `false` to disable all not finished banners.
+         * 
+         * @default { type: 'warning', text: 'This page is not finished'}
+         */
+        notFinished?: NotFinishedOptions
+    }
+
+    /**
+     * Options for storing additional (theme) settings in local storage.
+     */
+    storage?: {
+        /**
+         * The local storage keys that is used by components and the theme
+         * 
+         * @default 
+         * { 
+         *     hideSidebarAction: 'rlmm-hide-action',
+         *     useSteamProtocolUrl: 'rlmm-urls-steam',
+         *     watchAllPages: 'rlmm-push-all'
+         * }
+         */
+        keys?: Partial<
+            Record<
+                | 'useSteamProtocolUrl'
+                | 'hideSidebarAction'
+                | 'watchAllPages'
+                , string
+            >
+        >
+    }
 }
+
+export type ThemeConfig = RLMMThemeConfig

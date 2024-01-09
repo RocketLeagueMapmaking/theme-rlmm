@@ -13,8 +13,9 @@ export function renderSidebarAction(theme: RLMMThemeConfig) {
     return h(VPButton, {
         onVnodeMounted: (node) => {
             const storage = useStorage()
+            const key = storage.getThemeKeys().value.hideSidebarAction
 
-            storedValue.value = storage.getAny('rlmm-hide-action', false)
+            storedValue.value = storage.getAny(key, false)
             node.el!.style.display = storedValue.value ? 'none' : 'block'
         },
         text: options.title ?? 'Edit preferences',
