@@ -2,6 +2,8 @@ import { defineConfigWithTheme } from 'vitepress'
 
 import { type RLMMThemeConfig } from '../../lib/'
 
+const domain = 'https://theme-rlmm.pages.dev/'
+
 export default defineConfigWithTheme<RLMMThemeConfig>({
     title: "RLMM",
     description: "Testing playground for the map making guide",
@@ -15,11 +17,11 @@ export default defineConfigWithTheme<RLMMThemeConfig>({
     srcDir: './guide',
     srcExclude: ['**/flowchart/questions/*.md'],
     sitemap: {
-        hostname: 'https://test-theme.pages.dev/'
+        hostname: domain,
     },
 
     head: [
-        ['link', { rel: 'manifest', href: 'http://127.0.0.1:5173/manifest.json' }],
+        ['link', { rel: 'manifest', href: domain + 'manifest.json' }],
         ['meta', { name: 'theme-color', content: '#3eaf7c' }],
         [
             'script',
@@ -135,6 +137,10 @@ export default defineConfigWithTheme<RLMMThemeConfig>({
                             link: '/theme/windows/',
                         },
                         {
+                            text: 'Search',
+                            link: '/theme/windows/search'
+                        },
+                        {
                             text: 'Tree',
                             link: '/theme/windows/tree',
                         },
@@ -160,7 +166,7 @@ export default defineConfigWithTheme<RLMMThemeConfig>({
                 id: 'banner-contest-6',
                 dismissable: true,
                 color: 'linear-gradient(90deg, var(--vp-c-brand-3) 0%, red 50%, blue 100%)',
-                html: 'Map making contest 6 is now active! <a href="https://discord.com/channels/711882968200904715/711883463871037510/1169509851832000523">Read the announcement</a>'
+                text: 'Map making contest 6 is now active! [Read the announcement](https://discord.com/channels/711882968200904715/711883463871037510/1169509851832000523)'
             }
         },
 

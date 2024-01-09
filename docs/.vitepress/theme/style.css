@@ -1,8 +1,13 @@
 .dark {
-    --vp-c-bg: #07160f;
+    /* --vp-c-bg: #1b1e1d; */
     --vp-c-bg-alt: #070d0d;
-    --vp-c-bg-elv: #10322c;
+    --vp-c-bg-elv: #091c18;
     --vp-c-bg-soft: #1d3536;
+}
+
+.dark.green-bg {
+    --vp-c-bg: #091e13;
+    --vp-c-bg-elv: #10322c;
 }
 
 :root {

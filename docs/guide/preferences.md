@@ -5,12 +5,13 @@ aside: false
 # Preferences
 
 <script setup>
-import { useNotifications } from '../../lib/'
+import { useNotifications, useStorage, ListWindow } from '../../lib/'
 
 const NotificationManager = useNotifications()
+const storage = useStorage()
 </script>
 
-<TabsWindow :tabs="['general', 'notifications', 'guide', 'advanced']">
+<TabsWindow :activeTabStyle="{ backgroundColor: 'var(--vp-c-bg-soft)' }" :tabs="['general', 'notifications', 'guide', 'advanced']">
 
 <template #tab-general>
 
@@ -19,6 +20,11 @@ const NotificationManager = useNotifications()
 <PreferenceSetting :isAppearance="true" storeKey="">
 
 Use dark theme
+</PreferenceSetting>
+
+<PreferenceSetting storeKey="rlmm-bg-green" documentClassToToggle="green-bg">
+
+Use greener background
 </PreferenceSetting>
 
 ### Display
@@ -140,15 +146,21 @@ Open Steam urls in the Windows app
 
 ### Experimental
 
-<PreferenceSetting
-    storeKey="rlmm-dev-build"
-    defaultValue="stable"
-    :options="['stable', 'dev', 'nightly']"
-    type="select"
->
+:::details Nightly builds
+Feeling adventurous? Try out on of these experimental builds:
 
-Documentation build
-</PreferenceSetting>
+<ListWindow :groupByCategory="true" categoryKey="environment" dataUrl="https://docs.rocketleaguemapmaking.workers.dev/deployments">
+    <template #default="{ item }">
+        <VPLink :href="item.url" :noIcon="true">
+            <ActionBlock>
+                <template #left>
+                    {{ item.branch }}@{{ item.id }}
+                </template>
+            </ActionBlock>
+        </VPLink>
+    </template>
+</ListWindow>
+:::
 
 <PreferenceSetting storeKey="rlmm-use-editor" defaultValue="UDK" type="select" :options="['UDK']">
 

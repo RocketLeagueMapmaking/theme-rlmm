@@ -30,21 +30,55 @@ This will render as markdown text:
 In a markdown editor, you will also see the second example highlighted indicating that it will be rendered as markdown.
 :::
 
+## ActionBlock <Badge type="info" text="general component" />
+
+Renders a highlighted section. To place it at the top or bottom of the page use the [`blocks`](./frontmatter.md#blocks) frontmatter option on a page.
+
+Exposed slots:
+
+- `left`
+- `right`
+
+<ActionBlock>
+<template #left>
+
+This is some content
+</template>
+
+<template #right>
+<VPButton text="click me" />
+</template>
+</ActionBlock>
+<ActionBlock :style="{ backgroundColor: 'var(--vp-c-neutral-inverse)' }">
+<template #left>
+
+<p>
+<img src="https://c5.patreon.com/external/favicon/rebrand/favicon.ico?v=af5597c2ef" alt="patreon">
+Donate via Patreon
+</p>
+</template>
+
+<template #right>
+<VPButton text="donate" theme="sponsor" href="https://patreon.com/rocketleaguemapmaking" />
+</template>
+</ActionBlock>
+
 ## PreferenceSetting <Badge type="info" text="general component" />
 
 Component to show or allow to set a value that gets stored in the local storage of the current browser.
 
 The default slot is the text associated with the action. Use the `storeKey` property to decide which local storage key the value will get and `defaultValue` to set the current value if nothing has been set yet.
 
-| Option name  | Type                                            | Default     | Description                                               |
-| ------------ | ----------------------------------------------- | ----------- | --------------------------------------------------------- |
-| storeKey     | `'rlmm-${string}'`                              | -           | The key to store in the local storage                     |
-| type         | [setting type](#setting-types)                  | `'switch'`  | The type of option                                        |
-| renderValue  | `boolean`                                       | `false`     | Set to only show the setting value                        |
-| defaultValue | `any`                                           | `false`     | The value when unset. Must be the same type as the option |
-| isAppearance | `boolean`                                       | `false`     | For switch option, use the theme switcher                 |
-| options      | `string[]`                                      | `[]`        | For select option, the available choices                  |
-| onChanged    | `(option: { key: string, value: any }) => void` | `undefined` | Hook that is called when the option is changed            |
+| Option name           | Type                                            | Default     | Description                                               |
+| --------------------- | ----------------------------------------------- | ----------- | --------------------------------------------------------- |
+| storeKey              | `'rlmm-${string}'`                              | -           | The key to store in the local storage                     |
+| type                  | [setting type](#setting-types)                  | `'switch'`  | The type of option                                        |
+| renderValue           | `boolean`                                       | `false`     | Set to only show the setting value                        |
+| defaultValue          | `any`                                           | `false`     | The value when unset. Must be the same type as the option |
+| isAppearance          | `boolean`                                       | `false`     | For switch option, use the theme switcher                 |
+| options               | `string[]`                                      | `[]`        | For select option, the available choices                  |
+| documentClassToToggle | `string`                                        | `undefined` | Add a custom class to the page for applying styles        |
+| onChanged             | `(option: { key: string, value: any }) => void` | `undefined` | Hook that is called when the option is changed            |
 
 ### Setting types
 
@@ -75,6 +109,10 @@ Showing a value is handled with `renderValue` property set to `true`. You don't 
 ```
 
 <PreferenceSetting :renderValue="true" storeKey="rlmm-path-udk" defaultValue="C:\UDK\RLMM\" type="input" />
+<PreferenceSetting storeKey="rlmm-path-udk" defaultValue="C:\UDK\RLMM\" type="input">
+
+Your UDK folder
+</PreferenceSetting>
 
 :::
 

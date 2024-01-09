@@ -53,7 +53,7 @@ type SponsorData = {
 
 #### sponsors.dataUrl
 
-The url that returns a JSON response of `SponsorData`. This option can be used instead of [data](#sponsorsdata).
+The url that returns a JSON response of `SponsorData`. This option can be used instead of [data](#sponsors-data).
 
 ### promotion
 
@@ -75,4 +75,36 @@ Type: [`HeroAction[]`](https://vitepress.dev/reference/default-theme-home-page#h
 
 ## Normal page
 
-No additional frontmatter is in the theme for normal pages
+### finished
+
+Mark pages as not finished with a warning at the top of the page
+
+```md
+---
+finished: false
+---
+```
+
+### blocks
+
+Add blocks / banners to a page
+
+```md
+---
+blocks:
+    - text: |
+        The following video tutorials are made about {topic}\
+        \- [First YouTube video](https://google.com)\
+        \- [Second YouTube video](https://google.com)
+      color: var(--vp-c-indigo-soft)
+---
+```
+
+Block options are:
+
+| Name     | Type                                    | Required | Default   |
+| -------- | --------------------------------------- | -------- | --------- |
+| text     | string                                  | x        | -         |
+| color    | string                                  | -        | undefined |
+| type     | 'info' \| 'tip' \| 'warning' \| 'error' | -        | 'info'    |
+| position | 'top' \| 'bottom'                       | -        | 'top'     |
