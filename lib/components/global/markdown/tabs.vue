@@ -6,7 +6,7 @@
                 {{ name }}
             </p>
         </div>
-        <hr>
+        <hr class="tabs-divider">
         <div v-for="name, index in getNames()" :key="name">
             <slot :name="`tab-${toSlug(name)}`" v-if="index === active" />
         </div>
@@ -63,7 +63,7 @@ onMounted(() => {
     if (startTab != undefined) changeActive(startTab)
 
     if (storage != undefined) {
-        const stored = useStorage().get(<never>props.storage.key)
+        const stored = useStorage().get(<never>props.storage?.key)
         if (stored != null) {
             changeActive(stored)
             if (storage.hideSelectorOnSet != undefined) {
@@ -79,11 +79,13 @@ onMounted(() => {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
+    overflow-x: auto;
 }
 
 .tabs-actions p {
+    padding: 10px 50px;
     /* Important because custom blocks apply a different margin to the first text */
     margin: 10px auto 0 auto !important;
 }
@@ -94,5 +96,9 @@ onMounted(() => {
 
 .tabs-actions p:hover {
     cursor: pointer;
+}
+
+.tabs-divider {
+    margin-top: 0;
 }
 </style>

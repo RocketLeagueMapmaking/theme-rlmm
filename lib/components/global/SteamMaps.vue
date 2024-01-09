@@ -16,7 +16,14 @@
                             By {{ map.creator.name }}
                         </span>
                         <VPLink :href="itemPageUrl(map)" :noIcon="true">
-                            <VPImage class="steam-map-img" :image="map.preview.url" :title="map.title" :alt="map.title" />
+                            <!-- TODO: Try to prevent the flash on image loading -->
+                            <div v-if="!loadedImgs[map.id]" class="steam-map-img" :style="{
+                                backgroundColor: 'var(--vp-c-bg)',
+                                height: '225px'
+                            }">
+                            </div>
+                            <VPImage v-on:load="() => loadedImgs[map.id] = true" class="steam-map-img"
+                                :image="map.preview.url" :title="map.title" :alt="map.title" />
                         </VPLink>
                         <!-- Only show actions on large screens -->
                         <div class="steam-map-active-actions only-large">
@@ -69,6 +76,7 @@ interface Props {
 
 const active = ref(0), isWindows = ref(false), hasSetting = ref(false);
 const maps = ref<SteamMap[]>([]);
+const loadedImgs = ref<Record<string, true>>({})
 
 const props = withDefaults(defineProps<Props>(), {
     amount: 3,
@@ -153,9 +161,10 @@ function goToNextMap(isClick?: boolean, dIndex = 1) {
 
 onMounted(async () => {
     const storage = useStorage();
+    const key = storage.getThemeKeys().value.useSteamProtocolUrl
 
     isWindows.value = getPlatform() === 'Windows'
-    hasSetting.value = storage.getAny(`rlmm-urls-steam`, false)
+    hasSetting.value = storage.getAny(key, false)
 
     maps.value = await fetchSteamMaps(props)
 
@@ -175,7 +184,7 @@ onMounted(async () => {
 .steam-maps-title {
     font-weight: bold;
     font-size: larger;
-    margin: 20px 30px;
+    margin: 30px 30px 10px 30px;
 }
 
 .steam-maps-title :deep(span) {
@@ -236,7 +245,7 @@ onMounted(async () => {
     }
 
     .steam-map-active {
-        padding: 10px !important;
+        padding: 6px !important;
         text-align: center !important;
     }
 

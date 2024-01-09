@@ -1,8 +1,11 @@
-
-import { type EnhanceFunction, enhanceAppWithTheme, } from './theme'
+import {
+    type EnhanceFunction,
+    enhanceAppWithTheme,
+} from './theme'
 
 // Components
 
+import ActionBlock from './global/ActionBlock.vue'
 import EventShowcase from './global/EventShowcase.vue'
 import PreferenceSetting from './global/PreferenceSetting.vue'
 import SteamMaps from './global/SteamMaps.vue'
@@ -19,6 +22,11 @@ export const enhanceApp: EnhanceFunction = async (ctx) => {
     app.component('StepsWindow', StepsView)
     app.component('TabsWindow', TabsView)
 
+    app.component('Actions', ActionView)
+    app.component('Steps', StepsView)
+    app.component('Tabs', TabsView)
+
+    app.component('ActionBlock', ActionBlock)
     app.component('EventShowcase', EventShowcase)
     app.component('PreferenceSetting', PreferenceSetting)
     app.component('SteamMaps', SteamMaps)
