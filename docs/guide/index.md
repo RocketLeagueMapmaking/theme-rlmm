@@ -72,7 +72,7 @@ promotion:
           href: https://learn.skillquest.io/landing/1699993747535x796931164922708000
 
 sponsors:
-  title: Patreon shoutout. 
+  message: Patreon shoutout. 
   link: https://patreon.com/rocketleaguemapmaking
   dataUrl: https://docs.rocketleaguemapmaking.workers.dev/sponsors
 ---

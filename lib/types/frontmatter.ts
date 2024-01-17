@@ -37,7 +37,7 @@ export interface HomePageFrontmatter extends DefaultHomePageFrontmatter {
     resourceTitle?: string
     resources?: Feature[]
     sponsors?: {
-        title?: string
+        message?: string
         action?: string
         link: string
         data?: SponsorData
