@@ -1,37 +1,40 @@
-import { useData } from "vitepress"
-import { computed, onMounted, ref } from "vue"
-import { RLMMThemeConfig } from "../types"
+import { onMounted, ref } from "vue"
+import { inBrowser, useData } from "vitepress"
 
-export type WatchedPages =
-    | 'all'
-    | string[]
+import { RLMMThemeConfig } from "../types"
+import { useLocalStorage, useSessionStorage } from "@vueuse/core"
+
+// export type WatchedPages =
+//     | 'all'
+//     | string[]
+
+export type ThemeStorageKeys = NonNullable<Required<NonNullable<RLMMThemeConfig['storage']>['keys']>>
 
 export function useStorage<Key extends string = string>() {
     const storage = ref<Storage | null>(null)
-    const keys = ref<NonNullable<Required<NonNullable<RLMMThemeConfig['storage']>['keys']>>>({
+    const defaultKeys = Object.freeze({
+        hideNotificationInbox: 'rlmm-hide-navinbox',
         hideSidebarAction: 'rlmm-hide-action',
+        notificationInboxLastOpened: 'rlmm-navinbox-lastopened',
         useSteamProtocolUrl: 'rlmm-urls-steam',
         watchAllPages: 'rlmm-push-all',
     })
 
+    const keys = ref<ThemeStorageKeys>(defaultKeys)
+
     onMounted(() => {
-        storage.value = window?.localStorage ?? null
+        if (!inBrowser || !window || !window.localStorage) return console.error('No storage found!')
+        storage.value = window.localStorage
 
         const { theme } = useData<RLMMThemeConfig>()
         const options = theme.value.storage?.keys
 
-        keys.value = {
-            hideSidebarAction: options?.hideSidebarAction ?? 'rlmm-hide-action',
-            useSteamProtocolUrl: options?.useSteamProtocolUrl ?? 'rlmm-urls-steam',
-            watchAllPages: options?.watchAllPages ?? 'rlmm-push-all',
-        } satisfies Required<NonNullable<RLMMThemeConfig['storage']>['keys']>
+        keys.value = Object.entries(defaultKeys)
+            .reduce((obj, [key, defaultValue]) => ({ ...obj, [key]: options?.[key] ?? defaultValue }), {} as ThemeStorageKeys)
     })
 
-    const get = (key: string) => storage.value?.getItem(key.toString()) ?? null
-    const getBool = (key: string): boolean | undefined => {
-        const value = get(key)
-        return value != null ? value === 'true' : undefined
-    }
+    const get = (key: string | undefined) => key ? storage.value?.getItem(key.toString()) ?? null : null
+    const toBool = (value: string | null) => value != null ? value === 'true' : undefined
 
     const list = (prefix: string, value?: string) => Object.entries(storage.value ?? {})
         .filter(([key, setting]) => (value != undefined ? value === setting : true) && key.startsWith(prefix))
@@ -53,21 +56,10 @@ export function useStorage<Key extends string = string>() {
         },
 
         getBoolean: (key: Key, unknown?: boolean): boolean => {
-            return getBool(key) ?? unknown ?? false
+            return toBool(get(key)) ?? unknown ?? false
         },
 
-        getWatchedPages() {
-            // TODO: figure out interface to expose prefix
-            // and make interacting with watched pages easier
-            const prefix = 'rlmm-page-'
-            const isAll = getBool(keys.value.watchAllPages) ?? false
-
-            if (isAll) return 'all'
-            else return list(prefix, 'true')
-                .map(p => p.slice(prefix.length).replace(/_/g, '/'))
-        },
-
-        getThemeKeys() {
+        get themeKeys() {
             return keys
         },
 
@@ -78,5 +70,10 @@ export function useStorage<Key extends string = string>() {
         list: (prefix: string, value?: string): string[] => {
             return list(prefix, value)
         },
+
+        useKey: <T>(...params: Parameters<typeof useLocalStorage<T>>) => {
+            return useLocalStorage(params[0], params[1], params[2] ?? { writeDefaults: false })
+        },
+        useSessionKey: useSessionStorage,
     }
 }

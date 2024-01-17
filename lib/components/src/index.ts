@@ -1,4 +1,5 @@
 export { default as ListWindow } from './list/ListView.vue';
+export { default as NotificationListWindow } from './list/NotificationListView.vue';
 export { default as SearchBlock } from './list/SearchBlock.vue';
 
 export { default as TreeWindow } from './tree/TreeView.vue';

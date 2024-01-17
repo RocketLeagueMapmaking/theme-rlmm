@@ -6,7 +6,7 @@ import { enhanceApp } from './components/enhance'
 import { Layout } from './layouts/'
 
 export * from './components/export'
-export * from './data/'
+export * from './composables/'
 
 export type * from './types'
 

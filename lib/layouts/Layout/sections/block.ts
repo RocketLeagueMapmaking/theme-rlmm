@@ -1,13 +1,13 @@
 import { h } from 'vue'
 
 import type { BlockRenderOptions } from '../../../types/'
-import { getThemeColor } from '../../../data'
+import { getThemeColor, renderHTML } from '../../../util'
 
 export function renderBlock (md: markdownit, options: BlockRenderOptions) {
     if (options === false) return h('div')
     const containerClass = `${options.type ?? 'info'} custom-block vp-raw`
 
-    const innerHTML = options.html ?? (typeof options.text === 'string' ? md.render(options.text) : options.text.html)
+    const innerHTML = options.html ?? renderHTML(md, options.text)
     const backgroundColor = options.color
         ? getThemeColor(options.color)
         : undefined

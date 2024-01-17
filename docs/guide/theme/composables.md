@@ -1,4 +1,4 @@
-# Utilities
+# Composables
 
 ## useNotifications
 
@@ -6,24 +6,25 @@
 
 ```mdx
 <script setup>
-import { useNotifications } from 'vitepress-theme-rlmm'
-
+import { useNotifications } from '../../../lib'
 const NotificationManager = useNotifications()
 </script>
 
+<div v-if="NotificationManager.enabled.value">
 <VPButton
     text="Enable notifications"
-    v-if="!NotificationManager.hasPermission"
-    @click="NotificationManager.requestPermissions()"
+    v-if="!NotificationManager.permissions.granted.value"
+    @click="NotificationManager.permissions.request()"
 />
 <VPButton
     text="Send test notification"
     theme="alt"
-    v-if="NotificationManager.hasPermission"
-    @click="NotificationManager.showNotification('Notification', {
+    v-else
+    @click="NotificationManager.worker.value.showNotification('Notification', {
         body: 'Your notifications are working'
     })"
 />
+</div>
 ```
 
 <script setup>
@@ -31,19 +32,21 @@ import { useNotifications } from '../../../lib'
 const NotificationManager = useNotifications()
 </script>
 
+<div v-if="NotificationManager.enabled.value">
 <VPButton
     text="Enable notifications"
-    v-if="!NotificationManager.hasPermission"
-    @click="NotificationManager.requestPermissions()"
+    v-if="!NotificationManager.permissions.granted.value"
+    @click="NotificationManager.permissions.request()"
 />
 <VPButton
     text="Send test notification"
     theme="alt"
-    v-if="NotificationManager.hasPermission"
-    @click="NotificationManager.showNotification('Notification', {
+    v-else
+    @click="NotificationManager.worker.value.showNotification('Notification', {
         body: 'Your notifications are working'
     })"
 />
+</div>
 
 :::
 
@@ -84,14 +87,18 @@ transformPageData(pageData, ctx) {
 And then on the page itself escape the file extension and format the route:
 
 ```mdx
+<script setup>
+import { useWatchedPages } from 'vitepress-theme-rlmm'
+const watched = useWatchedPages('rlmm-page-')
+</script>
+
 <PreferenceSetting
-    :storeKey="`rlmm-page-${page.replace(/\//g, '_').replace('.md', '')}`"
+    :storeKey="watched.toKey(page)"
     v-for="page in $frontmatter.pages"
     :key="page"
     type="switch"
 >
-
-/{{ page.replace('index.md', '').replace('.md', '') }}
+{{ watched.toDisplay(page) }}
 </PreferenceSetting>
 ```
 
@@ -104,9 +111,10 @@ Utility to interact with the local storage
 ```ts
 import { useSettings } from 'vitepress-theme-rlmm'
 
+const settings = useSettings()
 const enabled = ref(false)
+
 onMounted(() => {
-    const settings = useSettings()
     enabled.value = settings.getBoolean('rlmm-key-enabled', true)
 })
 ```

@@ -33,7 +33,7 @@ import { useUrlSearchParams } from '@vueuse/core'
 
 import { VPButton, VPSwitch } from '../../theme'
 
-type SearchFilter<Type extends string, Options extends object> = {
+export type SearchFilter<Type extends string, Options extends object> = {
     type: Type
     searchParam?: string
     itemKey: string
@@ -67,7 +67,7 @@ const searchParam = props.urlSearchParam ?? 'search'
 const empty = (value: string | null) => value == null || value.length === 0
 
 watch(search, (value) => {
-    if (params[searchParam] !== value) params[searchParam] = value
+    if (params[searchParam] !== value && !empty(value)) params[searchParam] = value!
     console.debug('New search: ', value)
 })
 

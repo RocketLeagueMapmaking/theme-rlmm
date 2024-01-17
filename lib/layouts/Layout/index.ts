@@ -1,8 +1,11 @@
 import { defineAsyncComponent, h } from 'vue'
 import { useData } from 'vitepress'
 
-import { fetchComponentData } from '../../data/'
-import type { RLMMNotification, RLMMThemeConfig } from '../../types'
+import { fetchComponent } from '../../util/'
+import type {
+    BannerNotification,
+    RLMMThemeConfig,
+} from '../../types'
 
 import { renderHomePageSections } from './sections/home'
 
@@ -18,14 +21,15 @@ export default function defineDefaultLayout() {
                 frontmatter: fm,
             } = useData<RLMMThemeConfig>()
 
-            const notification = theme.banner && await fetchComponentData(theme.banner, undefined)
-                .then(res => res.data as false | RLMMNotification | undefined)
+            const banner = await fetchComponent<false | BannerNotification>(theme.banner)
+            const notifications = await fetchComponent(theme.notifications) ?? []
 
             const homepageSlots = await renderHomePageSections(fm.value)
 
             return h(MainLayout, {
                 homepageSlots,
-                notification,
+                banner,
+                notifications, 
             })
         }
     })

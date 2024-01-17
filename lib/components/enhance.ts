@@ -1,3 +1,5 @@
+import { Icon } from '@iconify/vue'
+
 import {
     type EnhanceFunction,
     enhanceAppWithTheme,
@@ -13,10 +15,23 @@ import SteamMaps from './global/SteamMaps.vue'
 import ActionView from './global/markdown/action.vue'
 import StepsView from './global/markdown/steps.vue'
 import TabsView from './global/markdown/tabs.vue'
+import { ThemeConfig } from '../types'
+
+export const registerGlobalProperties: EnhanceFunction = (ctx) => {
+    // TODO: read from package.json
+    ctx.app.config.globalProperties.$theme = {
+        name: 'vitepress-theme-rlmm',
+        version: '0.3.0'
+    }
+}
 
 export const enhanceApp: EnhanceFunction = async (ctx) => {
     const { app } = ctx
+
     enhanceAppWithTheme(ctx)
+    registerGlobalProperties(ctx);
+
+    app.component('Icon', Icon)
 
     app.component('ActionWindow', ActionView)
     app.component('StepsWindow', StepsView)

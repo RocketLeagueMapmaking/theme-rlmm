@@ -3,7 +3,7 @@ title: List window
 ---
 
 <script setup lang="ts">
-import { ListWindow } from '../../../../lib/'
+import { ListWindow, NotificationListWindow } from '../../../../lib/'
 </script>
 
 Component: `ListWindow`
@@ -63,3 +63,15 @@ List sort options:
         - {{ item.title }}
     </template>
 </ListWindow>
+
+## Notifications
+
+<NotificationListWindow>
+<template #default="{ item }">
+
+### {{ item.title }} <Badge text="tag" type="info" />
+
+<p v-html="item.text"></p>
+
+</template>
+</NotificationListWindow>

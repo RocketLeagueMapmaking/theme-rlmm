@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { onMounted, ref, withDefaults } from 'vue'
 
-import { type ComponentData, fetchComponentData } from '../../data/'
+import { type ComponentData, fetchComponentData } from '../../util'
 
 export interface ShowcaseEvent {
     title: string
@@ -28,7 +28,7 @@ export interface ShowcaseEvent {
     link: string
 }
 
-const props = withDefaults(defineProps<{
+export interface Props {
     title: string
     description: string
     action: {
@@ -39,7 +39,9 @@ const props = withDefaults(defineProps<{
     descriptionLength?: number
     data?: ShowcaseEvent[]
     dataUrl?: string
-}>(), {
+}
+
+const props = withDefaults(defineProps<Props>(), {
     amount: 3,
     data: () => [],
     dataUrl: undefined,

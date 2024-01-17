@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, withDefaults } from 'vue'
-import { useStorage } from '../../../data/';
+import { useStorage } from '../../../composables/';
 
 const active = ref(0);
 const props = withDefaults(defineProps<{

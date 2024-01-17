@@ -27,3 +27,16 @@ Press . (Period/Full Stop) to bring up the Pivot Point wheel, and choose 3D Curs
 </StepsWindow>
 
 :::
+
+## Cheatsheet - export
+
+<StepsWindow color="green">
+<template #step-1>
+
+Press export
+</template>
+<template #step-2>
+
+Import it in UDK
+</template>
+</StepsWindow>

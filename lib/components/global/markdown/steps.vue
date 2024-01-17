@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { useSlots, withDefaults } from 'vue'
 
-import { getThemeColor } from '../../../data/'
+import { getThemeColor } from '../../../util'
 
 const { color, length } = withDefaults(defineProps<{
     length?: number

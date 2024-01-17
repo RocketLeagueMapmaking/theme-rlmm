@@ -2,7 +2,7 @@
     <div class="container">
         <div 
             v-for="category in items"
-            :key="category.title"
+            :key="category.title ?? 'title'"
             class="category"
         >
             <h3 v-if="category.title && category.items.filter(filter).length > 0">{{ category.title }}</h3>
@@ -12,7 +12,7 @@
                 class="item"
                 :style="{ ...itemStyle }"
             >
-                <slot :item="item">
+                <slot :item="<Item>item">
                     <span>{{ item }}</span>
                 </slot>
             </div>
@@ -20,14 +20,14 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="Item = Record<string, never>">
 import { onMounted, ref, withDefaults } from 'vue';
 
-import { fetchComponentData } from '../../../data/util';
+import { fetchComponentData } from '../../../util';
 
-const props = withDefaults(defineProps<{
+export interface Props {
     dataUrl?: string
-    data?: []
+    data?: unknown[]
     itemStyle?: object
     filter?: (item: never) => boolean
     sort?: { 
@@ -38,7 +38,9 @@ const props = withDefaults(defineProps<{
     dataKey?: string
     categoryKey?: string
     groupByCategory?: boolean
-}>(), {
+}
+
+const props = withDefaults(defineProps<Props>(), {
     groupByCategory: false,
     itemStyle: () => ({}),
     data: () => [],
@@ -46,25 +48,25 @@ const props = withDefaults(defineProps<{
     idKey: 'id',
 })
 
-const items = ref([])
+const items = ref<{ title: string | null, items: never[] }[]>([])
 
-function sort (a: unknown, b: unknown) {
+function sort <T = never>(a: T, b: T) {
     if (!props.sort) return 0
     else return a[props.sort.key].localeCompare(b[props.sort.key])
 }
 
 function mapToCategories <T = never>(items: T[]): { title: string | null, items: T[] }[] {
     if (!props.groupByCategory || !props.categoryKey) return [{ title: null, items }]
-    else return [...new Set<string>(items.map(i => i[props.categoryKey]))]
+    else return [...new Set<string>(items.map(i => i[props.categoryKey!]))]
         .sort((a, b) => a.localeCompare(b))
         .reduce((list, name) => { 
             list.push({ 
                 title: name[0].toUpperCase() + name.slice(1), 
-                items: items.filter(i => i[props.categoryKey] === name)
+                items: <never>items.filter(i => i[props.categoryKey!] === name)
             })
 
             return list
-        }, [])
+        }, [] as { title: string | null, items: T[] }[])
 }
 
 onMounted(async () => {

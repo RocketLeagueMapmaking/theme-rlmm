@@ -5,6 +5,7 @@ aside: false
 # Preferences
 
 <script setup>
+import { useCssVar } from '@vueuse/core'
 import { useNotifications, useStorage, ListWindow } from '../../lib/'
 
 const NotificationManager = useNotifications()
@@ -27,28 +28,36 @@ Use dark theme
 Use greener background
 </PreferenceSetting>
 
+<PreferenceSetting storeKey="rlmm-accent-color" type="color" cssVariable="--vp-c-brand-1">
+
+Accent color
+</PreferenceSetting>
+
 ### Display
 
 <PreferenceSetting storeKey="rlmm-hide-action">
 
-Hide `Edit preferences` action
+Hide sidebar action button
 </PreferenceSetting>
 
 <PreferenceSetting storeKey="rlmm-show-sidemenu">
 
 Show advanced pages in sidemenu
 </PreferenceSetting>
-<PreferenceSetting storeKey="rlmm-left-toc">
-
-Move TOC back to left sidemenu
-</PreferenceSetting>
 </template>
 
 <template #tab-notifications>
 
+### Inbox
+
+<PreferenceSetting storeKey="rlmm-hide-navinbox">
+
+Hide notification inbox
+</PreferenceSetting>
+
 ### Push notifications
 
-Get push notifications when the guide is updated
+Get push notifications for map making updates
 
 :::tip Workshop updates
 [See all sources](https://swagbot.pages.dev/feeds) for getting notifications on new and updated workshop items
@@ -56,10 +65,10 @@ Get push notifications when the guide is updated
 
 <VPButton
     text="Enable notifications"
-    v-if="!NotificationManager.hasPermission"
+    v-if="NotificationManager && !NotificationManager.permissions.granted"
     @click="NotificationManager.requestPermissions()"
 />
-<div v-else>
+<div v-else-if="NotificationManager">
 <VPButton
     text="Send test notification"
     theme="alt"

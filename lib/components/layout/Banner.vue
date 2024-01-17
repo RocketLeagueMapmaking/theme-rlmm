@@ -14,14 +14,15 @@
 </template>
 
 <script setup lang="ts">
-import { useElementSize } from '@vueuse/core';
 import { computed, inject, onMounted, ref, watchEffect } from 'vue';
+import { useElementSize, useMounted } from '@vueuse/core';
 import { useData } from 'vitepress'
 
-import { getThemeColor } from '../../data';
-import type { RLMMNotification, RLMMThemeConfig } from '../../types'
+import { useNotifications } from '../../composables';
+import { getThemeColor } from '../../util';
+import type { BannerNotification, RLMMThemeConfig } from '../../types'
 
-const banner = defineProps<Partial<RLMMNotification>>();
+const banner = defineProps<BannerNotification>();
 
 const { 
     page,
@@ -34,8 +35,9 @@ const bgColor = getThemeColor(banner.color ?? themeOptions?.color ?? 'brand')
 const md = inject<markdownit>('md')
 
 const el = ref<HTMLElement>();
-const isMounted = ref<boolean>(false)
+const isMounted = useMounted()
 
+const notifications = useNotifications()
 const { height } = useElementSize(el);
 watchEffect(() => {
     if (height.value) {
@@ -57,7 +59,7 @@ const restore = (key: string | undefined, cls: string) => {
     const pageEnabled = themeOptions?.enabled?.(page.value) ?? true;
 
     const show = saved ? saved !== 'false' && saved > new Date().toString() : false && pageEnabled
-    if (show || key == undefined) {
+    if (show || key == undefined || !notifications.isActive(banner)) {
         document.documentElement.classList.add(cls);
     }
 };
@@ -78,7 +80,6 @@ const dismiss = () => {
 
 onMounted(() => {
     restore(banner.id, className)
-    isMounted.value = true
 })
 </script>
 

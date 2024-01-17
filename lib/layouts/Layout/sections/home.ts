@@ -1,8 +1,7 @@
 import { h, type VNode } from 'vue'
-
 import { VPHomeSponsors } from 'vitepress/theme'
 
-import { fetchComponentData } from '../../../data'
+import { fetchComponentData, renderIf } from '../../../util'
 
 import EventShowcase from '../../../components/global/EventShowcase.vue'
 import SteamMaps from '../../../components/global/SteamMaps.vue'
@@ -10,39 +9,16 @@ import { VPFeatures } from '../../../components/export'
 
 import { renderPromotion } from './promotion'
 
-import type { SponsorData } from "../../../types"
+import type {
+    HomePageFrontmatter,
+} from "../../../types"
 
 function getHomeFrontmatter (fm: Record<string, any>) {
-    if (fm.layout !== 'home') return undefined
-	return {
-		sponsors: {
-            enabled: fm.sponsors != undefined,
-			message: fm.sponsors?.title ?? 'Patreons',
-			actionText: fm.sponsors?.action ?? 'Become a supporter',
-			actionLink: fm.sponsors?.link,
-			data: fm.sponsors?.data ?? [] as SponsorData,
-            dataUrl: fm.sponsors?.dataUrl,
-		},
-        events: {
-            enabled: fm.events?.title && fm.events?.description,
-            ...(fm.events ?? {}),
-        },
-		resources: {
-            enabled: fm.resources != undefined,
-			title: fm.resourceTitle ?? 'Resources',
-			resources: fm.resources,
-		},
-		steam: {
-			enabled: fm.hero?.steam != undefined && (fm.hero?.steam?.enabled === false ? false : true),
-			...(fm.hero?.steam ?? {}),
-		},
-	}
-}
+    const isHomeFm = (fm: Record<string, any>): fm is HomePageFrontmatter => fm.layout === 'home'
 
-const renderIf = (
-    condition: boolean | undefined,
-    node: VNode | (() => VNode)
-) => condition ? (typeof node === 'function' ? node() : node) : undefined
+    if (!isHomeFm(fm)) return undefined
+    else return fm
+}
 
 // TODO: move to seperate home component later?
 export async function renderHomePageSections (
@@ -51,20 +27,29 @@ export async function renderHomePageSections (
     const data = getHomeFrontmatter(frontmatter ?? {})
     if (!data) return undefined
 
-    const events = data.events.enabled ? await fetchComponentData(data.events, []) : []
-    const sponsors = data.sponsors.enabled ? await fetchComponentData(data.sponsors, []) : []
+    const events = data.events ? await fetchComponentData(data.events, []) : []
+    const sponsors = data.sponsors ? await fetchComponentData(data.sponsors, []) : []
 
     const children = [
-        renderIf(data?.resources.enabled, () => h('div', { class: 'home-resources' }, [h('p', data.resources.title)])),
-        renderIf(data?.resources.enabled, () => h(VPFeatures, { features: data.resources.resources })),
-        renderIf(data?.events.enabled, () => h(EventShowcase, events)),
-        renderIf(frontmatter?.promotion != undefined, () => renderPromotion(frontmatter.promotion)),
+        renderIf(data.resources, () => {
+            return h(
+                'div',
+                { class: 'home-resources' },
+                [h('p', data.resourceTitle ?? 'Resources')]
+            )
+        }),
+        renderIf(data.resources, () => h(VPFeatures, { features: data.resources ?? [] })),
         // @ts-ignore
-        renderIf(data?.sponsors.enabled, () => h(VPHomeSponsors, sponsors)),
+        renderIf(data.events, () => h(EventShowcase, events)),
+        renderIf(data.promotion, () => renderPromotion(data.promotion!)),
+        // @ts-ignore
+        renderIf(data.sponsors, () => h(VPHomeSponsors, sponsors)),
     ].filter((child): child is NonNullable<typeof child> => child != undefined)
-    
+
+    const steamOptions = data.hero && 'steam' in data.hero ? data.hero.steam : undefined
+
     return {
-        'home-hero-image': () => renderIf(data?.steam.enabled, () => h(SteamMaps, data.steam)),
+        'home-hero-image': () => renderIf(steamOptions, () => h(SteamMaps, steamOptions)),
         'home-features-after': () => h('div', children),
     } as Record<string, () => VNode>
 }

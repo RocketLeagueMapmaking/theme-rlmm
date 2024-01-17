@@ -11,7 +11,7 @@ interface ButtonProps {
     href?: string
 }
 
-type PromotionOptions = {
+export type PromotionOptions = {
     title: { image: string } | string
     description: string
     image: string

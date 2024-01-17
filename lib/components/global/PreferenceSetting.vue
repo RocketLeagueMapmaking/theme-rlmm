@@ -2,13 +2,14 @@
     <span>
         <ActionBlock v-if="!renderValue">
             <template #left>
-                <slot></slot>
+                <slot>{{ text }}</slot>
             </template>
 
             <template #right>
                 <VPSwitchAppearance v-if="isAppearance && type === 'switch'" />
                 <VPSwitch v-else-if="type === 'switch'" :class="{ enabled: value }" v-model="value" @click="onChange" />
-                <input v-else-if="type === 'input'" type="text" v-model="value" @change="onChange">
+                <input v-else-if="['input', 'color'].includes(type)" :class="{ 'color-action': type === 'color' }"
+                    :type="type === 'input' ? 'text' : type" v-model="value" @change="onChange">
                 <select v-else-if="type === 'select'" class="action" v-model="value" @change="onChange">
                     <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
                 </select>
@@ -24,17 +25,26 @@
 import { withDefaults, ref, onMounted } from 'vue'
 import { inBrowser } from 'vitepress';
 
-import { useStorage } from '../../data/'
+import { useStorage } from '../../composables/'
 
 import ActionBlock from './ActionBlock.vue'
+import { useCssVar } from '@vueuse/core';
 
 const value = ref<boolean | string | number>(false)
-const store = ref<ReturnType<typeof useStorage> | null>(null)
+const store = useStorage()
+
+type SettingType =
+    | 'switch'
+    | 'select'
+    | 'input'
+    | 'color'
 
 const props = withDefaults(defineProps<{
     isAppearance?: boolean
-    type?: 'switch' | 'select' | 'input'
+    type?: SettingType
+    text?: string
     storeKey: string
+    cssVariable?: string
     options?: string[]
     defaultValue?: any
     renderValue?: boolean
@@ -50,12 +60,18 @@ const props = withDefaults(defineProps<{
     },
 })
 
+const cssColor = props.cssVariable && props.type === 'color' ? useCssVar(props.cssVariable) : undefined
+
 function onChange() {
     const oldValue = value.value
     const newValue = typeof oldValue === 'boolean' ? !oldValue : oldValue
 
-    store.value?.set(props.storeKey, newValue.toString())
+    store.set(props.storeKey, newValue.toString())
     value.value = newValue
+
+    if (cssColor) {
+        cssColor.value = newValue.toString()
+    }
 
     if (inBrowser) {
         if (props.documentClassToToggle) {
@@ -69,8 +85,14 @@ function onChange() {
 onMounted(() => {
     const storage = useStorage();
 
-    store.value = storage
-    value.value = storage.getAny(props.storeKey, props.defaultValue)
+    // TODO: remove any
+    value.value = storage.useKey<any>(props.storeKey, cssColor?.value ?? props.defaultValue).value
+
+    if (typeof value.value === 'string' && cssColor) {
+        cssColor.value = value.value.toString()
+    } else if (cssColor) {
+        value.value = cssColor.value
+    }
 
     if (inBrowser) {
         if (props.documentClassToToggle && value.value === true) {
@@ -89,5 +111,11 @@ input {
 .action:hover {
     cursor: pointer;
     border: 1px solid var(--vp-c-brand-3);
+}
+
+.color-action {
+    width: 40px;
+    padding: 0;
+    background-color: transparent;
 }
 </style>

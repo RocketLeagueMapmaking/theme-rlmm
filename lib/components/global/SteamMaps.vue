@@ -1,6 +1,6 @@
 <template>
     <Suspense v-if="enabled">
-        <div class="container">
+        <div class="container" ref="containerRef">
             <div class="steam-maps">
                 <p class="steam-maps-title" v-if="title.length > 0" v-html="title">
                 </p>
@@ -44,18 +44,19 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, withDefaults } from 'vue'
+import { computed, onMounted, ref, withDefaults } from 'vue'
 
 import { VPIconChevronLeft, VPIconChevronRight } from '../theme'
 
-import { getPlatform, useStorage } from '../../data/'
+import { usePlatform, useStorage } from '../../composables/'
 import type { SteamMap } from '../../types'
+import { useParallax } from '@vueuse/core';
 
 type SteamMapIconType =
     | 'left'
     | 'right'
 
-interface Props {
+export interface Props {
     amount?: number
     title?: string
     sortBy?: 'created' | 'updated'
@@ -74,9 +75,12 @@ interface Props {
     handleException?: (err: unknown) => void
 }
 
-const active = ref(0), isWindows = ref(false), hasSetting = ref(false);
+const active = ref(0), hasSetting = ref(false), containerRef = ref();
 const maps = ref<SteamMap[]>([]);
 const loadedImgs = ref<Record<string, true>>({})
+
+const platform = usePlatform(), isWindows = computed(() => platform.value === 'Windows');
+const storage = useStorage();
 
 const props = withDefaults(defineProps<Props>(), {
     amount: 3,
@@ -112,6 +116,7 @@ function itemPageUrl(map: SteamMap) {
 }
 
 function itemDownloadUrl(map: SteamMap) {
+    // TODO: add
     return ''
 }
 
@@ -160,16 +165,15 @@ function goToNextMap(isClick?: boolean, dIndex = 1) {
 }
 
 onMounted(async () => {
-    const storage = useStorage();
-    const key = storage.getThemeKeys().value.useSteamProtocolUrl
-
-    isWindows.value = getPlatform() === 'Windows'
+    const key = storage.themeKeys.value.useSteamProtocolUrl
     hasSetting.value = storage.getAny(key, false)
 
     maps.value = await fetchSteamMaps(props)
 
     if (props.displayTime < 0) return
     setInterval(goToNextMap, props.displayTime)
+
+    const {} = useParallax(containerRef)
 })
 </script>
 

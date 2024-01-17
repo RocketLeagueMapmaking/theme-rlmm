@@ -16,7 +16,7 @@
         </div>
 
         <div class="item-children" v-if="parent && open">
-            <TreeItem v-for="child in getItem(item[idKey], items)" :main-bg-color="!mainBgColor"
+            <TreeItem v-for="child in getItem(item[idKey], items ?? [])" :main-bg-color="!mainBgColor"
                 :parent="child[isParentKey]" :is-parent-key="isParentKey" :key="child[nameKey ?? idKey]" :item="<any>child" :get-item="getItem"
                 :name-key="nameKey" :search="search" :id-key="idKey" :parents="newParents">
                 <template #name="slotProps">
@@ -44,7 +44,7 @@ const open = ref(false), showDetails = ref(false)
 
 const props = defineProps<{
     getItem: (id: string, items: any[]) => Item[]
-    search?: string
+    search?: string | null
     isParentKey: string
     parent: boolean
     parents: string[]

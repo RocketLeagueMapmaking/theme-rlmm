@@ -1,7 +1,8 @@
+import type { ThemeText } from "./text"
+
 export type BlockPosition =
     | 'top'
     | 'bottom'
-
 
 export interface BlockOptions {
     /**
@@ -24,7 +25,7 @@ export interface BlockOptions {
     /**
      * The text to render in the blocks
      */
-    text: string | { html: string }
+    text: ThemeText
 
     /** @deprecated */
     html?: string

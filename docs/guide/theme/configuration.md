@@ -42,4 +42,4 @@ export default defineConfigWithTheme<RLMMThemeConfig>({
 Push notifications will only work in secure contexts!
 :::
 
-Push notifications and the Push API are made easier with [`useNotifications`](util#usenotifications).
+Push notifications and the Push API are made easier with [`useNotifications`](composables#usenotifications).

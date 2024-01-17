@@ -1,7 +1,7 @@
 <template>
     <ParentLayout>
         <template #home-features-after>
-            <p class="home-resources offline-text" v-html="offlineText"></p>
+            <p class="home-resources offline-text" v-html="$frontmatter.offlineText ?? offlineText"></p>
         </template>
     </ParentLayout>
 </template>

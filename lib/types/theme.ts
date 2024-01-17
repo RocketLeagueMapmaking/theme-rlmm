@@ -1,22 +1,13 @@
 import type { PageData, DefaultTheme } from 'vitepress'
-import type { RLMMNotification } from './notification'
 
-import type { BlockPosition, BlockRenderOptions, NotFinishedOptions } from './theme/blocks'
-
-export type SponsorData = {
-    tier: string
-    items: {
-        name: string
-        img: string
-        url: string
-    }[]
-}[]
-
-export type {
+import type {
+    BannerNotification,
     BlockPosition,
     BlockRenderOptions,
+    NavInboxOptions,
     NotFinishedOptions,
-}
+    ThemeNotification,
+} from './theme/'
 
 export interface RLMMThemeConfig extends DefaultTheme.Config {
     /**
@@ -36,9 +27,8 @@ export interface RLMMThemeConfig extends DefaultTheme.Config {
 
         /**
          * The text on the action button
-         * @default 'Edit preferences'
          */
-		title?: string
+		title: string
 
         /**
          * Where to place the action button on the sidebar 
@@ -79,11 +69,11 @@ export interface RLMMThemeConfig extends DefaultTheme.Config {
         /**
          * The data of the notification banner to display
          */
-        data?: RLMMNotification
+        data?: BannerNotification
 
         /**
          * The url to fetch the notification.
-         * When making a GET request a `RLMMNotification` JSON response is expected.
+         * When making a GET request a `BannerNotification` JSON response is expected.
          */
         dataUrl?: string
     }
@@ -124,6 +114,16 @@ export interface RLMMThemeConfig extends DefaultTheme.Config {
         notFinished?: NotFinishedOptions
     }
 
+    notifications?: {
+        /**
+         * Show notifications in an inbox style
+         */
+        inbox?: NavInboxOptions
+
+        data?: ThemeNotification[]
+        dataUrl?: string
+    }
+
     /**
      * Options for storing additional (theme) settings in local storage.
      */
@@ -133,7 +133,9 @@ export interface RLMMThemeConfig extends DefaultTheme.Config {
          * 
          * @default 
          * { 
+         *     hideNotificationInbox: 'rlmm-hide-navinbox',
          *     hideSidebarAction: 'rlmm-hide-action',
+         *     notificationInboxLastOpened: 'rlmm-navinbox-lastopened',
          *     useSteamProtocolUrl: 'rlmm-urls-steam',
          *     watchAllPages: 'rlmm-push-all'
          * }
@@ -141,11 +143,26 @@ export interface RLMMThemeConfig extends DefaultTheme.Config {
         keys?: Partial<
             Record<
                 | 'useSteamProtocolUrl'
+                | 'hideNotificationInbox'
                 | 'hideSidebarAction'
+                | 'notificationInboxLastOpened'
                 | 'watchAllPages'
                 , string
             >
         >
+
+        // TODO: allow difference between themes
+        /**
+         * A set of CSS colors to apply on loading the page
+         * @example { '--vp-c-bg': 'localstore-key' }
+         */
+        colorKeys?: Record<string, string>
+
+        /**
+         * Apply classes to the page based on local storage items
+         * @example { 'green-bg': 'use-green-bg-setting' }
+         */
+        pageClasses?: Record<string, string>
     }
 }
 

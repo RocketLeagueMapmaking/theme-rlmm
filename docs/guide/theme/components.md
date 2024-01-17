@@ -71,13 +71,14 @@ The default slot is the text associated with the action. Use the `storeKey` prop
 
 | Option name           | Type                                            | Default     | Description                                               |
 | --------------------- | ----------------------------------------------- | ----------- | --------------------------------------------------------- |
-| storeKey              | `'rlmm-${string}'`                              | -           | The key to store in the local storage                     |
+| storeKey              | `string`                                        | -           | The key to store in the local storage                     |
 | type                  | [setting type](#setting-types)                  | `'switch'`  | The type of option                                        |
 | renderValue           | `boolean`                                       | `false`     | Set to only show the setting value                        |
 | defaultValue          | `any`                                           | `false`     | The value when unset. Must be the same type as the option |
 | isAppearance          | `boolean`                                       | `false`     | For switch option, use the theme switcher                 |
 | options               | `string[]`                                      | `[]`        | For select option, the available choices                  |
 | documentClassToToggle | `string`                                        | `undefined` | Add a custom class to the page for applying styles        |
+| cssVariable           | `string`                                        | `undefined` | For color option, sync the component with a css variable  |
 | onChanged             | `(option: { key: string, value: any }) => void` | `undefined` | Hook that is called when the option is changed            |
 
 ### Setting types
@@ -87,6 +88,7 @@ The allowed `type`s are:
 - `'switch'`: toggle for boolean values
 - `'input'`: input field for string values
 - `'select'`: select field for string array values
+- `'color'`: color pick
 
 ```ts
 <PreferenceSetting storeKey="rlmm-path-udk" defaultValue="C:\UDK\RLMM\" type="input">
@@ -95,7 +97,7 @@ The allowed `type`s are:
 ```
 
 :::tip Get settings value
-To get a setting value in a component, use the [`getSettings`](util#getsettings) function
+To get a setting value in a component, use the [`useSettings`](composables#usesettings) function
 :::
 
 ### Show value
@@ -118,6 +120,8 @@ Your UDK folder
 
 ## ActionWindow <Badge type="info" text="markdown component" />
 
+- Alias: `Actions`
+
 A component that allows you to easily make advanced windows with actions at the bottom of the window to switch between different states or templates within states. Can be combined with [markdown file inclusion](https://vitepress.dev/guide/markdown#markdown-file-inclusion) to separate the actions and views. If you only have templates in the question files, exclude them from the build files using `srcExclude`.
 
 :::details Example
@@ -128,12 +132,14 @@ See [the flowchart](../udk/index.md#flowchart)
 
 ## StepsWindow <Badge type="info" text="markdown component" />
 
-Make a step by step tutorial in markdown with this component.
+- Alias: `Steps`
 
-| Option name | Type                         | Default   | Description                                                                                                       |
-| ----------- | ---------------------------- | --------- | ----------------------------------------------------------------------------------------------------------------- |
-| length      | `number`                     | `20`      | The maximum amount of steps that are rendered. If you need more steps change this property to the amount you need |
-| color       | [theme color](#theme-colors) | `'brand'` | The color of the step numbers                                                                                     |
+Make a step by step tutorial in markdown with this component. Note that only `length` items are shown, if you need more steps change this property to the amount you need!
+
+| Option name | Type                         | Default   | Description                                   |
+| ----------- | ---------------------------- | --------- | --------------------------------------------- |
+| length      | `number`                     | `20`      | The maximum amount of steps that are rendered |
+| color       | [theme color](#theme-colors) | `'brand'` | The color of the step numbers                 |
 
 :::details Example
 
@@ -186,6 +192,8 @@ press start
 :::
 
 ## TabsWindow <Badge type="info" text="markdown component" />
+
+- Alias: `Tabs`
 
 Splits a window with tabs
 

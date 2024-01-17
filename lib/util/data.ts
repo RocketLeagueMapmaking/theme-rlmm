@@ -35,32 +35,11 @@ export async function fetchComponentData <T, D, O extends object = object>(
     }
 }
 
-// Combine `platform` and `userAgentData` since one is deprecated and one is experimental
-export function getPlatform(): string {
-    // Not in TS
-    const data = (navigator as (typeof navigator & { userAgentData: { platform: string } })).userAgentData
+export async function fetchComponent <T, O extends object = object>(
+    data: ComponentData<T, O> | undefined,
+): Promise<T | undefined> {
+    if (data == undefined) return undefined
 
-    if (typeof data !== 'undefined' && data != null) {
-        return data.platform;
-    }
-
-    if (typeof navigator.platform !== 'undefined') {
-        return navigator.platform;
-    }
-
-    return 'unknown';
-}
-
-export function getThemeColor (color: string) {
-    const isTheme = [
-        'brand',
-        'red',
-        'indigo',
-        'default',
-        'gray',
-        'yellow',
-        'green',
-    ].includes(color)
-
-    return isTheme ? `var(--vp-c-${color}-3)` : color
+    return await fetchComponentData<T, undefined, O>(data, undefined)
+        .then(result => result.data)
 }
