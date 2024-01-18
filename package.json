@@ -1,5 +1,5 @@
 {
-  "name": "theme-rlmm",
+  "name": "@rocketleaguemapmaking/theme-rlmm",
   "version": "0.3.0",
   "type": "module",
   "description": "Theme for rocketleaguemapmaking.com",
@@ -11,11 +11,9 @@
   "bugs": {
     "url": "https://github.com/rocketleaguemapmaking/theme-rlmm/issues"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rocketleaguemapmaking/theme-rlmm.git"
-  },
+  "repository":  "https://github.com/rocketleaguemapmaking/theme-rlmm.git",
   "publishConfig": {
+    "access": "public",
     "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
