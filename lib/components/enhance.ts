@@ -20,7 +20,7 @@ import { ThemeConfig } from '../types'
 export const registerGlobalProperties: EnhanceFunction = (ctx) => {
     // TODO: read from package.json
     ctx.app.config.globalProperties.$theme = {
-        name: 'vitepress-theme-rlmm',
+        name: 'theme-rlmm',
         version: '0.3.0'
     }
 }
