@@ -1,11 +1,10 @@
 import { h, ref } from 'vue'
 import { VPButton } from 'vitepress/theme'
 
-import { useStorage } from '../../../data/'
+import { useStorage } from '../../../composables/'
 import type { RLMMThemeConfig } from '../../../types'
 
-export function renderSidebarAction(theme: RLMMThemeConfig) {
-    const options = theme.sidebarAction
+export function renderSidebarAction(options: RLMMThemeConfig['sidebarAction']) {
     if (options == undefined) return undefined
 
     let storedValue = ref(false)
@@ -13,11 +12,12 @@ export function renderSidebarAction(theme: RLMMThemeConfig) {
     return h(VPButton, {
         onVnodeMounted: (node) => {
             const storage = useStorage()
+            const key = storage.themeKeys.value.hideSidebarAction
 
-            storedValue.value = storage.getAny('rlmm-hide-action', false)
+            storedValue.value = storage.getAny(key, false)
             node.el!.style.display = storedValue.value ? 'none' : 'block'
         },
-        text: options.title ?? 'Edit preferences',
+        text: options.title,
         href: options.path,
         class: options.buttonTheme ?? 'alt',
         style: {

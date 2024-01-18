@@ -1,0 +1,41 @@
+:root {
+    --vp-home-hero-name-color: transparent;
+    --vp-home-hero-name-background: -webkit-linear-gradient(135deg,
+            var(--vp-c-brand-3) 30%,
+            var(--vp-c-brand-2) 70%,
+            var(--vp-c-brand-1) 100%);
+}
+
+.VPHomeSponsors {
+    margin-top: 0 !important;
+    border-top: none !important;
+}
+
+.dark .promotion-img {
+    background-color: var(--vp-c-neutral);
+}
+
+.home-resources {
+    position: relative;
+    margin: 30px 0 20px 0;
+    padding: 0 24px;
+    font-weight: bold;
+    font-size: large;
+}
+
+.home-resources p {
+    margin: 0 auto;
+    max-width: 1152px;
+}
+
+@media (min-width: 640px) {
+    .home-resources {
+        padding: 0 48px;
+    }
+}
+
+@media (min-width: 960px) {
+    .home-resources {
+        padding: 0 64px;
+    }
+}

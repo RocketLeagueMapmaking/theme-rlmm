@@ -16,19 +16,19 @@
     </div>
 </template>
 
-<script setup lang="ts" generic="Item extends Record<string, any>, Metadata extends object = null, BeforeLoadedItem extends object = Item">
+<script setup lang="ts" generic="Item extends Record<string, any>, Metadata extends object | null = null, BeforeLoadedItem extends object = Item">
 import { type UnwrapRef, onMounted, ref, withDefaults, provide } from 'vue';
 
-import { fetchComponentData } from '../../../data';
+import { fetchComponentData } from '../../../util';
 
 import TreeItem from './TreeItem.vue'
 
-const treeItems = ref<Item[]>(null)
+const treeItems = ref<Item[]>([])
 const metadata = ref<Metadata | null>(null)
 const baseItem = ref<Item[] | null>(null)
 
 const props = withDefaults(defineProps<{
-    data?: unknown
+    data?: Item | Item[]
     dataUrl?: string
     dataKey?: string
     parentKey?: string
@@ -38,7 +38,7 @@ const props = withDefaults(defineProps<{
     idChildKey?: string
     nameChildKey?: string
     idKey?: string
-    search?: string
+    search?: string | null
     // filter?: (item: Item) => boolean
     transformLoadedItem?: (item: BeforeLoadedItem) => Item
 }>(), {
@@ -73,25 +73,25 @@ onMounted(async () => {
     treeItems.value = await fetchComponentData(props, [])
         .then(data => {
             if (props.dataKey) {
-                const { [props.dataKey]: output, ...meta } = data.data as Record<string, unknown>
+                const { [props.dataKey]: output, ...meta } = data.data as Record<string, string>
                 if (meta[props.idKey]) baseId = meta[props.idKey].toString()
                 metadata.value = meta as unknown as UnwrapRef<Metadata>
 
                 return data.data[props.dataKey]
-            } else {
+            } else if (Array.isArray(data.data)) {
                 baseId = data.data[0]?.[props.idKey]
                 return data.data
             }
         });
 
-    if (props.transformLoadedItem) {
+    if (props.transformLoadedItem != undefined) {
         (treeItems.value as Item[]) = treeItems.value.map(item => {
-            return props.transformLoadedItem(<BeforeLoadedItem>item)
+            return props.transformLoadedItem!(<BeforeLoadedItem>item)
         })
     }
 
     // Only compute after tree items has been set
-    baseItem.value = getItem(baseId, treeItems.value)
+    baseItem.value = getItem(baseId!, treeItems.value)
 
     // Throw errors on invalid configuration or no items found
     if (!baseItem.value) throw new Error('No base item found! Configure the idKey and/or dataKey correctly')

@@ -1,6 +1,6 @@
 <template>
     <Suspense v-if="enabled">
-        <div class="container">
+        <div class="container" ref="containerRef">
             <div class="steam-maps">
                 <p class="steam-maps-title" v-if="title.length > 0" v-html="title">
                 </p>
@@ -16,7 +16,14 @@
                             By {{ map.creator.name }}
                         </span>
                         <VPLink :href="itemPageUrl(map)" :noIcon="true">
-                            <VPImage class="steam-map-img" :image="map.preview.url" :title="map.title" :alt="map.title" />
+                            <!-- TODO: Try to prevent the flash on image loading -->
+                            <div v-if="!loadedImgs[map.id]" class="steam-map-img" :style="{
+                                backgroundColor: 'var(--vp-c-bg)',
+                                height: '225px'
+                            }">
+                            </div>
+                            <VPImage v-on:load="() => loadedImgs[map.id] = true" class="steam-map-img"
+                                :image="map.preview.url" :title="map.title" :alt="map.title" />
                         </VPLink>
                         <!-- Only show actions on large screens -->
                         <div class="steam-map-active-actions only-large">
@@ -37,18 +44,19 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, withDefaults } from 'vue'
+import { computed, onMounted, ref, withDefaults } from 'vue'
 
 import { VPIconChevronLeft, VPIconChevronRight } from '../theme'
 
-import { getPlatform, useStorage } from '../../data/'
+import { usePlatform, useStorage } from '../../composables/'
 import type { SteamMap } from '../../types'
+import { useParallax } from '@vueuse/core';
 
 type SteamMapIconType =
     | 'left'
     | 'right'
 
-interface Props {
+export interface Props {
     amount?: number
     title?: string
     sortBy?: 'created' | 'updated'
@@ -67,8 +75,12 @@ interface Props {
     handleException?: (err: unknown) => void
 }
 
-const active = ref(0), isWindows = ref(false), hasSetting = ref(false);
+const active = ref(0), hasSetting = ref(false), containerRef = ref();
 const maps = ref<SteamMap[]>([]);
+const loadedImgs = ref<Record<string, true>>({})
+
+const platform = usePlatform(), isWindows = computed(() => platform.value === 'Windows');
+const storage = useStorage();
 
 const props = withDefaults(defineProps<Props>(), {
     amount: 3,
@@ -104,6 +116,7 @@ function itemPageUrl(map: SteamMap) {
 }
 
 function itemDownloadUrl(map: SteamMap) {
+    // TODO: add
     return ''
 }
 
@@ -152,15 +165,15 @@ function goToNextMap(isClick?: boolean, dIndex = 1) {
 }
 
 onMounted(async () => {
-    const storage = useStorage();
-
-    isWindows.value = getPlatform() === 'Windows'
-    hasSetting.value = storage.getAny(`rlmm-urls-steam`, false)
+    const key = storage.themeKeys.value.useSteamProtocolUrl
+    hasSetting.value = storage.getAny(key, false)
 
     maps.value = await fetchSteamMaps(props)
 
     if (props.displayTime < 0) return
     setInterval(goToNextMap, props.displayTime)
+
+    const {} = useParallax(containerRef)
 })
 </script>
 
@@ -175,7 +188,7 @@ onMounted(async () => {
 .steam-maps-title {
     font-weight: bold;
     font-size: larger;
-    margin: 20px 30px;
+    margin: 30px 30px 10px 30px;
 }
 
 .steam-maps-title :deep(span) {
@@ -236,7 +249,7 @@ onMounted(async () => {
     }
 
     .steam-map-active {
-        padding: 10px !important;
+        padding: 6px !important;
         text-align: center !important;
     }
 

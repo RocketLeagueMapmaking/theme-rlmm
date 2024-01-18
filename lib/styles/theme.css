@@ -1,0 +1,16 @@
+input,
+select,
+option {
+    background-color: var(--vp-c-bg-soft);
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+.VPButton {
+    border-radius: 6px !important;
+}
+
+.VPSwitch.enabled .check {
+    background-color: var(--vp-c-brand-3);
+    transform: translateX(18px);
+}

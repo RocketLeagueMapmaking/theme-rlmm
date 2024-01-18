@@ -11,16 +11,15 @@ interface ButtonProps {
     href?: string
 }
 
-type PromotionOptions = {
+export type PromotionOptions = {
     title: { image: string } | string
     description: string
     image: string
     actions: ButtonProps[]
 }
 
-export function renderPromotion(config?: PromotionOptions) {
-    if (!config) return undefined
-    else return h('div', {
+export function renderPromotion(config: PromotionOptions) {
+    return h('div', {
         class: 'home-resources',
         style: {
             display: 'flex',
@@ -34,6 +33,8 @@ export function renderPromotion(config?: PromotionOptions) {
             style: {
                 width: '800px',
                 maxWidth: '80vw',
+                maxHeight: '600px',
+                objectFit: 'cover',
                 margin: '20px',
                 borderRadius: '10px',
                 flex: 1,
@@ -44,10 +45,10 @@ export function renderPromotion(config?: PromotionOptions) {
             style: { maxWidth: '90vw', flex: 0.6 }
         }, [
             h(typeof config.title !== 'string' ? VPImage : 'p', {
+                class: 'promotion-img',
                 style: {
                     width: '400px',
                     maxWidth: '80vw',
-                    backgroundColor: 'var(--vp-c-neutral)',
                 },
                 image: typeof config.title !== 'string' ? config.title.image : undefined,
                 innerHTML: typeof config.title === 'string' ? config.title : undefined,

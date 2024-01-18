@@ -4,7 +4,7 @@
         <p style="text-align: center;">{{ description }}</p>
         <div class="showcase-items">
             <VPLink v-for="item in items" :key="item.title" :href="getLink(item)">
-                <div class="showcase-item">
+                <div class="showcase-item" :style="{ width: `${Math.floor(90 / items.length)}vw`}">
                     <VPImage :image="item.image" />
                     <h1>{{ item.title }}</h1>
                     <p>{{ getDescription(item) }}</p>
@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { onMounted, ref, withDefaults } from 'vue'
 
-import { type ComponentData, fetchComponentData } from '../../data/'
+import { type ComponentData, fetchComponentData } from '../../util'
 
 export interface ShowcaseEvent {
     title: string
@@ -28,7 +28,7 @@ export interface ShowcaseEvent {
     link: string
 }
 
-const props = withDefaults(defineProps<{
+export interface Props {
     title: string
     description: string
     action: {
@@ -39,10 +39,12 @@ const props = withDefaults(defineProps<{
     descriptionLength?: number
     data?: ShowcaseEvent[]
     dataUrl?: string
-}>(), {
+}
+
+const props = withDefaults(defineProps<Props>(), {
     amount: 3,
     data: () => [],
-    dataUrl: null,
+    dataUrl: undefined,
     descriptionLength: 100,
 })
 
@@ -100,7 +102,6 @@ a {
     padding: 20px 30px;
     margin: 12px;
     height: 300px;
-    max-width: 60vw;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -117,9 +118,24 @@ a {
     font-weight: bolder;
 }
 
+.showcase-item :deep(img) {
+    width: -webkit-fill-available;
+    max-width: 500px !important;
+}
+
 @media (max-width: 960px) {
     .showcase-items {
         flex-direction: column;
+    }
+
+    .showcase-item {
+        width: 90vw !important;
+    }
+
+    .showcase-item :deep(img) {
+        max-width: 70vw !important;
+        max-height: 40%;
+        aspect-ratio: calc(16 / 9);
     }
 }
 </style>

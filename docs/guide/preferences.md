@@ -5,12 +5,14 @@ aside: false
 # Preferences
 
 <script setup>
-import { useNotifications } from '../../lib/'
+import { useCssVar } from '@vueuse/core'
+import { useNotifications, useStorage, ListWindow, WatchSubscriptionManager } from '../../lib/'
 
 const NotificationManager = useNotifications()
+const storage = useStorage()
 </script>
 
-<TabsWindow :tabs="['general', 'notifications', 'guide', 'advanced']">
+<TabsWindow :activeTabStyle="{ backgroundColor: 'var(--vp-c-bg-soft)' }" :tabs="['general', 'notifications', 'guide', 'advanced']">
 
 <template #tab-general>
 
@@ -21,28 +23,41 @@ const NotificationManager = useNotifications()
 Use dark theme
 </PreferenceSetting>
 
+<PreferenceSetting storeKey="rlmm-bg-green" documentClassToToggle="green-bg">
+
+Use greener background
+</PreferenceSetting>
+
+<PreferenceSetting storeKey="rlmm-accent-color" type="color" cssVariable="--vp-c-brand-1">
+
+Accent color
+</PreferenceSetting>
+
 ### Display
 
 <PreferenceSetting storeKey="rlmm-hide-action">
 
-Hide `Edit preferences` action
+Hide sidebar action button
 </PreferenceSetting>
 
 <PreferenceSetting storeKey="rlmm-show-sidemenu">
 
 Show advanced pages in sidemenu
 </PreferenceSetting>
-<PreferenceSetting storeKey="rlmm-left-toc">
-
-Move TOC back to left sidemenu
-</PreferenceSetting>
 </template>
 
 <template #tab-notifications>
 
+### Inbox
+
+<PreferenceSetting storeKey="rlmm-hide-navinbox">
+
+Hide notification inbox
+</PreferenceSetting>
+
 ### Push notifications
 
-Get push notifications when the guide is updated
+Get push notifications for map making updates
 
 :::tip Workshop updates
 [See all sources](https://swagbot.pages.dev/feeds) for getting notifications on new and updated workshop items
@@ -50,10 +65,10 @@ Get push notifications when the guide is updated
 
 <VPButton
     text="Enable notifications"
-    v-if="!NotificationManager.hasPermission"
+    v-if="NotificationManager && !NotificationManager.permissions.granted"
     @click="NotificationManager.requestPermissions()"
 />
-<div v-else>
+<div v-else-if="NotificationManager">
 <VPButton
     text="Send test notification"
     theme="alt"
@@ -86,11 +101,7 @@ Get only a notification when one of the selected pages is updated
 </PreferenceSetting>
 :::
 
-<VPButton
-    text="Update watched pages"
-    v-if="NotificationManager.hasPermission"
-    @click="console.log(NotificationManager.getWatchedPages())"
-/>
+<WatchSubscriptionManager :subscription="{}" watchPrefix="rlmm-page-"/>
 
 </div>
 </template>
@@ -140,15 +151,21 @@ Open Steam urls in the Windows app
 
 ### Experimental
 
-<PreferenceSetting
-    storeKey="rlmm-dev-build"
-    defaultValue="stable"
-    :options="['stable', 'dev', 'nightly']"
-    type="select"
->
+:::details Nightly builds
+Feeling adventurous? Try out on of these experimental builds:
 
-Documentation build
-</PreferenceSetting>
+<ListWindow :groupByCategory="true" categoryKey="environment" dataUrl="https://docs.rocketleaguemapmaking.workers.dev/deployments">
+    <template #default="{ item }">
+        <VPLink :href="item.url" :noIcon="true">
+            <ActionBlock>
+                <template #left>
+                    {{ item.branch }}@{{ item.id }}
+                </template>
+            </ActionBlock>
+        </VPLink>
+    </template>
+</ListWindow>
+:::
 
 <PreferenceSetting storeKey="rlmm-use-editor" defaultValue="UDK" type="select" :options="['UDK']">
 

@@ -1,6 +1,6 @@
 <!-- From vitepress issue: https://github.com/faker-js/faker/pull/1487/files -->
 <template>
-    <div ref="el" class="banner" :style="{ background: bgColor }">
+    <div v-if="isMounted" ref="el" class="banner" :style="{ background: bgColor }">
         <div class="text" v-html="html">
         </div>
 
@@ -14,20 +14,30 @@
 </template>
 
 <script setup lang="ts">
-import { useElementSize } from '@vueuse/core';
-import { onMounted, ref, watchEffect } from 'vue';
+import { computed, inject, onMounted, ref, watchEffect } from 'vue';
+import { useElementSize, useMounted } from '@vueuse/core';
 import { useData } from 'vitepress'
 
-import { getThemeColor } from '../../data';
-import type { RLMMNotification, RLMMThemeConfig } from '../../types'
+import { useNotifications } from '../../composables';
+import { getThemeColor } from '../../util';
+import type { BannerNotification, RLMMThemeConfig } from '../../types'
 
-const banner = defineProps<Partial<RLMMNotification>>();
+const banner = defineProps<BannerNotification>();
 
-const { page, theme } = useData<RLMMThemeConfig>()
+const { 
+    page,
+    theme: { value: { banner: themeOptions } },
+} = useData<RLMMThemeConfig>()
+
 const className = 'banner-dismissed'
-const bgColor = getThemeColor(banner.color ?? theme.value.banner?.color ?? 'brand')
+const bgColor = getThemeColor(banner.color ?? themeOptions?.color ?? 'brand')
+
+const md = inject<markdownit>('md')
 
 const el = ref<HTMLElement>();
+const isMounted = useMounted()
+
+const notifications = useNotifications()
 const { height } = useElementSize(el);
 watchEffect(() => {
     if (height.value) {
@@ -38,29 +48,39 @@ watchEffect(() => {
     }
 });
 
-const restore = (key: string, cls: string, def = false) => {
-    const saved = localStorage.getItem(key);
-    const pageEnabled = theme.value.banner?.enabled?.(page.value) ?? true;
+const html = computed(() => {
+    return typeof banner.text === 'string'
+        ? md?.render(banner.text)
+        : banner.text?.html
+})
 
-    const show = saved ? saved !== 'false' && saved > new Date().toString() : def && pageEnabled
-    if (show || banner.id == undefined) {
+const restore = (key: string | undefined, cls: string) => {
+    const saved = key ? localStorage.getItem(key) : undefined;
+    const pageEnabled = themeOptions?.enabled?.(page.value) ?? true;
+
+    const show = saved ? saved !== 'false' && saved > new Date().toString() : false && pageEnabled
+    if (show || key == undefined || !notifications.isActive(banner)) {
         document.documentElement.classList.add(cls);
     }
 };
 
 const dismiss = () => {
-    const cooldown = banner.cooldown ?? theme.value.banner.cooldown ?? -1
+    if (!banner.id) return console.error('Cannot dismiss no banner!')
+
+    const cooldown = banner.cooldown ?? themeOptions?.cooldown ?? -1
 
     localStorage.setItem(
         banner.id,
         cooldown < 0 ? 'false' : (Date.now() + 8.64e7 * cooldown).toString() // current time + n day
     );
     document.documentElement.classList.add(className);
-    theme.value.banner?.onDismissed?.(banner.id)
+
+    themeOptions?.onDismissed?.(banner.id)
 };
 
-onMounted(() => restore(banner.id, className))
-// restore(id, className);
+onMounted(() => {
+    restore(banner.id, className)
+})
 </script>
 
 <style>

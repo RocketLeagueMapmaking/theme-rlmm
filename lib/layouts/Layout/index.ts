@@ -1,56 +1,35 @@
-import { defineAsyncComponent, h, type DefineComponent } from 'vue'
+import { defineAsyncComponent, h } from 'vue'
 import { useData } from 'vitepress'
 
-import { VPHomeSponsors } from 'vitepress/theme'
+import { fetchComponent } from '../../util/'
+import type {
+    BannerNotification,
+    RLMMThemeConfig,
+} from '../../types'
 
-import { getHomeFrontmatter } from './frontmatter'
-import { fetchComponentData } from '../../data/'
-import type { RLMMNotification, RLMMThemeConfig } from '../../types'
+import { renderHomePageSections } from './sections/home'
 
-import Banner from '../../components/layout/Banner.vue'
-import EventShowcase from '../../components/global/EventShowcase.vue'
-import SteamMaps from '../../components/global/SteamMaps.vue'
-import { VPFeatures } from '../../components/export'
+import MainLayout from './components/main.vue'
+import LoadingLayout from './components/loading.vue'
 
-import { renderPromotion } from './sections/promotion'
-import { renderSidebarAction } from './sections/sidebarAction'
-
-export default function defineDefaultLayout(Layout: DefineComponent) {
+export default function defineDefaultLayout() {
     return defineAsyncComponent({
-        loadingComponent: h(Layout, {}, { 
-            'home-features-after': () => {
-                return h('p', { 
-                    class: 'home-resources' ,
-                    style: {
-                        textAlign: 'center',
-                        margin: '100px 0',
-                    },
-                    innerHTML: 'Loading...<br><br>You seem to be offline, reload the page to try again...'
-                }) 
-            }
-        }),
+        loadingComponent: () => h(LoadingLayout),
         loader: async () => {
-            const { frontmatter, theme: { value: theme } } = useData<RLMMThemeConfig>()
-            const data = getHomeFrontmatter(frontmatter.value ?? {})
-            const notification = theme.banner && await fetchComponentData(theme.banner, undefined)
-                .then(res => res.data as false | RLMMNotification | undefined)
+            const {
+                theme: { value: theme },
+                frontmatter: fm,
+            } = useData<RLMMThemeConfig>()
 
-            const children = [
-                (data?.resources.enabled ? h('div', { class: 'home-resources' }, [h('p', data.resources.title)]) : undefined),
-                (data?.resources.enabled ? h(VPFeatures, { features: data.resources.resources }) : undefined),
-                (data?.events.enabled ? h(EventShowcase, await fetchComponentData(data.events, [])) : undefined),
-                renderPromotion(frontmatter.value.promotion),
-                // @ts-ignore
-                (data?.sponsors.enabled ? h(VPHomeSponsors, await fetchComponentData(data.sponsors, [])) : undefined),
-            ].filter((child): child is NonNullable<typeof child> => child != undefined)
+            const banner = await fetchComponent<false | BannerNotification>(theme.banner)
+            const notifications = await fetchComponent(theme.notifications) ?? []
 
-            const sidebarActionPos = `sidebar-nav-${theme.sidebarAction?.position === 'bottom' ? 'after' : 'before'}`
+            const homepageSlots = await renderHomePageSections(fm.value)
 
-            return h(Layout, {}, {
-                'layout-top': () => h(Banner, notification || {}),
-                [sidebarActionPos]: () => renderSidebarAction(theme),
-                'home-hero-image': () => data?.steam.enabled ? h(SteamMaps, data.steam) : undefined,
-                'home-features-after': () => h('div', children),
+            return h(MainLayout, {
+                homepageSlots,
+                banner,
+                notifications, 
             })
         }
     })

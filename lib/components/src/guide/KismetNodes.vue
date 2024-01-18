@@ -1,11 +1,7 @@
 <template>
-    <SearchBlock searchKey="name" :filters="[
-        { type: 'select', itemKey: 'type', options: ['actions', 'conditions', 'events'] },
-        { type: 'select', itemKey: 'Package', options: ['ProjectX', 'TAGame'] },
-    ]">
+    <SearchBlock searchKey="name" :filters="filters">
         <template #default="{ filter }">
-            <ListWindow dataUrl="https://kismet-cdn.ghostrider-05.com/assets?version=latest&tag=nodes_automated"
-                idKey="Class" categoryKey="type" :groupByCategory="true" :filter="filter">
+            <ListWindow :dataUrl="listUrl" idKey="Class" categoryKey="type" :groupByCategory="true" :filter="filter">
                 <template #default="{ item }">
                     <details class="details custom-block">
                         <summary>{{ item.name }}</summary>
@@ -22,5 +18,12 @@
 
 <script setup lang="ts">
 import ListWindow from '../list/ListView.vue'
-import SearchBlock from '../list/SearchBlock.vue'
+import SearchBlock, { SearchFilter } from '../list/SearchBlock.vue'
+
+const listUrl = 'https://kismet-cdn.ghostrider-05.com/assets?version=latest&tag=nodes_automated'
+
+const filters: SearchFilter<'select', { options: string[] }>[] = [
+    { type: 'select', itemKey: 'type', options: ['actions', 'conditions', 'events'] },
+    { type: 'select', itemKey: 'Package', options: ['ProjectX', 'TAGame'] },
+]
 </script>

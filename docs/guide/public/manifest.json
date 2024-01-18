@@ -5,8 +5,6 @@
     "display": "standalone",
     "theme_color": "#3eaf7c",
     "background_color": "#3eaf7c",
-    "scope": "/",
-    "start_url": "/",
     "icons": [
         {
             "src": "./icons/logo_rlmm_round_48.png",

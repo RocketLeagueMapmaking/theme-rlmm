@@ -69,10 +69,10 @@ promotion:
     description: Learn map making in a video tutorial course.<br><br>Some more text about the course and why you should choose it over regular videos if you have the money for it
     actions:
         - text: Read more
-          link: https://learn.skillquest.io/landing/1699993747535x796931164922708000
+          href: https://learn.skillquest.io/landing/1699993747535x796931164922708000
 
 sponsors:
-  title: Patreon shoutout
+  message: Patreon shoutout. 
   link: https://patreon.com/rocketleaguemapmaking
   dataUrl: https://docs.rocketleaguemapmaking.workers.dev/sponsors
 ---

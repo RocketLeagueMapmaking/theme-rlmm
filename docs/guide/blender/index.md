@@ -1,3 +1,16 @@
+---
+finished: false
+blocks:
+    - text: |
+        The following video tutorials are made about {UDK topic}\
+        \- [First YouTube video](https://google.com)\
+        \- [Second YouTube video](https://google.com)
+      color: var(--vp-c-indigo-soft)
+    - text: Want to read more about {UDK topic}? Learn more about [A](./) or [B](./)
+      type: tip
+      position: bottom
+---
+
 # Blender
 
 ## Tutorials
@@ -14,3 +27,16 @@ Press . (Period/Full Stop) to bring up the Pivot Point wheel, and choose 3D Curs
 </StepsWindow>
 
 :::
+
+## Cheatsheet - export
+
+<StepsWindow color="green">
+<template #step-1>
+
+Press export
+</template>
+<template #step-2>
+
+Import it in UDK
+</template>
+</StepsWindow>

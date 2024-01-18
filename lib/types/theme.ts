@@ -1,14 +1,13 @@
 import type { PageData, DefaultTheme } from 'vitepress'
-import type { RLMMNotification } from './notification'
 
-export type SponsorData = {
-    tier: string
-    items: {
-        name: string
-        img: string
-        url: string
-    }[]
-}[]
+import type {
+    BannerNotification,
+    BlockPosition,
+    BlockRenderOptions,
+    NavInboxOptions,
+    NotFinishedOptions,
+    ThemeNotification,
+} from './theme/'
 
 export interface RLMMThemeConfig extends DefaultTheme.Config {
     /**
@@ -28,9 +27,8 @@ export interface RLMMThemeConfig extends DefaultTheme.Config {
 
         /**
          * The text on the action button
-         * @default 'Edit preferences'
          */
-		title?: string
+		title: string
 
         /**
          * Where to place the action button on the sidebar 
@@ -71,12 +69,101 @@ export interface RLMMThemeConfig extends DefaultTheme.Config {
         /**
          * The data of the notification banner to display
          */
-        data?: RLMMNotification
+        data?: BannerNotification
 
         /**
          * The url to fetch the notification.
-         * When making a GET request a `RLMMNotification` JSON response is expected.
+         * When making a GET request a `BannerNotification` JSON response is expected.
          */
         dataUrl?: string
     }
+
+    /**
+     * Enhance a page with custom blocks placed at the top and/or bottom
+     */
+    blocks?: {
+        /**
+         * Enabled:
+         * - false: no custom blocks
+         * - true: all custom blocks
+         * - 'top': only blocks at the top of the page
+         * - 'bottom': only blocks at the bottom of the page
+         */
+        enabled?: boolean | BlockPosition
+
+        /**
+         * Blocks rendered on a page without setting the frontmatter on the page itself
+         */
+        default?:
+            | Exclude<BlockRenderOptions, false>[]
+            | ((page: PageData) => false | Exclude<BlockRenderOptions, false>[])
+
+        /**
+         * Adds custom blocks for related pages at the bottom
+         * Controls whether to enable or not on all pages if configured in the frontmatter.
+         */
+        relatedPages?: boolean
+
+        /**
+         * Mark pages as not finished with a default banner at the top of the page.
+         * Can be enabled on a page with the `finished: false` frontmatter.
+         * Set to `false` to disable all not finished banners.
+         * 
+         * @default { type: 'warning', text: 'This page is not finished'}
+         */
+        notFinished?: NotFinishedOptions
+    }
+
+    notifications?: {
+        /**
+         * Show notifications in an inbox style
+         */
+        inbox?: NavInboxOptions
+
+        data?: ThemeNotification[]
+        dataUrl?: string
+    }
+
+    /**
+     * Options for storing additional (theme) settings in local storage.
+     */
+    storage?: {
+        /**
+         * The local storage keys that is used by components and the theme
+         * 
+         * @default 
+         * { 
+         *     hideNotificationInbox: 'rlmm-hide-navinbox',
+         *     hideSidebarAction: 'rlmm-hide-action',
+         *     notificationInboxLastOpened: 'rlmm-navinbox-lastopened',
+         *     useSteamProtocolUrl: 'rlmm-urls-steam',
+         *     watchAllPages: 'rlmm-push-all'
+         * }
+         */
+        keys?: Partial<
+            Record<
+                | 'useSteamProtocolUrl'
+                | 'hideNotificationInbox'
+                | 'hideSidebarAction'
+                | 'notificationInboxLastOpened'
+                | 'watchAllPages'
+                , string
+            >
+        >
+
+        // TODO: allow difference between themes
+        /**
+         * A set of CSS colors to apply on loading the page
+         * @example { '--vp-c-bg': 'localstore-key' }
+         */
+        colorKeys?: Record<string, string>
+
+        /**
+         * Apply classes to the page based on local storage items
+         * @example { 'green-bg': 'use-green-bg-setting' }
+         */
+        pageClasses?: Record<string, string>
+    }
 }
+
+export type ThemeConfig = RLMMThemeConfig
