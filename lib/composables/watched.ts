@@ -17,10 +17,7 @@ export function useWatchedPages(prefix: string = 'rlmm-page-') {
         },
 
         getWatchedPages(): WatchedPages {
-            // TODO: figure out interface to expose prefix
-            // and make interacting with watched pages easier
-            // const prefix = 'rlmm-page-'
-            const isAll = storage.getBoolean(storage.themeKeys.value?.watchAllPages!) ?? false
+            const isAll = storage.getBoolean(storage.themeKeys.value.watchAllPages) ?? false
 
             if (isAll) return 'all'
             else return storage.list(prefix, 'true')

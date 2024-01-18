@@ -6,7 +6,7 @@ aside: false
 
 <script setup>
 import { useCssVar } from '@vueuse/core'
-import { useNotifications, useStorage, ListWindow } from '../../lib/'
+import { useNotifications, useStorage, ListWindow, WatchSubscriptionManager } from '../../lib/'
 
 const NotificationManager = useNotifications()
 const storage = useStorage()
@@ -101,11 +101,7 @@ Get only a notification when one of the selected pages is updated
 </PreferenceSetting>
 :::
 
-<VPButton
-    text="Update watched pages"
-    v-if="NotificationManager.hasPermission"
-    @click="console.log(NotificationManager.getWatchedPages())"
-/>
+<WatchSubscriptionManager :subscription="{}" watchPrefix="rlmm-page-"/>
 
 </div>
 </template>
