@@ -22,7 +22,7 @@ import SearchBlock, { SearchFilter } from '../list/SearchBlock.vue'
 
 const listUrl = 'https://kismet-cdn.ghostrider-05.com/assets?version=latest&tag=nodes_automated'
 
-const filters: SearchFilter<'select', { options: string[] }>[] = [
+const filters: SearchFilter[] = [
     { type: 'select', itemKey: 'type', options: ['actions', 'conditions', 'events'] },
     { type: 'select', itemKey: 'Package', options: ['ProjectX', 'TAGame'] },
 ]

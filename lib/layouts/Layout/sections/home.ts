@@ -1,6 +1,7 @@
 import { h, type VNode } from 'vue'
 import { VPHomeSponsors } from 'vitepress/theme'
 
+import { useStorage } from '../../../composables'
 import { fetchComponentData, renderIf } from '../../../util'
 
 import EventShowcase from '../../../components/global/EventShowcase.vue'
@@ -23,7 +24,7 @@ function getHomeFrontmatter (fm: Record<string, any>) {
 // TODO: move to seperate home component later?
 export async function renderHomePageSections (
     frontmatter: Record<string, any>,
-): Promise<Record<string, () => VNode> | undefined> {
+): Promise<Record<string, (() => VNode) | undefined> | undefined> {
     const data = getHomeFrontmatter(frontmatter ?? {})
     if (!data) return undefined
 
@@ -46,10 +47,14 @@ export async function renderHomePageSections (
         renderIf(data.sponsors, () => h(VPHomeSponsors, sponsors)),
     ].filter((child): child is NonNullable<typeof child> => child != undefined)
 
+    const storage = useStorage()
+    const hideSteamSetting = storage.useKey('rlmm-home-hidesteam', null).value === 'true'
     const steamOptions = data.hero && 'steam' in data.hero ? data.hero.steam : undefined
 
     return {
-        'home-hero-image': () => renderIf(steamOptions, () => h(SteamMaps, steamOptions)),
+        'home-hero-image': !hideSteamSetting && steamOptions && steamOptions.enabled !== false
+            ? () => renderIf(steamOptions, () => h(SteamMaps, steamOptions))
+            : undefined,
         'home-features-after': () => h('div', children),
-    } as Record<string, () => VNode>
+    } as Record<string, undefined | (() => VNode)>
 }

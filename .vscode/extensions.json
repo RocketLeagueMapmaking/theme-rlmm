@@ -7,8 +7,9 @@
         "davidanson.vscode-markdownlint",
         "christian-kohler.npm-intellisense",
         "christian-kohler.path-intellisense",
-        "octref.vetur",
         "zixuanchen.vitest-explorer",
-        "vue.volar"
+        "eliostruyf.vscode-front-matter",
+        "bierner.github-markdown-preview",
+        "vue.vscode-typescript-vue-plugin"
     ]
 }

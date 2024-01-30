@@ -10,9 +10,11 @@
 import { computed, withDefaults } from 'vue'
 import DefaultTheme from 'vitepress/theme'
 
-import markdownit from 'markdown-it'
+import { useMarkdown } from '../../../composables';
 
 const { Layout: ParentLayout } = DefaultTheme
+
+const md = useMarkdown()
 
 const props = withDefaults(defineProps<{
     text?: string | { html: string }
@@ -23,7 +25,7 @@ const props = withDefaults(defineProps<{
 
 const offlineText = computed(() => {
     return typeof props.text === 'string' 
-        ? <string>markdownit().render(props.text)
+        ? md(props.text)
         : props.text.html
 })
 </script>

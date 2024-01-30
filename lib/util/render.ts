@@ -1,4 +1,6 @@
-import { type VNode } from "vue";
+import { h, type VNode } from "vue";
+
+import type { ThemeText } from "../types";
 
 export const renderIf = (
     condition: boolean | (unknown | undefined),
@@ -6,6 +8,19 @@ export const renderIf = (
 ) => condition && condition != undefined ? (typeof node === 'function' ? node() : node) : undefined
 
 export const renderHTML = (
-    md: markdownit,
-    text: string | { html: string }
-) => (typeof text === 'string' ? md.render(text) : text.html)
+    md: (md: string) => string,
+    text: ThemeText,
+) => (typeof text === 'string' ? md(text) : text.html)
+
+export const renderTitle = (
+    options: { md: markdownit, enabled?: boolean, tag?: string },
+    text: string,
+) => h(options.tag ?? 'h2', {
+    id: options.enabled
+        ? text
+            .toLowerCase()
+            .replace(/ /g,'-')
+            .replace(/[-]+/g, '-')
+            .replace(/[^\w-]+/g,'')
+        : undefined,
+}, [text])

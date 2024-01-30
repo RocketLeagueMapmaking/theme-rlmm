@@ -1,5 +1,8 @@
 # Frontmatter
 
+> [!TIP] Frontmatter
+> You can use the [Frontmatter VSCode extension]() to have a better UI for editing frontmatter
+
 ## Home page
 
 ### hero.steam

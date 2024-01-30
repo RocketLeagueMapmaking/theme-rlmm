@@ -3,6 +3,10 @@ blocks:
     - text: Want to read more about {UDK topic}? Learn more about [A](./) or [B](./)
       type: tip
       position: bottom
+related:
+    - /udk/reference
+    - /blender/
+    - /faq/
 ---
 
 # Guide

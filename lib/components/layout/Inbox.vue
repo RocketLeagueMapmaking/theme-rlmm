@@ -18,7 +18,7 @@
 
             </div>
             <div class="nav-notification-inbox-bottom" v-if="options.bottomText">
-                <p v-html="renderHTML(md!, options.bottomText)"></p>
+                <p v-html="renderHTML(md, options.bottomText)"></p>
             </div>
         </div>
     </div>
@@ -43,7 +43,7 @@ const hasRead = ref(false)
 
 const storage = useStorage()
 const [open, toggle] = useToggle()
-const md = inject<markdownit>('md')
+const md = inject<(md: string) => string>('md')!
 
 const hideInbox = storage.useKey<string>(storage.themeKeys.value.hideNotificationInbox, null)
 const lastOpened = storage.useKey<string>(storage.themeKeys.value.notificationInboxLastOpened, null)
@@ -64,7 +64,7 @@ const unread = computed(() => {
 
 const emptyText = computed(() => {
     return props.options?.emptyText
-        ? renderHTML(md!, props.options.emptyText)
+        ? renderHTML(md, props.options.emptyText)
         : 'No notifications to read...'
 })
 

@@ -15,7 +15,6 @@ import SteamMaps from './global/SteamMaps.vue'
 import ActionView from './global/markdown/action.vue'
 import StepsView from './global/markdown/steps.vue'
 import TabsView from './global/markdown/tabs.vue'
-import { ThemeConfig } from '../types'
 
 export const registerGlobalProperties: EnhanceFunction = (ctx) => {
     // TODO: read from package.json

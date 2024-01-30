@@ -1,0 +1,356 @@
+{
+  "$schema": "https://frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.panel.actions.disabled": [
+    "optimizeSlug"
+  ],
+  "frontMatter.taxonomy.fieldGroups": [
+    {
+        "id": "feature",
+        "labelField": "title",
+        "fields": [
+            {
+                "title": "title",
+                "name": "title",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "title": "details",
+                "name": "details",
+                "type": "string"
+              },
+              {
+                "title": "link",
+                "name": "link",
+                "type": "string"
+              },
+              {
+                "title": "linkText",
+                "name": "linkText",
+                "type": "string"
+              },
+              {
+                "title": "icon",
+                "name": "icon",
+                "type": "string"
+              }
+        ]
+    },
+    {
+        "id": "action",
+        "labelField": "text",
+        "fields": [
+            {
+                "title": "theme",
+                "name": "theme",
+                "type": "choice",
+                "default": "brand",
+                "choices": [
+                    {
+                        "id": "brand",
+                        "title": "Brand"
+                    },
+                    {
+                        "id": "alt",
+                        "title": "Alternative"
+                    },
+                    {
+                        "id": "sponsor",
+                        "title": "Sponsor"
+                    }
+                ]
+              },
+              {
+                "title": "text",
+                "name": "text",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "title": "link",
+                "name": "link",
+                "type": "string"
+              }
+        ]
+    }
+  ],
+  "frontMatter.taxonomy.contentTypes": [
+    {
+      "name": "default",
+      "pageBundle": false,
+      "previewPath": null,
+      "allowAsSubContent": true,
+      "fields": [
+        {
+          "title": "Title",
+          "name": "title",
+          "single": true,
+          "type": "string"
+        },
+        {
+          "title": "Description",
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "title": "Layout",
+          "name": "layout",
+          "type": "choice",
+          "choices": [
+            {
+              "id": "doc",
+              "title": "Document"
+            },
+            {
+              "id": "home",
+              "title": "Home page"
+            },
+            {
+              "id": "page",
+              "title": "Custom page"
+            }
+          ]
+        },
+        {
+          "title": "Is finished",
+          "name": "finished",
+          "default": false,
+          "type": "draft"
+        }
+      ]
+    },
+    {
+      "name": "home",
+      "isSubContent": true,
+      "pageBundle": false,
+      "fields": [
+        {
+            "title": "Title",
+            "name": "title",
+            "single": true,
+            "type": "string"
+          },
+          {
+            "title": "Description",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "title": "Layout",
+            "name": "layout",
+            "type": "choice",
+            "default": "home",
+            "editable": false,
+            "choices": [
+            //   {
+            //     "id": "doc",
+            //     "title": "Document"
+            //   },
+              {
+                "id": "home",
+                "title": "Home page"
+              },
+            //   {
+            //     "id": "page",
+            //     "title": "Custom page"
+            //   }
+            ]
+          },
+          {
+            "title": "Is finished",
+            "name": "finished",
+            "default": false,
+            "type": "draft"
+          },
+        {
+          "title": "hero",
+          "name": "hero",
+          "required": false,
+          "type": "fields",
+          "fields": [
+            {
+              "title": "name",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "title": "tagline",
+              "name": "tagline",
+              "type": "string"
+            },
+            {
+              "title": "image",
+              "name": "image",
+              "type": "image"
+            },
+            {
+              "title": "actions",
+              "name": "actions",
+              "type": "block",
+              "fieldGroup": [
+                "action"
+              ]
+            },
+            {
+              "title": "steam",
+              "name": "steam",
+              "type": "fields",
+              "fields": [
+                {
+                  "title": "title",
+                  "name": "title",
+                  "type": "string"
+                },
+                {
+                  "title": "enabled",
+                  "name": "enabled",
+                  "type": "boolean"
+                },
+                {
+                  "title": "amount",
+                  "name": "amount",
+                  "type": "number"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "features",
+          "name": "features",
+          "type": "block",
+          "fieldGroup": [
+            "feature"
+          ]
+        },
+        {
+          "title": "resources",
+          "name": "resources",
+          "type": "block",
+          "fieldGroup": [
+            "feature"
+          ]
+        },
+        {
+          "title": "events",
+          "name": "events",
+          "type": "fields",
+          "fields": [
+            {
+              "title": "title",
+              "name": "title",
+              "type": "string"
+            },
+            {
+              "title": "description",
+              "name": "description",
+              "type": "string"
+            },
+            {
+              "title": "action",
+              "name": "action",
+              "type": "fields",
+              "fields": [
+                {
+                  "title": "text",
+                  "name": "text",
+                  "type": "string"
+                },
+                {
+                  "title": "link",
+                  "name": "link",
+                  "type": "string"
+                }
+              ]
+            },
+            {
+              "title": "dataUrl",
+              "name": "dataUrl",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "title": "promotion",
+          "name": "promotion",
+          "type": "fields",
+          "fields": [
+            {
+              "title": "image",
+              "name": "image",
+              "type": "image"
+            },
+            {
+              "title": "title",
+              "name": "title",
+              "type": "fields",
+              "fields": [
+                {
+                  "title": "image",
+                  "name": "image",
+                  "type": "image"
+                }
+              ]
+            },
+            {
+              "title": "description",
+              "name": "description",
+              "type": "string"
+            },
+            {
+              "title": "actions",
+              "name": "actions",
+              "type": "block",
+              "fields": [
+                {
+                  "title": "0",
+                  "name": "0",
+                  "type": "fields",
+                  "fields": [
+                    {
+                      "title": "text",
+                      "name": "text",
+                      "type": "string"
+                    },
+                    {
+                      "title": "href",
+                      "name": "href",
+                      "type": "string"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "sponsors",
+          "name": "sponsors",
+          "type": "fields",
+          "fields": [
+            {
+              "title": "message",
+              "name": "message",
+              "type": "string"
+            },
+            {
+              "title": "link",
+              "name": "link",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "title": "dataUrl",
+              "name": "dataUrl",
+              "type": "string"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "frontMatter.taxonomy.seoContentLengh": -1,
+  "frontMatter.content.defaultFileType": "md",
+  "frontMatter.content.publicFolder": "/docs/guide/public/",
+  "frontMatter.preview.host": "http://localhost:5173/"
+}

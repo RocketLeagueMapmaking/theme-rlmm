@@ -1,6 +1,6 @@
 {
   "name": "@rocketleaguemapmaking/theme-rlmm",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "description": "Theme for rocketleaguemapmaking.com",
   "homepage": "https://theme-rlmm.pages.dev/",
@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/rocketleaguemapmaking/theme-rlmm/issues"
   },
-  "repository":  "https://github.com/rocketleaguemapmaking/theme-rlmm.git",
+  "repository": "https://github.com/rocketleaguemapmaking/theme-rlmm.git",
   "publishConfig": {
     "access": "public",
     "registry": "https://npm.pkg.github.com"
@@ -23,13 +23,13 @@
   },
   "main": "lib/index.ts",
   "devDependencies": {
-    "markdown-it": "^14.0.0",
+    "marked": "^11.2.0",
     "typescript": "^5.3.3",
     "vue": "^3.4.15"
   },
   "dependencies": {
     "@iconify/vue": "^4.1.1",
     "@vueuse/core": "^10.7.2",
-    "vitepress": "1.0.0-rc.39"
+    "vitepress": "1.0.0-rc.40"
   }
 }

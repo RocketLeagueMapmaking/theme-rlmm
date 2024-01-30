@@ -1,3 +1,6 @@
+---
+title: Components
+---
 # Components
 
 There a few types of components installed globally:
@@ -36,8 +39,11 @@ Renders a highlighted section. To place it at the top or bottom of the page use 
 
 Exposed slots:
 
+- default slot. Can't be used in combination with the other slots
 - `left`
 - `right`
+
+:::details Examples
 
 <ActionBlock>
 <template #left>
@@ -49,19 +55,56 @@ This is some content
 <VPButton text="click me" />
 </template>
 </ActionBlock>
-<ActionBlock :style="{ backgroundColor: 'var(--vp-c-neutral-inverse)' }">
+<ActionBlock :style="{ backgroundColor: 'var(--vp-c-neutral-inverse)', border: '2px solid var(--vp-c-neutral)' }">
 <template #left>
 
-<p>
 <img src="https://c5.patreon.com/external/favicon/rebrand/favicon.ico?v=af5597c2ef" alt="patreon">
 Donate via Patreon
-</p>
 </template>
 
 <template #right>
 <VPButton text="donate" theme="sponsor" href="https://patreon.com/rocketleaguemapmaking" />
 </template>
 </ActionBlock>
+
+Or use the default slot:
+
+<ActionBlock :style="{ backgroundColor: 'var(--vp-c-warning-soft)'}">
+<template #default>
+
+This is some content
+<VPButton text="click me" />
+<VPButton text="click me too" />
+</template>
+</ActionBlock>
+
+Is not the same as with two slots:
+
+<ActionBlock :style="{ backgroundColor: 'var(--vp-c-warning-soft)'}">
+<template #left>
+
+This is some content
+</template>
+<template #right>
+
+<VPButton text="click me" />
+<VPButton text="click me too" />
+</template>
+</ActionBlock>
+
+:::
+
+## Icon <Badge type="info" text="general component" />
+
+Renders an icon
+
+Options: see `@iconify/vue`
+
+:::details Example
+
+<Icon icon="carbon:notification-new" width="30" />
+
+:::
 
 ## PreferenceSetting <Badge type="info" text="general component" />
 
@@ -96,9 +139,8 @@ The allowed `type`s are:
 </PreferenceSetting>
 ```
 
-:::tip Get settings value
+> [!TIP] Get settings value
 To get a setting value in a component, use the [`useSettings`](composables#usesettings) function
-:::
 
 ### Show value
 
@@ -275,10 +317,9 @@ Shows the most recent published / updated maps on the Rocket League Steam worksh
 | disableClick    | `boolean`                     | `false`               | Option to disable going to the next map by clicking on the current map. Will open the map on clicking |
 | urlProtocol     | [url protocol](#url-protocol) | `setting-windows`     | Where to open Steam urls                                                                              |
 
-:::tip Colored title
+> [!TIP] Colored title
 The `title` option renders as HTML making it customisable to style.
 By default any `span` element in the title will be the brand color.
-:::
 
 ### Url protocol
 

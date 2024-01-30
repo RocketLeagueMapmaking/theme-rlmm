@@ -1,11 +1,11 @@
 <template>
-    <ParentLayout>
-        <template #layout-top v-if="banner != undefined && banner !== false">
-            <Banner v-bind="banner" />
+    <ParentLayout :class="{ 'banner-dismissed': !(banner != undefined && banner !== false) }">
+        <template #layout-top>
+            <Banner v-bind="banner" v-if="banner != undefined && banner !== false"/>
         </template>
 
-        <template v-for="homeSlot in Object.keys(homepageSlots ?? {})" #[homeSlot]>
-            <component :is="homepageSlots![homeSlot]()" />
+        <template v-for="homeSlot in Object.keys(homepageSlots ?? {}).filter(s => homepageSlots![s])" #[homeSlot]>
+            <component :is="homepageSlots![homeSlot]!()" />
         </template>
 
         <template v-for="dynamicSlot in slots" #[dynamicSlot.slotName]>
@@ -13,18 +13,18 @@
         </template>
 
         <template #doc-before>
-            <!-- @vue-ignore -->
-            <component v-if="$frontmatter.finished === false && theme.notFinished !== false"
+            <component v-if="$frontmatter.finished === false && theme.blocks?.notFinished !== false"
                 :is="renderNotFinished(md, theme.blocks?.notFinished)" />
-            <!-- @vue-ignore -->
             <component :is="renderBlocks(md, $frontmatter.blocks ?? [], 'top')" />
         </template>
 
+        <template #doc-after>
+            <RelatedPages />
+        </template>
+
         <template #doc-footer-before>
-            <!-- TODO: figure out global properties -->
-            <!-- @vue-ignore  -->
             <component :is="renderBlocks(md, $frontmatter.blocks ?? [], 'bottom')" />
-            <!-- TODO: add related resources -->
+            <Feedback v-if="theme.blocks?.feedback" v-bind="theme.blocks?.feedback === true ? {} : theme.blocks.feedback" />
         </template>
     </ParentLayout>
 </template>
@@ -32,30 +32,38 @@
 <script setup lang="ts">
 import { h, provide, type VNode } from 'vue'
 import { useCssVar } from '@vueuse/core'
-import { useData } from 'vitepress'
+import { useData, useRouter } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 
-import markdownit from 'markdown-it'
+// import markdownit from 'markdown-it'
 
-import { useStorage } from '../../../composables'
-import type { BannerNotification, RLMMThemeConfig, ThemeNotification } from '../../../types'
+import { useMarkdown, useStorage } from '../../../composables'
+import type {
+    BannerNotification,
+    ThemeConfig,
+    ThemeNotification,
+} from '../../../types'
 
 import Banner from '../../../components/layout/Banner.vue'
+import Feedback from '../../../components/layout/Feedback.vue'
 import NavInbox from '../../../components/layout/Inbox.vue'
+import RelatedPages from '../../../components/layout/RelatedPages.vue'
 
 import { renderSidebarAction } from '../sections/sidebarAction'
 import { renderNotFinished } from '../sections/notFinished'
 import { renderBlocks } from '../sections/block'
+import { createAnalyticsDataCollector } from '../../../util'
 
 const props = defineProps<{
-    homepageSlots: Record<string, () => VNode> | undefined
+    homepageSlots: Record<string, (() => VNode) | undefined> | undefined
     banner: false | BannerNotification | undefined
     notifications: ThemeNotification[]
 }>()
 
 const { Layout: ParentLayout } = DefaultTheme
 
-const md: markdownit = markdownit()
+const md = useMarkdown()
+const router = useRouter()
 const storage = useStorage()
 
 provide('md', md)
@@ -63,7 +71,7 @@ provide('notifications', props.notifications)
 
 const {
     theme,
-} = useData<RLMMThemeConfig>()
+} = useData<ThemeConfig>()
 
 const slots: { slotName: string, node: (() => VNode | undefined) }[] = [
     {
@@ -75,6 +83,8 @@ const slots: { slotName: string, node: (() => VNode | undefined) }[] = [
         slotName: `nav-bar-content-${theme.value.notifications?.inbox?.position === 'before' ? 'before' : 'after'}`,
     }
 ]
+
+router.onAfterRouteChanged = createAnalyticsDataCollector(theme.value.analytics)
 
 function iterateStorage(
     items: Record<string, string> | undefined,

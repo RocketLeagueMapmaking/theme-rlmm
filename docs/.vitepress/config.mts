@@ -10,6 +10,8 @@ export default defineConfigWithTheme<RLMMThemeConfig>({
 
     cleanUrls: true,
     appearance: true,
+    lastUpdated: true,
+    
     markdown: {
         headers: true,
     },
@@ -35,13 +37,18 @@ export default defineConfigWithTheme<RLMMThemeConfig>({
     ],
 
     transformPageData(pageData, ctx) {
-        if (pageData.relativePath === 'preferences.md') {
+        if (pageData.frontmatter.exposePages) {
             pageData.frontmatter.pages = ctx.siteConfig.pages
         }
     },
 
     themeConfig: {
         externalLinkIcon: true,
+        editLink: {
+            pattern: 'https://github.com/rocketleaguemapmaking/theme-rlmm/tree/main/docs/guide/:path',
+            text: 'View this page on GitHub',
+        },
+
         search: {
             provider: 'algolia',
             options: {
@@ -170,6 +177,10 @@ export default defineConfigWithTheme<RLMMThemeConfig>({
                 color: 'linear-gradient(90deg, var(--vp-c-brand-3) 0%, var(--vp-c-brand-1) 50%, var(--vp-c-indigo-3) 100%)',
                 text: 'Map making contest 6 is now active! [Read the announcement](https://discord.com/channels/711882968200904715/711883463871037510/1169509851832000523)'
             }
+        },
+
+        blocks: {
+            feedback: true,
         },
 
         notifications: {

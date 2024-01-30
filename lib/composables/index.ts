@@ -1,4 +1,5 @@
 export * from './notifications'
+export * from './markdown'
 export * from './platform'
 export * from './storage'
 export * from './watched'

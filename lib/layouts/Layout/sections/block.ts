@@ -3,7 +3,7 @@ import { h } from 'vue'
 import type { BlockRenderOptions } from '../../../types/'
 import { getThemeColor, renderHTML } from '../../../util'
 
-export function renderBlock (md: markdownit, options: BlockRenderOptions) {
+export function renderBlock (md: (md: string) => string, options: BlockRenderOptions) {
     if (options === false) return h('div')
     const containerClass = `${options.type ?? 'info'} custom-block vp-raw`
 
@@ -26,7 +26,7 @@ export function renderBlock (md: markdownit, options: BlockRenderOptions) {
 }
 
 export function renderBlocks (
-    md: markdownit,
+    md: (md: string) => string,
     blocks: BlockRenderOptions[],
     position: NonNullable<Exclude<BlockRenderOptions, false>['position']>,
 ) {
