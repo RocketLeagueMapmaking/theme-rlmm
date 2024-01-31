@@ -2,7 +2,25 @@
 
 See the [official guide](https://vitepress.dev/guide/extending-default-theme#customizing-css) on how to customize css variables for custom colors, etc.
 
-For all configuration options of this theme, use the exported type `ThemeConfig`:
+The theme comes with an `defineConfig` utility function that will add some configurations. These configuration can also be applied manually by using the exported `ThemeDefaultConfig`.
+
+```ts
+import { defineConfig } from 'theme-rlmm'
+
+export default defineConfig({
+    // Config options with typings and jsdocs
+    // Applies the configuration changes listed below
+})
+```
+
+:::details Configuration changes
+
+- `transformPageData`: adds all pages paths to `$frontmatter.pages` if the frontmatter `exposePages: true` is on the current page.
+- `vite`: replaces built-in nav dropdown to add expanded view
+
+:::
+
+If you don't want to use configuration changes of this theme, use the exported type `ThemeConfig`:
 
 ```ts
 import { defineConfigWithTheme } from 'vitepress'
@@ -12,6 +30,13 @@ export default defineConfigWithTheme<ThemeConfig>({
     // Config options with typings and jsdocs
 })
 ```
+
+## Global properties
+
+Besides the default `$frontmatter` and `$params` frontmatter, the following properties are also global:
+
+- `$theme`: information about the current theme.
+  - Type: `{ name: string, description: string, version: string }`
 
 ## Sidebar action
 

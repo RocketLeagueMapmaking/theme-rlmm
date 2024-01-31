@@ -5,6 +5,8 @@ import {
     enhanceAppWithTheme,
 } from './theme'
 
+import * as pkg from '../../package.json'
+
 // Components
 
 import ActionBlock from './global/ActionBlock.vue'
@@ -17,10 +19,10 @@ import StepsView from './global/markdown/steps.vue'
 import TabsView from './global/markdown/tabs.vue'
 
 export const registerGlobalProperties: EnhanceFunction = (ctx) => {
-    // TODO: read from package.json
     ctx.app.config.globalProperties.$theme = {
-        name: 'theme-rlmm',
-        version: '0.3.0'
+        name: pkg.name,
+        version: pkg.version,
+        description: pkg.description,
     }
 }
 
