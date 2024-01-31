@@ -6,12 +6,18 @@ export type BlockPosition =
     | 'top'
     | 'bottom'
 
+export type BlockType =
+    | 'warning'
+    | 'error'
+    | 'tip'
+    | 'info'
+
 export interface BlockOptions {
     /**
      * Use a preset for text and background color of the block.
      * @default 'info'
      */
-    type?: 'warning' | 'error' | 'tip' | 'info'
+    type?: BlockType
 
     /**
      * Where to place the block

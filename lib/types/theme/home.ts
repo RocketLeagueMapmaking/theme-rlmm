@@ -1,4 +1,5 @@
 import type { HeadConfig, DefaultTheme } from "vitepress"
+import type { ThemeText } from "./text"
 
 type Frontmatter = Record<string, any>
 
@@ -47,4 +48,12 @@ export interface DefaultHomePageFrontmatter extends DefaultNormalPageFrontmatter
     layout: 'home'
     hero?: Hero
     features?: Feature[]
+}
+
+export interface HomeOptions {
+    /**
+     * The text to show when offline on the home page
+     * Also configurable by $frontmatter.offlineText
+     */
+    offlineText?: ThemeText
 }

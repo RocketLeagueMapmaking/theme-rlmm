@@ -10,6 +10,14 @@ option {
     border-radius: 6px !important;
 }
 
+.VPSwitchAppearance {
+    width: 22px !important;
+}
+
+.dark .VPSwitchAppearance .check {
+    transform: translateX(0px) !important;
+}
+
 .VPSwitch.enabled .check {
     background-color: var(--vp-c-brand-3);
     transform: translateX(18px);

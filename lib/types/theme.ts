@@ -2,16 +2,23 @@ import type { DefaultTheme } from 'vitepress'
 
 import type {
     BannerOptions,
+    NavItem,
     PageBlockOptions,
     SidebarActionOptions,
     StorageOptions,
     ThemeNotificationOptions,
-    ThemeText,
 } from './theme/'
+import type { HomeOptions } from './theme/home'
 
 import type { AnalyticsOptions } from '../util'
 
+export type {
+    HomeOptions,
+}
+
 export interface ThemeConfig extends DefaultTheme.Config {
+    nav?: NavItem[]
+
     /**
      * Send metric requests to your server after the path has been updated
      */
@@ -32,12 +39,14 @@ export interface ThemeConfig extends DefaultTheme.Config {
      */
     blocks?: PageBlockOptions
 
-    home?: {
-        offlineText?: ThemeText
-    }
+    /**
+     * Define options for the home page
+     * @expiremental
+     */
+    home?: HomeOptions
 
     /**
-     * 
+     * Add notifications to display in an inbox or where you want with the notification list window.
      */
     notifications?: ThemeNotificationOptions
 
