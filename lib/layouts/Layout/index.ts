@@ -23,6 +23,12 @@ export default function defineDefaultLayout() {
                 text: theme.home?.offlineText,
             })
         },
+        errorComponent: () => {
+            return h(LoadingLayout, {
+                text: 'Failed to load...',
+            })
+        },
+        onError: console.error,
         loader: async () => {
             const {
                 theme: { value: theme },

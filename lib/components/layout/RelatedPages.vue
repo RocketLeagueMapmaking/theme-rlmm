@@ -1,8 +1,8 @@
 <template>
-    <div class="related-pages" v-if="show">
+    <div class="related-pages" v-if="rawOptions !== false && ($frontmatter.related ?? []).length > 0">
         <p class="related-pages-title">{{ options?.title ?? 'See also' }}</p>
         <div class="related-page prev-next">
-            <VPLink class="link pager-link next" :href="path.path" v-for="path of paths.map(parse)">
+            <VPLink class="link pager-link next" :href="path.path" v-for="path of ($frontmatter.related ?? []).map(parse)">
                 <span class="desc">{{ path.desc }}</span>
                 <span class="title">{{ path.title }}</span>
             </VPLink>
@@ -11,22 +11,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import { useData } from 'vitepress';
 
 import { VPLink } from '../theme';
-import { ThemeConfig } from '../../types';
+import type { ThemeConfig } from '../../types';
 
-const { theme, frontmatter } = useData<ThemeConfig>()
+const { theme } = useData<ThemeConfig>()
 
-const paths: string[] = frontmatter.value.related ?? []
 const rawOptions = theme.value.blocks?.relatedPages
 const options = typeof rawOptions !== 'boolean' ? rawOptions : undefined
-
-const show = computed(() => {
-    return paths.length > 0
-        && rawOptions !== false
-})
 
 // TODO: expose this
 // TODO: look into built-end stuff / options in frontmatter to improve this data?
