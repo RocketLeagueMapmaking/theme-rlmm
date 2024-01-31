@@ -21,7 +21,7 @@
                         <!-- Only show actions on large screens -->
                         <div class="steam-map-active-actions only-large">
                             <VPButton theme="alt" text="View" :href="itemPageUrl(map)" />
-                            <VPButton theme="alt" text="Download" :href="itemDownloadUrl(map)" />
+                            <VPButton theme="alt" text="Download" v-if="downloadUrlTemplate" :href="itemDownloadUrl(map)" />
                         </div>
                     </div>
                     <VPIconChevronRight class="steam-maps-icon" v-if="showIcon(index, 'right')"
@@ -65,6 +65,7 @@ export interface Props {
     iconsEnabled?:
     | boolean
     | Record<SteamMapIconType, boolean>
+    downloadUrlTemplate?: string | ((id: string) => string) | null
     handleException?: (err: unknown) => void
 }
 
@@ -84,6 +85,7 @@ const props = withDefaults(defineProps<Props>(), {
     disableClick: false,
     displayTime: 10_000,
     handleException: console.error,
+    downloadUrlTemplate: null,
 })
 
 function itemPageUrl(map: SteamMap) {
@@ -108,8 +110,9 @@ function itemPageUrl(map: SteamMap) {
 }
 
 function itemDownloadUrl(map: SteamMap) {
-    // TODO: add
-    return ''
+    return typeof props.downloadUrlTemplate === 'string'
+        ? props.downloadUrlTemplate.replace(':id', map.id)
+        : props.downloadUrlTemplate?.(map.id)
 }
 
 async function fetchSteamMaps(options: Required<Props>) {
@@ -185,11 +188,11 @@ onMounted(async () => {
 
 <style>
 /* If the component is added on the home page, hide the container that blocks interactions */
-.image-bg {
+.image-bg:has(.steam-maps) {
     display: none;
 }
 
-.VPHero .image {
+.VPHero .image:has(.steam-maps) {
     z-index: 5;
 }
 </style>

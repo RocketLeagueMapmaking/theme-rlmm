@@ -306,16 +306,17 @@ This is Tab C
 
 Shows the most recent published / updated maps on the Rocket League Steam workshop.
 
-| Option name     | Type                          | Default               | Description                                                                                           |
-| --------------- | ----------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------- |
-| amount          | `number`                      | `3`                   | The amount of maps to display                                                                         |
-| sortBy          | `'created' \| 'updated'`      | `'created'`           | Whether to show recent published or updated maps                                                      |
-| title           | `string`                      | `'New workshop maps'` | The title above the map(s)                                                                            |
-| enabled         | `boolean`                     | `true`                | Option to disable the component                                                                       |
-| displayTime     | `number`                      | `10_000`              | The amount of ms before the next map is shown. Set to a negative number to disable this               |
-| handleException | `Function`                    | `console.error`       | Method to handle errors / empty responses                                                             |
-| disableClick    | `boolean`                     | `false`               | Option to disable going to the next map by clicking on the current map. Will open the map on clicking |
-| urlProtocol     | [url protocol](#url-protocol) | `setting-windows`     | Where to open Steam urls                                                                              |
+| Option name         | Type                                | Default               | Description                                                                                           |
+| ------------------- | ----------------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------- |
+| amount              | `number`                            | `3`                   | The amount of maps to display                                                                         |
+| sortBy              | `'created' \| 'updated'`            | `'created'`           | Whether to show recent published or updated maps                                                      |
+| title               | `string`                            | `'New workshop maps'` | The title above the map(s)                                                                            |
+| enabled             | `boolean`                           | `true`                | Option to disable the component                                                                       |
+| displayTime         | `number`                            | `10_000`              | The amount of ms before the next map is shown. Set to a negative number to disable this               |
+| handleException     | `Function`                          | `console.error`       | Method to handle errors / empty responses                                                             |
+| disableClick        | `boolean`                           | `false`               | Option to disable going to the next map by clicking on the current map. Will open the map on clicking |
+| urlProtocol         | [url protocol](#url-protocol)       | `setting-windows`     | Where to open Steam urls                                                                              |
+| downloadUrlTemplate | `?string \| (id: string) => string` | `null`                | The template to use for downloading maps                                                              |
 
 > [!TIP] Colored title
 The `title` option renders as HTML making it customisable to style.

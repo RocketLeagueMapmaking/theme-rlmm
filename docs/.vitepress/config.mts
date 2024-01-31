@@ -1,11 +1,11 @@
 import { defineConfigWithTheme } from 'vitepress'
 
-import { type RLMMThemeConfig } from '../../lib/'
+import { defineConfig } from '../../lib/config'
 
 const domain = 'https://theme-rlmm.pages.dev/'
 
-export default defineConfigWithTheme<RLMMThemeConfig>({
-    title: "RLMM",
+export default defineConfig({
+    title: "theme-rlmm",
     description: "Testing playground for the map making guide",
 
     cleanUrls: true,
@@ -35,12 +35,6 @@ export default defineConfigWithTheme<RLMMThemeConfig>({
               })()`
         ],
     ],
-
-    transformPageData(pageData, ctx) {
-        if (pageData.frontmatter.exposePages) {
-            pageData.frontmatter.pages = ctx.siteConfig.pages
-        }
-    },
 
     themeConfig: {
         externalLinkIcon: true,
@@ -72,17 +66,48 @@ export default defineConfigWithTheme<RLMMThemeConfig>({
         nav: [
             { text: 'Theme', link: '/theme/' },
             {
+                text: 'Resources',
+                items: [
+                    {
+                        text: 'Discord',
+                        link: '/'
+                    },
+                    {
+                        text: 'GitHub',
+                        items: [
+                            {
+                                text: 'Discussions',
+                                link: '/'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 text: 'Guide',
                 // link: '/udk/',
                 items: [
                     {
                         text: 'UDK',
+                        expanded: true,
                         link: '/udk/',
+                        description: 'Learn more about UDK',
+                        icon: 'carbon:edit'
                     },
                     {
                         text: 'Blender',
+                        expanded: true,
                         link: '/blender/',
-                    }
+                        description: 'Learn more about Blender',
+                        icon: 'carbon:cube',
+                    },
+                    {
+                        text: 'Kismet',
+                        expanded: true,
+                        link: '/udk/reference',
+                        description: 'Learn more about kismet',
+                        icon: 'carbon:branch'
+                    },
                 ]
             },
         ],

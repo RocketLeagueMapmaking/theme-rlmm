@@ -66,6 +66,20 @@ List sort options:
 
 ## Notifications
 
+A more advanced list window component is also exported for showing the current notifications: `NotificationListWindow`.
+
+```mdx
+<NotificationListWindow>
+<template #default="{ item }">
+
+### {{ item.title }} <Badge text="tag" type="info" />
+
+<p v-html="item.text"></p>
+
+</template>
+</NotificationListWindow>
+```
+
 <NotificationListWindow>
 <template #default="{ item }">
 

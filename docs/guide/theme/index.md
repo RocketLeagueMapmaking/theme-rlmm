@@ -5,8 +5,10 @@ This is a [VitePress](https://vitepress.dev) theme with Rocket League workshop c
 ## Installation
 
 ```sh
-npm install @rocketleaguemapmaking/theme-rlmm --registry=https://npm.pkg.github.com
+npm install rocketleaguemapmaking/theme-rlmm
 ```
+
+Or you can install from [GitHub Packages](https://github.com/RocketLeagueMapmaking/theme-rlmm/pkgs/npm/theme-rlmm).
 
 ## Using the theme
 
@@ -21,10 +23,9 @@ export default Theme
 Then in your configuration file:
 
 ```ts
-import { defineConfigWithTheme } from 'vitepress'
-import { type ThemeConfig } from 'theme-rlmm'
+import { defineConfig } from 'theme-rlmm'
 
-export default defineConfigWithTheme<ThemeConfig>({
+export default defineConfig({
     // ...
 })
 ```

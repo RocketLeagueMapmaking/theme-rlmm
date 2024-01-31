@@ -70,7 +70,7 @@ Type: `string | { image: string }`
 
 #### promotion.description
 
-The HTLM description
+The HTML description
 
 #### promotion.actions
 
@@ -111,3 +111,9 @@ Block options are:
 | color    | string                                  | -        | undefined |
 | type     | 'info' \| 'tip' \| 'warning' \| 'error' | -        | 'info'    |
 | position | 'top' \| 'bottom'                       | -        | 'top'     |
+
+### related
+
+Adds links to pages that could be interesting based on the current page.
+
+- Type: `string[]`
