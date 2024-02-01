@@ -3,7 +3,7 @@
         <p class="related-pages-title">{{ options?.title ?? 'See also' }}</p>
         <div class="related-page prev-next">
             <VPLink class="link pager-link next" :href="path.path" v-for="path of ($frontmatter.related ?? []).map(parse)">
-                <span class="desc">{{ path.desc }}</span>
+                <span class="desc" v-if="path.description">{{ path.description }}</span>
                 <span class="title">{{ path.title }}</span>
             </VPLink>
         </div>
@@ -11,9 +11,11 @@
 </template>
 
 <script setup lang="ts">
-import { useData } from 'vitepress';
+import { type DefaultTheme, useData } from 'vitepress';
 
 import { VPLink } from '../theme';
+
+import { findInSidebar, getSidebarItems } from '../../util';
 import type { ThemeConfig } from '../../types';
 
 const { theme } = useData<ThemeConfig>()
@@ -21,19 +23,32 @@ const { theme } = useData<ThemeConfig>()
 const rawOptions = theme.value.blocks?.relatedPages
 const options = typeof rawOptions !== 'boolean' ? rawOptions : undefined
 
-// TODO: expose this
+const sidebarItems = getSidebarItems(theme.value.sidebar)
+
 // TODO: look into built-end stuff / options in frontmatter to improve this data?
 function parse (path: string) {
-    const parts = path.split('/')
-    const cas = (word: string) => {
-        word = word.replace(/udk/g, 'UDK').replace(/faq/g, 'FAQ')
-        if (word.length === 0) return 'Introduction'
-        else return word[0].toUpperCase() + word.slice(1)
-    }
+    const convert = ({ item, parent }: Record<'item' | 'parent', DefaultTheme.SidebarItem | null>) => ({
+        title: item?.text,
+        description: options?.useDocFooter ? item?.docFooterText : parent?.text,
+    })
+
+    const data = options?.transformRoute?.(path)
+        ?? convert(findInSidebar(sidebarItems, path))
+        ?? options?.transformUnknownPath?.(path)
+        ?? (() => {
+            const cap = (str: string) => str[0].toUpperCase() + str.slice(1)
+            const parts = path.split('/'), last = parts[parts.length - 1]
+            const name = last.length === 0 ? 'Introduction' : last
+
+            return {
+                title: cap(name),
+                description: cap(parts[parts.length - 2]),
+            }
+        })()
+
     return {
         path,
-        title: cas(parts[parts.length - 1]),
-        desc: cas(parts[parts.length - 2]),
+        ...(data ?? {}),
     }
 }
 </script>

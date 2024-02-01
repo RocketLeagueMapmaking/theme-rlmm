@@ -79,6 +79,18 @@ export interface FeedbackOptions {
 
 export interface RelatedPagesOptions {
     title?: string
+    transformRoute?: (path: string) =>
+        | { title: string, description?: string }
+        | undefined
+
+    /**
+     * @experimental
+     * @param path 
+     */
+    transformUnknownPath?: (path) => 
+        { title: string, description?: string }
+    /** @experimental */
+    useDocFooter?: boolean
 }
 
 export interface PageBlockOptions {
