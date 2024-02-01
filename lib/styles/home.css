@@ -39,3 +39,9 @@
         padding: 0 64px;
     }
 }
+
+@media (max-width: 960px) {
+    .home-promotion {
+        flex: 1 !important;
+    }
+}

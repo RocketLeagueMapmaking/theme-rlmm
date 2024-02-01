@@ -41,7 +41,7 @@ export function renderPromotion(config: PromotionOptions) {
             },
         }),
         h('div', {
-            class: 'vp-doc home-resources',
+            class: 'vp-doc home-resources home-promotion',
             style: { maxWidth: '90vw', flex: 0.6 }
         }, [
             h(typeof config.title !== 'string' ? VPImage : 'p', {

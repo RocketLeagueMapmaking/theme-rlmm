@@ -19,7 +19,6 @@ const md = useMarkdown()
 const props = withDefaults(defineProps<{
     text?: string | { html: string }
 }>(), {
-    // TODO: expose this in themeConfig
     text: 'Loading...\n\nYou seem to be offline, reload the page to try again...'
 })
 

@@ -8,12 +8,12 @@
                     <VPIconChevronLeft class="steam-maps-icon" v-if="showIcon(index, 'left')"
                         @click="goToNextMap(true, -1)" />
                     <div class="steam-map-active" v-if="index === active" @click="goToNextMap(true)">
-                        <p :style="{ fontWeight: 'bold' }">
-                            {{ map.title }}
+                        <p class="steam-map-title">
+                            {{ renderText(map.title, { maxLength: maxLengthTitle }) }}
                         </p>
                         <!-- Only show creator name on large screens -->
                         <span class="only-large">
-                            By {{ map.creator.name }}
+                            By {{ renderText(map.creator.name, { maxLength: maxLengthUsername }) }}
                         </span>
                         <VPLink :href="itemPageUrl(map)" :noIcon="true">
                             <ImgWithPlaceholder :image="map.preview.url" />
@@ -43,6 +43,7 @@ import { useImage } from '@vueuse/core'
 import { VPIconChevronLeft, VPIconChevronRight, VPImage } from '../theme'
 
 import { usePlatform, useStorage } from '../../composables/'
+import { renderText } from '../../util'
 import type { SteamMap } from '../../types'
 
 type SteamMapIconType =
@@ -66,6 +67,8 @@ export interface Props {
     | boolean
     | Record<SteamMapIconType, boolean>
     downloadUrlTemplate?: string | ((id: string) => string) | null
+    maxLengthTitle?: number
+    maxLengthUsername?: number
     handleException?: (err: unknown) => void
 }
 
@@ -86,6 +89,8 @@ const props = withDefaults(defineProps<Props>(), {
     displayTime: 10_000,
     handleException: console.error,
     downloadUrlTemplate: null,
+    maxLengthTitle: 30,
+    maxLengthUsername: 24,
 })
 
 function itemPageUrl(map: SteamMap) {
@@ -188,12 +193,25 @@ onMounted(async () => {
 
 <style>
 /* If the component is added on the home page, hide the container that blocks interactions */
-.image-bg:has(.steam-maps) {
+.VPHero:has(.steam-maps) .image-bg {
     display: none;
 }
 
 .VPHero .image:has(.steam-maps) {
     z-index: 5;
+}
+
+@media screen and (min-width: 960px) {
+    .image-container:has(.steam-maps) {
+        scale: 0.8;
+        width: 200px;
+    }
+}
+@media screen and (min-width: 1100px) {
+    .image-container:has(.steam-maps) {
+        scale: 1;
+        width: initial;
+    }
 }
 </style>
 
@@ -218,6 +236,12 @@ onMounted(async () => {
     justify-content: center;
 }
 
+.steam-map-title {
+    font-weight: bold;
+    text-overflow: ellipsis;
+    text-size-adjust: auto;
+}
+
 .steam-map-active:hover,
 .steam-maps-icon:hover,
 .VPImage:hover {
@@ -228,6 +252,7 @@ onMounted(async () => {
 :deep(.steam-map-img) {
     border-radius: 8px;
     width: 400px !important;
+    height: 225px;
     max-height: 225px;
     max-width: 75vw !important;
     margin: 10px 0px;
@@ -265,9 +290,12 @@ onMounted(async () => {
         padding: 6px !important;
         text-align: center !important;
     }
+}
 
+@media screen and (max-width: 640px) {
     :deep(.steam-map-img) {
         margin: 0px !important;
+        height: 175px;
     }
 }
 </style>

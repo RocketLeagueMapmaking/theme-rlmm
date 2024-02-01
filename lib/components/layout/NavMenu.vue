@@ -1,5 +1,5 @@
 <template>
-    <BaseMenu :items="items" :expanded="items?.every(i => i.expanded)">
+    <BaseMenu :items="items">
         <template #item="{ item }">
             <div v-if="item">
                 <VPLink
@@ -37,12 +37,19 @@ const props = defineProps<{
     items?: any[]
 }>()
 
-const isActiveLink: (currentPath: string, matchPath: string, asRegex?: boolean) => boolean = isActive
+type IsActive = (currentPath: string, matchPath: string, asRegex?: boolean) => boolean
+const isActiveLink: IsActive = isActive
+
 const { page } = useData<ThemeConfig>()
 
 function getStyle (item) {
+    const isNotLast = props.items?.findIndex(x => x.text === item.text) !== (props.items?.length ?? - 0) - 1
+
     return { 
-        borderBottom: props.items?.findIndex(x => x.text === item.text) !== (props.items?.length ?? - 0) - 1 ? '1px solid var(--vp-c-border)' : undefined }
+        borderBottom: isNotLast
+            ? '1px solid var(--vp-c-border)'
+            : undefined
+    }
 }
 </script>
 
@@ -53,7 +60,6 @@ function getStyle (item) {
 </style>
 
 <style scoped>
-
 .expanded-item {
     /* border-radius: 6px; */
     display: flex;

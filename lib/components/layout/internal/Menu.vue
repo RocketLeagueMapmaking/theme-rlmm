@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 import VPMenuLink from 'vitepress/dist/client/theme-default/components/VPMenuLink.vue'
 import VPMenuGroup from 'vitepress/dist/client/theme-default/components/VPMenuGroup.vue'
-import type { NavItem } from '../../../types';
+import type { NavItemExpanded } from '../../../types';
 
-defineProps<{
-  items?: NavItem[]
-//   Added
-  expanded?: boolean
+defineSlots<{
+    item: (props: { item: NavItemExpanded }) => any
+    default: (props: {}) => any
 }>()
 
-defineSlots<{ item: { item: NavItem }, defaultt: {} }>()
+defineProps<{
+  items?: any[]
+}>()
 </script>
 
 <template>
@@ -17,7 +18,7 @@ defineSlots<{ item: { item: NavItem }, defaultt: {} }>()
     <div v-if="items" class="items">
       <template v-for="item in items" :key="item.text">
         <!-- Added slot -->
-        <slot name="item" :item="item" v-if="expanded" />
+        <slot name="item" :item="item" v-if="items.every(i => i.expanded)" />
         <VPMenuLink v-else-if="'link' in item" :item="item" />
         <VPMenuGroup v-else :text="item.text" :items="item.items" />
       </template>

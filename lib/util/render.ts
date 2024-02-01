@@ -12,6 +12,12 @@ export const renderHTML = (
     text: ThemeText,
 ) => (typeof text === 'string' ? md(text) : text.html)
 
+export const renderText = (text: string, options?: { maxLength?: number }) => {
+    return options?.maxLength 
+        ? text.length > options.maxLength ? text.slice(0, options.maxLength) + '...' : text
+        : text
+}
+
 export const renderTitle = (
     options: { md: markdownit, enabled?: boolean, tag?: string },
     text: string,
