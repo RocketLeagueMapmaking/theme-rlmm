@@ -1,5 +1,5 @@
 import type { Props as SteamMapOptions } from '../components/global/SteamMaps.vue'
-import type { Props as EventsOptions } from '../components/global/EventShowcase.vue'
+import type { Props as EventsOptions } from '../components/global/ItemGrid.vue'
 
 import type { PromotionOptions } from '../layouts/Layout/sections/promotion'
 

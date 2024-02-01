@@ -10,7 +10,7 @@ import * as pkg from '../../package.json'
 // Components
 
 import ActionBlock from './global/ActionBlock.vue'
-import EventShowcase from './global/EventShowcase.vue'
+import ItemGrid from './global/ItemGrid.vue'
 import PreferenceSetting from './global/PreferenceSetting.vue'
 import SteamMaps from './global/SteamMaps.vue'
 
@@ -43,7 +43,9 @@ export const enhanceApp: EnhanceFunction = async (ctx) => {
     app.component('Tabs', TabsView)
 
     app.component('ActionBlock', ActionBlock)
-    app.component('EventShowcase', EventShowcase)
+    app.component('ItemGrid', ItemGrid)
+    /** @deprecated */
+    app.component('EventShowcase', ItemGrid)
     app.component('PreferenceSetting', PreferenceSetting)
     app.component('SteamMaps', SteamMaps)
 }

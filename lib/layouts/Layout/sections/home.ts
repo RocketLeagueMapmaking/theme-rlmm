@@ -4,7 +4,7 @@ import { VPHomeSponsors } from 'vitepress/theme'
 import { useStorage } from '../../../composables'
 import { fetchComponentData, renderIf } from '../../../util'
 
-import EventShowcase from '../../../components/global/EventShowcase.vue'
+import EventShowcase from '../../../components/global/ItemGrid.vue'
 import SteamMaps from '../../../components/global/SteamMaps.vue'
 import { VPFeatures } from '../../../components/export'
 
