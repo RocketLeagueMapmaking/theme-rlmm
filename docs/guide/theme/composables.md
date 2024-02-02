@@ -53,13 +53,15 @@ const NotificationManager = useNotifications()
 ### Subscriptions
 
 ```ts
-const subscriptionHandler = await NotificationManager.createSubscriptionHandler({
+interface UserSettings {
+    events: boolean
+    pages: 'all' | string[]
+}
+
+const subscriptionHandler = await useNotificationSubscription<UserSettings>({
     subscribeUrl: '<your server route>'
     publicKey: '<your service public key>',
 })
-
-// Handle unsupported envs
-if (!subscriptionHandler) return
 ```
 
 The server route is expected to have the following methods implemented:
@@ -69,20 +71,19 @@ The server route is expected to have the following methods implemented:
 - `PATCH ?id=<device_id>`
 - `DELETE ?id=<device_id>`
 
-Either all pages can be watched or select pages
-
 :::details Iterate pages
+
+To have a setting that lists pages, use the following steps to create an listing interface.
 
 In the config expose the pages to the frontmatter:
 
-```ts
-transformPageData(pageData, ctx) {
-    // Only on the page(s) where you need to have all page paths
-    if (pageData.relativePath === 'preferences.md') {
-        pageData.frontmatter.pages = ctx.siteConfig.pages
-    }
-},
+```mdx
+---
+exposePages: true
+---
 ```
+
+This will work if the [theme configuration](configuration#theme-configuration) is applied. Otherwise use the `transformPageData` hook to expose the pages.
 
 And then on the page itself escape the file extension and format the route:
 
@@ -118,3 +119,11 @@ onMounted(() => {
     enabled.value = settings.getBoolean('rlmm-key-enabled', true)
 })
 ```
+
+You can customize the local storage keys, colors and page classes with the theme options
+
+:::details Theme options
+
+<<< ../../../lib/types/theme/storage.ts
+
+:::

@@ -38,7 +38,7 @@ export interface ShowcaseEvent {
 
 export interface Props {
     title: string
-    description: string
+    description?: string
     action:
     | {
         link: string

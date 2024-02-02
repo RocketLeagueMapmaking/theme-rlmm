@@ -142,18 +142,10 @@
             "default": "home",
             "editable": false,
             "choices": [
-            //   {
-            //     "id": "doc",
-            //     "title": "Document"
-            //   },
               {
                 "id": "home",
                 "title": "Home page"
-              },
-            //   {
-            //     "id": "page",
-            //     "title": "Custom page"
-            //   }
+              }
             ]
           },
           {
@@ -335,7 +327,13 @@
             },
             {
               "title": "link",
-              "name": "link",
+              "name": "actionLink",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "title": "action",
+              "name": "actionText",
               "required": true,
               "type": "string"
             },

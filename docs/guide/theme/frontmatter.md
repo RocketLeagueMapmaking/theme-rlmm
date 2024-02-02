@@ -1,7 +1,7 @@
 # Frontmatter
 
 > [!TIP] Frontmatter
-> You can use the [Frontmatter VSCode extension]() to have a better UI for editing frontmatter
+> You can use the [Frontmatter VSCode extension](https://marketplace.visualstudio.com/items?itemName=eliostruyf.vscode-front-matter-beta) to have a better UI for editing frontmatter
 
 ## Home page
 

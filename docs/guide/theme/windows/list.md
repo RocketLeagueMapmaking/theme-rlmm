@@ -28,6 +28,12 @@ List sort options:
 | ----------- | ------ | ------- | --------------------------------- |
 | key         | string | -       | The object key to use for sorting |
 
+This component is not installed globally and must be imported from the theme:
+
+```ts
+import { ListWindow } from 'rocketleaguemapmaking/theme-rlmm'
+```
+
 ## Simple array
 
 ```vue

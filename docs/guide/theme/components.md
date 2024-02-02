@@ -106,6 +106,45 @@ Options: see `@iconify/vue`
 
 :::
 
+## ItemGrid <Badge type="info" text="general component" />
+
+Places items in a grid like layout
+
+Options:
+
+| Option name       | Type                               | Default     | Description                         |
+| ----------------- | ---------------------------------- | ----------- | ----------------------------------- |
+| amount            | `number`                           | `3`         | The max amount of items to show     |
+| title             | `string`                           | -           | The title at the top                |
+| description       | `string`                           | `undefined` | The description beneath the title   |
+| rowSize           | `number`                           | `3`         | The max amount of items on each row |
+| createUrl         | `(event: ShowcaseEvent) => string` | `undefined` | Create custom urls for each item    |
+| descriptionLength | `number`                           | `100`       | The max length of the description   |
+| data              | `ShowcaseEvent[]`                  | `[]`        | The item data                       |
+| dataUrl           | `string`                           | `null`      | The url to fetch items from         |
+| action            | `ItemGridAction`                   | -           | The action beneath the items        |
+
+If the action has a link, it will open the link on clicking.
+If the action has `totalItems`, it will show now the total amount of items and hide the action button.
+
+```ts
+type ItemGridAction = | {
+        link: string
+        text?: string
+        theme?: 'brand' | 'alt'
+    } | {
+        text?: string
+        totalItems: number
+        theme?: 'brand' | 'alt'
+    }
+```
+
+:::details Examples
+
+See [the home page](/) events
+
+:::
+
 ## PreferenceSetting <Badge type="info" text="general component" />
 
 Component to show or allow to set a value that gets stored in the local storage of the current browser.
@@ -317,10 +356,15 @@ Shows the most recent published / updated maps on the Rocket League Steam worksh
 | disableClick        | `boolean`                           | `false`               | Option to disable going to the next map by clicking on the current map. Will open the map on clicking |
 | urlProtocol         | [url protocol](#url-protocol)       | `setting-windows`     | Where to open Steam urls                                                                              |
 | downloadUrlTemplate | `?string \| (id: string) => string` | `null`                | The template to use for downloading maps                                                              |
+| maxLengthTitle      | `number`                            | `30`                  | The maximum length of the map title                                                                   |
+| maxLengthUsername   | `number`                            | `24`                  | The maximum length of the creator name                                                                |
 
 > [!TIP] Colored title
 The `title` option renders as HTML making it customisable to style.
 By default any `span` element in the title will be the brand color.
+
+> [!INFO] Hide on home page
+> The `hideHomeSteamMaps` local storage option for the key will allow to hide the Steam maps component to be hidden on the home page
 
 ### Url protocol
 
@@ -355,3 +399,4 @@ Available options:
 - `'indigo'`
 - `'red'`
 - `'yellow'`
+- `'purple'`

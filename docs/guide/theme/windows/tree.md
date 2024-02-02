@@ -6,6 +6,12 @@ title: Tree window
 import { TreeWindow } from '../../../../lib/'
 </script>
 
+This component is not installed globally and must be imported from the theme:
+
+```ts
+import { TreeWindow } from 'rocketleaguemapmaking/theme-rlmm'
+```
+
 ## Simple array
 
 ```mdx
