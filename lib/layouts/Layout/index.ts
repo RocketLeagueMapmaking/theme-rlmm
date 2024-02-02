@@ -24,8 +24,12 @@ export default function defineDefaultLayout() {
             })
         },
         errorComponent: () => {
+            const {
+                theme: { value: theme },
+            } = useData<ThemeConfig>()
+
             return h(LoadingLayout, {
-                text: 'Failed to load...',
+                text: theme.home?.errorText ?? 'Failed to load...',
             })
         },
         onError: console.error,

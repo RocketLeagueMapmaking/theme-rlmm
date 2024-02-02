@@ -1,7 +1,12 @@
 <template>
     <ParentLayout :class="{ 'banner-dismissed': !(banner != undefined && banner !== false) }">
         <template #layout-top>
-            <Banner v-bind="banner" v-if="banner != undefined && banner !== false"/>
+            <Banner v-bind="banner" v-if="banner != undefined && banner !== false" />
+            <ClientOnly>
+                <Teleport to=".VPHomeSponsors .love">
+                    <Icon :icon="theme.home?.sponsorLogo ?? 'fa-brands:patreon'" class="icon" fill="currentColor" />
+                </Teleport>
+            </ClientOnly>
         </template>
 
         <template v-for="homeSlot in Object.keys(homepageSlots ?? {}).filter(s => homepageSlots![s])" #[homeSlot]>
@@ -13,6 +18,11 @@
         </template>
 
         <template #doc-before>
+            <div class="doc-date" v-if="$frontmatter.createdAt" :style="{ right: '20px', position: 'absolute' }">
+                <p>
+                    {{ new Date($frontmatter.createdAt).toDateString() }}
+                </p>
+            </div>
             <component v-if="$frontmatter.finished === false && theme.blocks?.notFinished !== false"
                 :is="renderNotFinished(md, theme.blocks?.notFinished)" />
             <component :is="renderBlocks(md, $frontmatter.blocks ?? [], 'top')" />

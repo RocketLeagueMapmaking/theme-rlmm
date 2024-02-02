@@ -56,4 +56,14 @@ export interface HomeOptions {
      * Also configurable by $frontmatter.offlineText
      */
     offlineText?: ThemeText
+
+    /**
+     * The text to show when an error occured on the home page
+     */
+    errorText?: ThemeText
+
+    /**
+     * Customize the logo of the sponsor options
+     */
+    sponsorLogo?: string
 }

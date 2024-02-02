@@ -27,17 +27,17 @@ Display the sponsors / supporters / backers of the project
 
 - default: `'Patreons'`
 
-#### sponsors.link
+#### sponsors.actionLink
 
 The link to your donation page. Used in the support button at the bottom.
 
 - Required: `true`
 
-#### sponsors.action
+#### sponsors.actionText
 
 The text on the support button at the bottom.
 
-- default: `'Become a supporter'`
+- Required: `true`
 
 #### sponsors.data
 
@@ -77,6 +77,21 @@ The HTML description
 Type: [`HeroAction[]`](https://vitepress.dev/reference/default-theme-home-page#hero-section)
 
 ## Normal page
+
+### feedback
+
+Whether to show feedback on the page or not
+
+- Type: `boolean`
+- Default: `true`
+
+To disable feedback:
+
+```md
+---
+feedback: false
+---
+```
 
 ### finished
 

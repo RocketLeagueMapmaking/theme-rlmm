@@ -22,6 +22,8 @@
                         <div class="steam-map-active-actions only-large">
                             <VPButton theme="alt" text="View" :href="itemPageUrl(map)" />
                             <VPButton theme="alt" text="Download" v-if="downloadUrlTemplate" :href="itemDownloadUrl(map)" />
+                            <VPButton theme="alt" v-for="action in addActions?.(map) ?? []" :key="action.link"
+                                :text="action.text" :href="action.link" />
                         </div>
                     </div>
                     <VPIconChevronRight class="steam-maps-icon" v-if="showIcon(index, 'right')"
@@ -70,6 +72,7 @@ export interface Props {
     maxLengthTitle?: number
     maxLengthUsername?: number
     handleException?: (err: unknown) => void
+    addActions?: (map: SteamMap) => { text: string, link: string }[]
 }
 
 const active = ref(0), hasSetting = ref(false), containerRef = ref();
@@ -207,6 +210,7 @@ onMounted(async () => {
         width: 200px;
     }
 }
+
 @media screen and (min-width: 1100px) {
     .image-container:has(.steam-maps) {
         scale: 1;

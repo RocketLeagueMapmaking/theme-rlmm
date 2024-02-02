@@ -98,7 +98,7 @@ This is some content
 
 Renders an icon
 
-Options: see `@iconify/vue`
+Options: see [`@iconify/vue`](https://iconify.design/docs/icon-components/vue/#properties)
 
 :::details Example
 
@@ -107,6 +107,9 @@ Options: see `@iconify/vue`
 :::
 
 ## ItemGrid <Badge type="info" text="general component" />
+
+> [!CAUTION] Alias
+> This component is also registered as `EventShowcase` which is deprecated and will be removed soon
 
 Places items in a grid like layout
 
@@ -345,23 +348,29 @@ This is Tab C
 
 Shows the most recent published / updated maps on the Rocket League Steam workshop.
 
-| Option name         | Type                                | Default               | Description                                                                                           |
-| ------------------- | ----------------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------- |
-| amount              | `number`                            | `3`                   | The amount of maps to display                                                                         |
-| sortBy              | `'created' \| 'updated'`            | `'created'`           | Whether to show recent published or updated maps                                                      |
-| title               | `string`                            | `'New workshop maps'` | The title above the map(s)                                                                            |
-| enabled             | `boolean`                           | `true`                | Option to disable the component                                                                       |
-| displayTime         | `number`                            | `10_000`              | The amount of ms before the next map is shown. Set to a negative number to disable this               |
-| handleException     | `Function`                          | `console.error`       | Method to handle errors / empty responses                                                             |
-| disableClick        | `boolean`                           | `false`               | Option to disable going to the next map by clicking on the current map. Will open the map on clicking |
-| urlProtocol         | [url protocol](#url-protocol)       | `setting-windows`     | Where to open Steam urls                                                                              |
-| downloadUrlTemplate | `?string \| (id: string) => string` | `null`                | The template to use for downloading maps                                                              |
-| maxLengthTitle      | `number`                            | `30`                  | The maximum length of the map title                                                                   |
-| maxLengthUsername   | `number`                            | `24`                  | The maximum length of the creator name                                                                |
+| Option name         | Type                          | Default               | Description                                                                             |
+| ------------------- | ----------------------------- | --------------------- | --------------------------------------------------------------------------------------- |
+| amount              | `number`                      | `3`                   | The amount of maps to display                                                           |
+| sortBy              | `'created' \| 'updated'`      | `'created'`           | Whether to show recent published or updated maps                                        |
+| title               | `string`                      | `'New workshop maps'` | The title above the map(s)                                                              |
+| enabled             | `boolean`                     | `true`                | Option to disable the component                                                         |
+| displayTime         | `number`                      | `10_000`              | The amount of ms before the next map is shown. Set to a negative number to disable this |
+| handleException     | `Function`                    | `console.error`       | Method to handle errors / empty responses                                               |
+| addActions          | `AddSteamMapsAction`          | `() => []`            | Add more actions beside the default ones                                                |
+| disableClick        | `boolean`                     | `false`               | Change the [clicking behaviour](#click-action)                                          |
+| urlProtocol         | [url protocol](#url-protocol) | `setting-windows`     | Where to open Steam urls                                                                |
+| downloadUrlTemplate | `SteamDownloadUrlTemplate`    | `null`                | The template to use for downloading maps                                                |
+| maxLengthTitle      | `number`                      | `30`                  | The maximum length of the map title                                                     |
+| maxLengthUsername   | `number`                      | `24`                  | The maximum length of the creator name                                                  |
 
 > [!TIP] Colored title
 The `title` option renders as HTML making it customisable to style.
 By default any `span` element in the title will be the brand color.
+
+```ts
+type AddSteamMapsAction = (map: SteamMap) => { text: string, link: string }[]
+type SteamDownloadUrlTemplate = string | (id: string) => string
+```
 
 > [!INFO] Hide on home page
 > The `hideHomeSteamMaps` local storage option for the key will allow to hide the Steam maps component to be hidden on the home page
@@ -377,6 +386,11 @@ Available options:
 - `'app-windows'`: if on Windows, open urls in the Steam app
 - `'app'`: always open urls in the Steam app
 - `'browser'`: always open urls in the internet browser
+
+### Click action
+
+Use the `disableClick` option to disable going to the next map by clicking on the current map.
+This will open the map on clicking using the [url protocol](#url-protocol).
 
 :::details Example
 
