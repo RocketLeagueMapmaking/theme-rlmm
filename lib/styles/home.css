@@ -11,16 +11,6 @@
     border-top: none !important;
 }
 
-.VPHomeSponsors .love svg {
-    display: none;
-}
-
-.VPHomeSponsors .love svg:last-child {
-    display: flex;
-    width: 28px;
-    height: 28px;
-}
-
 .dark .promotion-img {
     background-color: var(--vp-c-neutral);
 }
