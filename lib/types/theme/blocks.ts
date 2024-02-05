@@ -1,6 +1,7 @@
-import type { PageData } from "vitepress"
+import type { Awaitable, PageData } from "vitepress"
 
 import type { ThemeText } from "./text"
+import { RenderFunction } from "vue"
 
 export type BlockPosition =
     | 'top'
@@ -55,16 +56,28 @@ export type NotFinishedOptions =
         }
     )
 
-export interface FeedbackAnswerOptions {
-    enabled?: boolean
-    icon?: string
+interface BaseFeedbackOptions<Args extends unknown[]> {
     text?: ThemeText
-    onClick?: () => Promise<void> | void
     style?: object
+    onClick?: (...args: Args) => Awaitable<void>
 }
 
-export interface FeedbackOptions {
-    text?: ThemeText
+export interface FeedbackAnswerOptions extends BaseFeedbackOptions<[page: PageData]> {
+    enabled?: boolean
+    icon?: string
+    title?: string
+    label?: string
+    form?: {
+        fields: {
+            type: 'input' | 'textarea'
+            text: string
+            placeholder?: string
+        }[]
+    }
+    renderAfterSubmitted?: RenderFunction
+}
+
+export interface FeedbackOptions extends BaseFeedbackOptions<[answer: 'yes' | 'no', page: PageData]> {
     showNotFinished?: boolean
     position?:
         | 'bottom-left'
@@ -73,8 +86,14 @@ export interface FeedbackOptions {
         yes?: FeedbackAnswerOptions
         no?: FeedbackAnswerOptions
     }
-    onClick?: (answer: 'yes' | 'no') => Promise<void> | void
-    style?: object
+
+    form?: {
+        enabled?: boolean
+        submitText?: string
+        cancelText?: string
+    }
+
+    renderAfterSubmitted?: RenderFunction
 }
 
 export interface RelatedPagesOptions {
