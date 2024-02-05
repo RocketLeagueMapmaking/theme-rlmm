@@ -91,6 +91,7 @@ const props = withDefaults(defineProps<Props>(), {
     disableClick: false,
     displayTime: 10_000,
     handleException: console.error,
+    addActions: () => [],
     downloadUrlTemplate: null,
     maxLengthTitle: 30,
     maxLengthUsername: 24,

@@ -10,6 +10,7 @@
         "zixuanchen.vitest-explorer",
         "eliostruyf.vscode-front-matter",
         "bierner.github-markdown-preview",
-        "vue.vscode-typescript-vue-plugin"
+        "vue.vscode-typescript-vue-plugin",
+        "antfu.vite"
     ]
 }

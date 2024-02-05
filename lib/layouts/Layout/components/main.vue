@@ -2,7 +2,7 @@
     <ParentLayout :class="{ 'banner-dismissed': !(banner != undefined && banner !== false) }">
         <template #layout-top>
             <Banner v-bind="banner" v-if="banner != undefined && banner !== false" />
-            <Replacer to=".VPHomeSponsors .love">
+            <Replacer to=".VPHomeSponsors .love" v-if="$frontmatter.layout === 'home'">
                 <Icon :icon="theme.home?.sponsorLogo ?? 'fa-brands:patreon'" class="icon" width="28px" fill="currentColor" />
             </Replacer>
         </template>
