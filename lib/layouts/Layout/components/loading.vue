@@ -10,11 +10,9 @@
 import { computed, withDefaults } from 'vue'
 import DefaultTheme from 'vitepress/theme'
 
-import { useMarkdown } from '../../../composables';
+import { renderText } from '../../../util';
 
 const { Layout: ParentLayout } = DefaultTheme
-
-const md = useMarkdown()
 
 const props = withDefaults(defineProps<{
     text?: string | { html: string }
@@ -22,11 +20,7 @@ const props = withDefaults(defineProps<{
     text: 'Loading...\n\nYou seem to be offline, reload the page to try again...'
 })
 
-const offlineText = computed(() => {
-    return typeof props.text === 'string' 
-        ? md(props.text)
-        : props.text.html
-})
+const offlineText = computed(() => renderText(props.text))
 </script>
 
 <style scoped>

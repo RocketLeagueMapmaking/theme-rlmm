@@ -13,6 +13,7 @@ import type { HomeOptions } from './theme/home'
 import type { AnalyticsOptions } from '../util'
 
 export type {
+    AnalyticsOptions,
     HomeOptions,
 }
 

@@ -22,8 +22,8 @@
                 </p>
             </div>
             <component v-if="$frontmatter.finished === false && theme.blocks?.notFinished !== false"
-                :is="renderNotFinished(md, theme.blocks?.notFinished)" />
-            <component :is="renderBlocks(md, $frontmatter.blocks ?? [], 'top')" />
+                :is="renderNotFinished(theme.blocks?.notFinished)" />
+            <component :is="renderBlocks($frontmatter.blocks ?? [], 'top')" />
         </template>
 
         <template #doc-after>
@@ -31,7 +31,7 @@
         </template>
 
         <template #doc-footer-before>
-            <component :is="renderBlocks(md, $frontmatter.blocks ?? [], 'bottom')" />
+            <component :is="renderBlocks($frontmatter.blocks ?? [], 'bottom')" />
             <Feedback v-if="theme.blocks?.feedback" v-bind="theme.blocks?.feedback === true ? {} : theme.blocks.feedback" />
         </template>
     </ParentLayout>
@@ -43,7 +43,7 @@ import { useCssVar } from '@vueuse/core'
 import { useData, useRouter } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 
-import { useMarkdown, useStorage } from '../../../composables'
+import { useStorage } from '../../../composables'
 import type {
     BannerNotification,
     ThemeConfig,
@@ -69,11 +69,9 @@ const props = defineProps<{
 
 const { Layout: ParentLayout } = DefaultTheme
 
-const md = useMarkdown()
 const router = useRouter()
 const storage = useStorage()
 
-provide('md', md)
 provide('notifications', props.notifications)
 
 const {

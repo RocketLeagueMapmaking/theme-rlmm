@@ -1,13 +1,13 @@
 <template>
     <div class="feedback-container" v-if="showFeedback">
         <div class="feedback-question">
-            <p v-html="renderHTML(md, text)"></p>
+            <p v-html="renderText(text)"></p>
             <div class="feedback-question-actions">
                 <div :class="{ [`feedback-question-action-${ctx}`]: true, active: ctx === answer }" @click="onClick(ctx)"
                     :title="answers[ctx]?.title" :aria-label="answers[ctx]?.label" :key="ctx" v-for="ctx in types">
                     <span v-if="answers[ctx]?.enabled !== false">
                         <Icon :icon="answers[ctx]?.icon" v-if="answers[ctx]?.icon" />
-                        <p v-else-if="answers[ctx]?.text" v-html="renderHTML(md, answers[ctx]!.text!)">
+                        <p v-else-if="answers[ctx]?.text" v-html="renderText(answers[ctx]!.text!)">
                         </p>
                     </span>
                 </div>
@@ -36,14 +36,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, h, inject, ref } from 'vue';
+import { computed, h, ref } from 'vue';
 import { onContentUpdated, useData } from 'vitepress';
 
-import { renderHTML } from '../../util';
+import { renderText } from '../../util';
 
 import type { FeedbackOptions } from '../../types/';
 
-const md = inject<(md: string) => string>('md')!;
 const { frontmatter, page } = useData()
 
 type FeedbackType = keyof NonNullable<FeedbackOptions['answers']>
@@ -70,7 +69,7 @@ const props = withDefaults(defineProps<FeedbackOptions>(), {
             icon: 'carbon:thumbs-down',
         },
     }),
-    renderAfterSubmitted: () => h('p', 'Thanks for submitting!')
+    renderAfterSubmitted: () => h('p', 'Thanks for submitting!'),
 })
 
 const pageData = computed(() => page.value)

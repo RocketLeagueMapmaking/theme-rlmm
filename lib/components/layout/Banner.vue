@@ -14,12 +14,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, ref, watchEffect } from 'vue';
+import { computed, onMounted, ref, watchEffect } from 'vue';
 import { useElementSize, useMounted } from '@vueuse/core';
 import { useData } from 'vitepress'
 
 import { useNotifications } from '../../composables';
-import { getThemeColor } from '../../util';
+import { getThemeColor, renderText } from '../../util';
 import type { BannerNotification, ThemeConfig } from '../../types'
 
 const banner = defineProps<BannerNotification>();
@@ -33,13 +33,12 @@ const className = 'banner-dismissed'
 const bgColor = getThemeColor(banner.color ?? themeOptions?.color ?? 'brand')
 const dismissLabel = themeOptions?.dismissButtonLabel ?? 'Dismiss banner'
 
-const md = inject<(md: string) => string>('md')
-
 const el = ref<HTMLElement>();
 const isMounted = useMounted()
 
 const notifications = useNotifications()
 const { height } = useElementSize(el);
+
 watchEffect(() => {
     if (height.value) {
         document.documentElement.style.setProperty(
@@ -49,11 +48,7 @@ watchEffect(() => {
     }
 });
 
-const html = computed(() => {
-    return typeof banner.text === 'string'
-        ? md?.(banner.text)
-        : banner.text?.html
-})
+const html = computed(() => renderText(banner.text))
 
 const restore = (key: string | undefined, cls: string) => {
     const saved = key ? localStorage.getItem(key) : undefined;
