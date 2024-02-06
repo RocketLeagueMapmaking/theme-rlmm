@@ -12,11 +12,10 @@
 
 <script setup lang="ts">
 import { type DefaultTheme, useData } from 'vitepress';
-import { useSidebar } from 'vitepress/theme';
 
 import { VPLink } from '../theme';
 
-import { findInSidebar } from '../../util';
+import { findInSidebar, getSidebarItems } from '../../util';
 import type { ThemeConfig } from '../../types';
 
 const { theme } = useData<ThemeConfig>()
@@ -24,7 +23,7 @@ const { theme } = useData<ThemeConfig>()
 const rawOptions = theme.value.blocks?.relatedPages
 const options = typeof rawOptions !== 'boolean' ? rawOptions : undefined
 
-const sidebar = useSidebar()
+const sidebar = getSidebarItems(theme.value.sidebar)
 
 // TODO: look into built-end stuff / options in frontmatter to improve this data?
 function parse (path: string) {
@@ -34,7 +33,7 @@ function parse (path: string) {
     })
 
     const data = options?.transformRoute?.(path)
-        ?? convert(findInSidebar(sidebar.sidebar.value, path))
+        ?? convert(findInSidebar(sidebar, path))
         ?? options?.transformUnknownPath?.(path)
         ?? (() => {
             const cap = (str: string) => str[0].toUpperCase() + str.slice(1)

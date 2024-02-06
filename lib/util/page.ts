@@ -2,7 +2,7 @@ import type { DefaultTheme } from 'vitepress'
 
 // TODO: write tests
 
-function getSidebarItems(sidebar?: DefaultTheme.Sidebar) {
+export function getSidebarItems(sidebar?: DefaultTheme.Sidebar) {
     if (!sidebar) return []
 
     const items = Array.isArray(sidebar)
