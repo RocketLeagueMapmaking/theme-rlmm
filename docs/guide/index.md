@@ -75,3 +75,9 @@ sponsors:
     actionText: Become a supporter
     dataUrl: https://docs.rocketleaguemapmaking.workers.dev/sponsors
 ---
+
+<script setup>
+import { RLMMSteamStatistics } from '../../lib/'
+</script>
+
+<RLMMSteamStatistics />
