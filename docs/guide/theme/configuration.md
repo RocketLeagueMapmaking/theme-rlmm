@@ -37,6 +37,7 @@ Besides the default `$frontmatter` and `$params` frontmatter, the following prop
 
 - `$theme`: information about the current theme.
   - Type: `{ name: string, description: string, version: string }`
+  - Value: {{ $theme }}
 
 ## Sidebar action
 
