@@ -1,8 +1,8 @@
 .dark {
-    --vp-c-bg: #000704;
-    --vp-c-bg-alt: #141a15;
-    --vp-c-bg-elv: #091c18;
-    --vp-c-bg-soft: #1d3536;
+    --vp-c-bg: hsl(154 70% 2% / 1);
+    --vp-c-bg-alt: #16191b;
+    --vp-c-bg-elv: #111413;
+    --vp-c-bg-soft: hsl(154, 10%, 8%);
 }
 
 .green-bg {
@@ -20,4 +20,15 @@
     --vp-c-brand-2: var(--vp-c-green-2);
     --vp-c-brand-3: var(--vp-c-green-3);
     --vp-c-brand-soft: var(--vp-c-green-soft);
+}
+
+:root {
+    --vp-home-hero-name-color: transparent;
+    --vp-home-hero-name-background: -webkit-linear-gradient(120deg, var(--vp-c-brand-1), var(--vp-c-brand-3));
+    --vp-home-hero-image-background-image: linear-gradient(-45deg, var(--vp-c-brand-1) 50%, var(--vp-c-neutral) 50%);
+    --vp-home-hero-image-filter: blur(400px);
+}
+
+.VPHomeSponsors .love {
+    color: var(--vp-c-sponsor);
 }

@@ -7,6 +7,7 @@ export function getThemeColor (color: string, variant = '3') {
         'gray',
         'yellow',
         'green',
+        'purple',
     ].includes(color)
 
     return isTheme ? `var(--vp-c-${color}-${variant})` : color

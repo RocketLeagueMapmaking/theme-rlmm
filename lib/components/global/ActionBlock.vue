@@ -1,8 +1,14 @@
 <template>
     <span>
         <div class="action-block" :class="className" :style="style ?? {}">
-            <slot name="left" />
-            <slot name="right" />
+            <slot>
+                <div>
+                    <slot name="left" />
+                </div>
+                <div>
+                    <slot name="right" />
+                </div>
+            </slot>
         </div>
     </span>
 </template>
@@ -27,12 +33,14 @@ defineProps<{
     border-radius: 4px;
 }
 
-.custom-block .action-block {
-    padding: 10px 18px !important;
+.action-block div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.action-block :deep(p) {
-    display: flex;
+.custom-block .action-block {
+    padding: 10px 18px !important;
 }
 
 .action-block :deep(img) {

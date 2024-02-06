@@ -28,6 +28,12 @@ List sort options:
 | ----------- | ------ | ------- | --------------------------------- |
 | key         | string | -       | The object key to use for sorting |
 
+This component is not installed globally and must be imported from the theme:
+
+```ts
+import { ListWindow } from 'rocketleaguemapmaking/theme-rlmm'
+```
+
 ## Simple array
 
 ```vue
@@ -65,6 +71,20 @@ List sort options:
 </ListWindow>
 
 ## Notifications
+
+A more advanced list window component is also exported for showing the current notifications: `NotificationListWindow`.
+
+```mdx
+<NotificationListWindow>
+<template #default="{ item }">
+
+### {{ item.title }} <Badge text="tag" type="info" />
+
+<p v-html="item.text"></p>
+
+</template>
+</NotificationListWindow>
+```
 
 <NotificationListWindow>
 <template #default="{ item }">

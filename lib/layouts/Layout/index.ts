@@ -4,7 +4,7 @@ import { useData } from 'vitepress'
 import { fetchComponent } from '../../util/'
 import type {
     BannerNotification,
-    RLMMThemeConfig,
+    ThemeConfig,
 } from '../../types'
 
 import { renderHomePageSections } from './sections/home'
@@ -14,12 +14,32 @@ import LoadingLayout from './components/loading.vue'
 
 export default function defineDefaultLayout() {
     return defineAsyncComponent({
-        loadingComponent: () => h(LoadingLayout),
+        loadingComponent: () => {
+            const {
+                theme: { value: theme },
+            } = useData<ThemeConfig>()
+
+            return h(LoadingLayout, {
+                text: theme.home?.offlineText,
+            })
+        },
+        errorComponent: () => {
+            const {
+                theme: { value: theme },
+            } = useData<ThemeConfig>()
+
+            return h(LoadingLayout, {
+                text: theme.home?.errorText ?? 'Failed to load...',
+            })
+        },
+        onError: console.error,
         loader: async () => {
             const {
                 theme: { value: theme },
                 frontmatter: fm,
-            } = useData<RLMMThemeConfig>()
+            } = useData<ThemeConfig>()
+
+            console.log('Loading layout...')
 
             const banner = await fetchComponent<false | BannerNotification>(theme.banner)
             const notifications = await fetchComponent(theme.notifications) ?? []

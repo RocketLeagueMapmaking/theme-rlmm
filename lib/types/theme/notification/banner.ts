@@ -1,3 +1,5 @@
+import type { PageData } from "vitepress"
+
 import type { BaseNotification } from "./base"
 
 /**
@@ -16,4 +18,48 @@ export interface BannerNotification extends BaseNotification {
      * @default -1
      */
     cooldown?: number
+}
+
+export interface BannerOptions {
+    /**
+     * Whether to show the banner on the current page
+     * @param page The current page data
+     */
+    enabled?: (page: PageData) => boolean
+
+    /**
+     * The (default) banner background color
+     * @default 'brand'
+     */
+    color?: string
+
+    /**
+     * The amount of days to wait before showing the notification again.
+     * Set to negative number to never show banners again.
+     * @default -1
+     */
+    cooldown?: number
+
+    /**
+     * 
+     * @param id the id of the banner that is being dismissed
+     */
+    onDismissed?: (id: string) => void
+
+    /**
+     * The data of the notification banner to display
+     */
+    data?: BannerNotification
+
+    /**
+     * The url to fetch the notification.
+     * When making a GET request a `BannerNotification` JSON response is expected.
+     */
+    dataUrl?: string
+
+    /**
+     * The label for the dismiss / close button
+     * @default 'Dismiss banner'
+     */
+    dismissButtonLabel?: string
 }

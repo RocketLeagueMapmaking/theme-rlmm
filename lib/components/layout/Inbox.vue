@@ -18,20 +18,19 @@
 
             </div>
             <div class="nav-notification-inbox-bottom" v-if="options.bottomText">
-                <p v-html="renderHTML(md!, options.bottomText)"></p>
+                <p v-html="renderText(options.bottomText)"></p>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, inject, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { onClickOutside, useToNumber, useToggle } from '@vueuse/core';
 
 import { useStorage, useNotification } from '../../composables';
-import { renderHTML } from '../../util';
+import { renderText } from '../../util';
 import type { NavInboxIcon, ThemeConfig, ThemeNotification } from '../../types';
-import { watch } from 'vue';
 
 const props = defineProps<{
     notifications: ThemeNotification[]
@@ -43,7 +42,6 @@ const hasRead = ref(false)
 
 const storage = useStorage()
 const [open, toggle] = useToggle()
-const md = inject<markdownit>('md')
 
 const hideInbox = storage.useKey<string>(storage.themeKeys.value.hideNotificationInbox, null)
 const lastOpened = storage.useKey<string>(storage.themeKeys.value.notificationInboxLastOpened, null)
@@ -64,7 +62,7 @@ const unread = computed(() => {
 
 const emptyText = computed(() => {
     return props.options?.emptyText
-        ? renderHTML(md!, props.options.emptyText)
+        ? renderText(props.options.emptyText)
         : 'No notifications to read...'
 })
 
@@ -110,7 +108,7 @@ function render(notification: ThemeNotification) {
     return {
         ...notification,
         title: notification.title,
-        text: notification.html ?? renderHTML(md!, notification.inboxText ?? notification.text)
+        text: notification.html ?? renderText(notification.inboxText ?? notification.text)
     }
 }
 </script>

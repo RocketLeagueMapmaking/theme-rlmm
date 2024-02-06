@@ -2,9 +2,9 @@ import { h, ref } from 'vue'
 import { VPButton } from 'vitepress/theme'
 
 import { useStorage } from '../../../composables/'
-import type { RLMMThemeConfig } from '../../../types'
+import type { SidebarActionOptions } from '../../../types'
 
-export function renderSidebarAction(options: RLMMThemeConfig['sidebarAction']) {
+export function renderSidebarAction(options?: SidebarActionOptions) {
     if (options == undefined) return undefined
 
     let storedValue = ref(false)

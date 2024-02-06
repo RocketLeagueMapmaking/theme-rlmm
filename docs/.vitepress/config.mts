@@ -1,15 +1,17 @@
 import { defineConfigWithTheme } from 'vitepress'
 
-import { type RLMMThemeConfig } from '../../lib/'
+import { defineConfig } from '../../lib/config'
 
 const domain = 'https://theme-rlmm.pages.dev/'
 
-export default defineConfigWithTheme<RLMMThemeConfig>({
-    title: "RLMM",
+export default defineConfig({
+    title: "theme-rlmm",
     description: "Testing playground for the map making guide",
 
     cleanUrls: true,
     appearance: true,
+    lastUpdated: true,
+    
     markdown: {
         headers: true,
     },
@@ -34,14 +36,13 @@ export default defineConfigWithTheme<RLMMThemeConfig>({
         ],
     ],
 
-    transformPageData(pageData, ctx) {
-        if (pageData.relativePath === 'preferences.md') {
-            pageData.frontmatter.pages = ctx.siteConfig.pages
-        }
-    },
-
     themeConfig: {
         externalLinkIcon: true,
+        editLink: {
+            pattern: 'https://github.com/rocketleaguemapmaking/theme-rlmm/tree/main/docs/guide/:path',
+            text: 'View this page on GitHub',
+        },
+
         search: {
             provider: 'algolia',
             options: {
@@ -65,17 +66,48 @@ export default defineConfigWithTheme<RLMMThemeConfig>({
         nav: [
             { text: 'Theme', link: '/theme/' },
             {
+                text: 'Resources',
+                items: [
+                    {
+                        text: 'Discord',
+                        link: 'https://github.com/rocketleaguemapmaking/rl-docs'
+                    },
+                    {
+                        text: 'GitHub',
+                        items: [
+                            {
+                                text: 'Discussions',
+                                link: 'https://github.com/rocketleaguemapmaking/rl-docs'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 text: 'Guide',
                 // link: '/udk/',
                 items: [
                     {
                         text: 'UDK',
+                        expanded: true,
                         link: '/udk/',
+                        description: 'Learn more about UDK',
+                        icon: 'carbon:edit'
                     },
                     {
                         text: 'Blender',
+                        expanded: true,
                         link: '/blender/',
-                    }
+                        description: 'Learn more about Blender',
+                        icon: 'carbon:cube',
+                    },
+                    {
+                        text: 'Kismet',
+                        expanded: true,
+                        link: '/udk/reference',
+                        description: 'Learn more about kismet',
+                        icon: 'carbon:branch'
+                    },
                 ]
             },
         ],
@@ -170,6 +202,10 @@ export default defineConfigWithTheme<RLMMThemeConfig>({
                 color: 'linear-gradient(90deg, var(--vp-c-brand-3) 0%, var(--vp-c-brand-1) 50%, var(--vp-c-indigo-3) 100%)',
                 text: 'Map making contest 6 is now active! [Read the announcement](https://discord.com/channels/711882968200904715/711883463871037510/1169509851832000523)'
             }
+        },
+
+        blocks: {
+            feedback: true,
         },
 
         notifications: {

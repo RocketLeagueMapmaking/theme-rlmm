@@ -1,5 +1,8 @@
 # Frontmatter
 
+> [!TIP] Frontmatter
+> You can use the [Frontmatter VSCode extension](https://marketplace.visualstudio.com/items?itemName=eliostruyf.vscode-front-matter-beta) to have a better UI for editing frontmatter
+
 ## Home page
 
 ### hero.steam
@@ -24,17 +27,17 @@ Display the sponsors / supporters / backers of the project
 
 - default: `'Patreons'`
 
-#### sponsors.link
+#### sponsors.actionLink
 
 The link to your donation page. Used in the support button at the bottom.
 
 - Required: `true`
 
-#### sponsors.action
+#### sponsors.actionText
 
 The text on the support button at the bottom.
 
-- default: `'Become a supporter'`
+- Required: `true`
 
 #### sponsors.data
 
@@ -67,13 +70,28 @@ Type: `string | { image: string }`
 
 #### promotion.description
 
-The HTLM description
+The HTML description
 
 #### promotion.actions
 
 Type: [`HeroAction[]`](https://vitepress.dev/reference/default-theme-home-page#hero-section)
 
 ## Normal page
+
+### feedback
+
+Whether to show feedback on the page or not
+
+- Type: `boolean`
+- Default: `true`
+
+To disable feedback:
+
+```md
+---
+feedback: false
+---
+```
 
 ### finished
 
@@ -108,3 +126,9 @@ Block options are:
 | color    | string                                  | -        | undefined |
 | type     | 'info' \| 'tip' \| 'warning' \| 'error' | -        | 'info'    |
 | position | 'top' \| 'bottom'                       | -        | 'top'     |
+
+### related
+
+Adds links to pages that could be interesting based on the current page.
+
+- Type: `string[]`

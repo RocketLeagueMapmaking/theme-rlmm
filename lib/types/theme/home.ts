@@ -1,4 +1,5 @@
-import type { HeadConfig } from "vitepress"
+import type { HeadConfig, DefaultTheme } from "vitepress"
+import type { ThemeText } from "./text"
 
 type Frontmatter = Record<string, any>
 
@@ -22,16 +23,11 @@ export interface DefaultNormalPageFrontmatter extends Frontmatter {
 // https://vitepress.dev/reference/default-theme-home-page
 export interface Hero {
     name?: string
-    text: string
+    text?: string
     tagline?: string
-    image?: ThemeableImage
+    image?: DefaultTheme.ThemeableImage
     actions?: HeroAction[]
 }
-
-type ThemeableImage =
-    | string
-    | { src: string; alt?: string }
-    | { light: string; dark: string; alt?: string }
 
 interface HeroAction {
     theme?: 'brand' | 'alt'
@@ -40,7 +36,7 @@ interface HeroAction {
 }
 
 export interface Feature {
-    icon?: FeatureIcon
+    icon?: DefaultTheme.FeatureIcon
     title: string
     details: string
     link?: string
@@ -48,19 +44,26 @@ export interface Feature {
     rel?: string
 }
 
-type FeatureIcon =
-    | string
-    | { src: string; alt?: string; width?: string; height: string }
-    | {
-        light: string
-        dark: string
-        alt?: string
-        width?: string
-        height: string
-    }
-
 export interface DefaultHomePageFrontmatter extends DefaultNormalPageFrontmatter {
     layout: 'home'
     hero?: Hero
     features?: Feature[]
+}
+
+export interface HomeOptions {
+    /**
+     * The text to show when offline on the home page
+     * Also configurable by $frontmatter.offlineText
+     */
+    offlineText?: ThemeText
+
+    /**
+     * The text to show when an error occured on the home page
+     */
+    errorText?: ThemeText
+
+    /**
+     * Customize the logo of the sponsor options
+     */
+    sponsorLogo?: string
 }

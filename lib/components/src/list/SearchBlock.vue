@@ -33,11 +33,15 @@ import { useUrlSearchParams } from '@vueuse/core'
 
 import { VPButton, VPSwitch } from '../../theme'
 
-export type SearchFilter<Type extends string, Options extends object> = {
+type BaseSearchFilter<Type extends string, Options extends object> = {
     type: Type
     searchParam?: string
     itemKey: string
 } & Options
+
+export type SearchFilter =
+    | BaseSearchFilter<'select', { options: string[] }>
+    | BaseSearchFilter<'switch', {}>
 
 const props = withDefaults(defineProps<{
     searchKey: string
@@ -46,10 +50,7 @@ const props = withDefaults(defineProps<{
         reset: string
         searchPlaceholder: string
     }
-    filters?: (
-        | SearchFilter<'select', { options: string[] }>
-        | SearchFilter<'switch', {}>
-    )[]
+    filters?: SearchFilter[]
 }>(), {
     filters: () => [],
     text: () => ({
@@ -93,7 +94,7 @@ function reset() {
     search.value = ''
 }
 
-function getEmptySelectOption (filter: SearchFilter<'select', { options: string[] }>) {
+function getEmptySelectOption (filter: SearchFilter) {
     return `All ${filter.itemKey}${!filter.itemKey.endsWith('s') ? 's' : ''}`
 }
 

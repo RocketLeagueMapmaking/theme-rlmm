@@ -5,23 +5,24 @@ import {
     enhanceAppWithTheme,
 } from './theme'
 
+import * as pkg from '../../package.json'
+
 // Components
 
 import ActionBlock from './global/ActionBlock.vue'
-import EventShowcase from './global/EventShowcase.vue'
+import ItemGrid from './global/ItemGrid.vue'
 import PreferenceSetting from './global/PreferenceSetting.vue'
 import SteamMaps from './global/SteamMaps.vue'
 
 import ActionView from './global/markdown/action.vue'
 import StepsView from './global/markdown/steps.vue'
 import TabsView from './global/markdown/tabs.vue'
-import { ThemeConfig } from '../types'
 
 export const registerGlobalProperties: EnhanceFunction = (ctx) => {
-    // TODO: read from package.json
     ctx.app.config.globalProperties.$theme = {
-        name: 'theme-rlmm',
-        version: '0.3.0'
+        name: pkg.name,
+        version: pkg.version,
+        description: pkg.description,
     }
 }
 
@@ -42,7 +43,9 @@ export const enhanceApp: EnhanceFunction = async (ctx) => {
     app.component('Tabs', TabsView)
 
     app.component('ActionBlock', ActionBlock)
-    app.component('EventShowcase', EventShowcase)
+    app.component('ItemGrid', ItemGrid)
+    /** @deprecated */
+    app.component('EventShowcase', ItemGrid)
     app.component('PreferenceSetting', PreferenceSetting)
     app.component('SteamMaps', SteamMaps)
 }

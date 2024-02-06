@@ -10,7 +10,40 @@ option {
     border-radius: 6px !important;
 }
 
+/**
+ * Styles for theme switch component. Makes it round
+ */
+
+.VPSwitchAppearance {
+    width: 22px !important;
+    height: 21.5px !important;
+}
+
+.dark .VPSwitchAppearance .check {
+    transform: translateX(0px) !important;
+}
+
 .VPSwitch.enabled .check {
     background-color: var(--vp-c-brand-3);
     transform: translateX(18px);
+}
+
+/*
+ * Styles for scroll bar
+ */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--vp-c-border);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--vp-c-brand-2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--vp-c-brand-3);
 }

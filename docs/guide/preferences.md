@@ -1,4 +1,5 @@
 ---
+exposePages: true
 aside: false
 ---
 
@@ -40,9 +41,9 @@ Accent color
 Hide sidebar action button
 </PreferenceSetting>
 
-<PreferenceSetting storeKey="rlmm-show-sidemenu">
+<PreferenceSetting storeKey="rlmm-home-hidesteam">
 
-Show advanced pages in sidemenu
+Hide new Steam maps on home page
 </PreferenceSetting>
 </template>
 

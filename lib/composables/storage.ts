@@ -13,6 +13,7 @@ export type ThemeStorageKeys = NonNullable<Required<NonNullable<RLMMThemeConfig[
 export function useStorage<Key extends string = string>() {
     const storage = ref<Storage | null>(null)
     const defaultKeys = Object.freeze({
+        hideHomeSteamMaps: 'rlmm-home-hidesteam',
         hideNotificationInbox: 'rlmm-hide-navinbox',
         hideSidebarAction: 'rlmm-hide-action',
         notificationInboxLastOpened: 'rlmm-navinbox-lastopened',

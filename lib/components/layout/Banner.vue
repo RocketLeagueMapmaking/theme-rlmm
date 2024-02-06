@@ -4,7 +4,7 @@
         <div class="text" v-html="html">
         </div>
 
-        <button type="button" @click="dismiss" v-if="dismissable">
+        <button type="button" :aria-label="dismissLabel" @click="dismiss" v-if="dismissable">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                 <path
                     d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
@@ -14,31 +14,31 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, ref, watchEffect } from 'vue';
+import { computed, onMounted, ref, watchEffect } from 'vue';
 import { useElementSize, useMounted } from '@vueuse/core';
 import { useData } from 'vitepress'
 
 import { useNotifications } from '../../composables';
-import { getThemeColor } from '../../util';
-import type { BannerNotification, RLMMThemeConfig } from '../../types'
+import { getThemeColor, renderText } from '../../util';
+import type { BannerNotification, ThemeConfig } from '../../types'
 
 const banner = defineProps<BannerNotification>();
 
 const { 
     page,
     theme: { value: { banner: themeOptions } },
-} = useData<RLMMThemeConfig>()
+} = useData<ThemeConfig>()
 
 const className = 'banner-dismissed'
 const bgColor = getThemeColor(banner.color ?? themeOptions?.color ?? 'brand')
-
-const md = inject<markdownit>('md')
+const dismissLabel = themeOptions?.dismissButtonLabel ?? 'Dismiss banner'
 
 const el = ref<HTMLElement>();
 const isMounted = useMounted()
 
 const notifications = useNotifications()
 const { height } = useElementSize(el);
+
 watchEffect(() => {
     if (height.value) {
         document.documentElement.style.setProperty(
@@ -48,11 +48,7 @@ watchEffect(() => {
     }
 });
 
-const html = computed(() => {
-    return typeof banner.text === 'string'
-        ? md?.render(banner.text)
-        : banner.text?.html
-})
+const html = computed(() => renderText(banner.text))
 
 const restore = (key: string | undefined, cls: string) => {
     const saved = key ? localStorage.getItem(key) : undefined;

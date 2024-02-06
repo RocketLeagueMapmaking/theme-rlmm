@@ -10,6 +10,7 @@ declare module 'vue' {
 
     $theme: {
         name: string
+        description: string
         version: string
     }
   }

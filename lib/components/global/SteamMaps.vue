@@ -8,27 +8,22 @@
                     <VPIconChevronLeft class="steam-maps-icon" v-if="showIcon(index, 'left')"
                         @click="goToNextMap(true, -1)" />
                     <div class="steam-map-active" v-if="index === active" @click="goToNextMap(true)">
-                        <p :style="{ fontWeight: 'bold' }">
-                            {{ map.title }}
+                        <p class="steam-map-title">
+                            {{ renderText(map.title, { maxLength: maxLengthTitle }) }}
                         </p>
                         <!-- Only show creator name on large screens -->
                         <span class="only-large">
-                            By {{ map.creator.name }}
+                            By {{ renderText(map.creator.name, { maxLength: maxLengthUsername }) }}
                         </span>
                         <VPLink :href="itemPageUrl(map)" :noIcon="true">
-                            <!-- TODO: Try to prevent the flash on image loading -->
-                            <div v-if="!loadedImgs[map.id]" class="steam-map-img" :style="{
-                                backgroundColor: 'var(--vp-c-bg)',
-                                height: '225px'
-                            }">
-                            </div>
-                            <VPImage v-on:load="() => loadedImgs[map.id] = true" class="steam-map-img"
-                                :image="map.preview.url" :title="map.title" :alt="map.title" />
+                            <ImgWithPlaceholder :image="map.preview.url" />
                         </VPLink>
                         <!-- Only show actions on large screens -->
                         <div class="steam-map-active-actions only-large">
                             <VPButton theme="alt" text="View" :href="itemPageUrl(map)" />
-                            <VPButton theme="alt" text="Download" :href="itemDownloadUrl(map)" />
+                            <VPButton theme="alt" text="Download" v-if="downloadUrlTemplate" :href="itemDownloadUrl(map)" />
+                            <VPButton theme="alt" v-for="action in addActions?.(map) ?? []" :key="action.link"
+                                :text="action.text" :href="action.link" />
                         </div>
                     </div>
                     <VPIconChevronRight class="steam-maps-icon" v-if="showIcon(index, 'right')"
@@ -44,13 +39,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, withDefaults } from 'vue'
+import { computed, defineComponent, h, onMounted, ref, withDefaults } from 'vue'
+import { useImage } from '@vueuse/core'
 
-import { VPIconChevronLeft, VPIconChevronRight } from '../theme'
+import { VPIconChevronLeft, VPIconChevronRight, VPImage } from '../theme'
 
 import { usePlatform, useStorage } from '../../composables/'
+import { renderText } from '../../util'
 import type { SteamMap } from '../../types'
-import { useParallax } from '@vueuse/core';
 
 type SteamMapIconType =
     | 'left'
@@ -72,12 +68,15 @@ export interface Props {
     iconsEnabled?:
     | boolean
     | Record<SteamMapIconType, boolean>
+    downloadUrlTemplate?: string | ((id: string) => string) | null
+    maxLengthTitle?: number
+    maxLengthUsername?: number
     handleException?: (err: unknown) => void
+    addActions?: (map: SteamMap) => { text: string, link: string }[]
 }
 
 const active = ref(0), hasSetting = ref(false), containerRef = ref();
 const maps = ref<SteamMap[]>([]);
-const loadedImgs = ref<Record<string, true>>({})
 
 const platform = usePlatform(), isWindows = computed(() => platform.value === 'Windows');
 const storage = useStorage();
@@ -92,6 +91,10 @@ const props = withDefaults(defineProps<Props>(), {
     disableClick: false,
     displayTime: 10_000,
     handleException: console.error,
+    addActions: () => [],
+    downloadUrlTemplate: null,
+    maxLengthTitle: 30,
+    maxLengthUsername: 24,
 })
 
 function itemPageUrl(map: SteamMap) {
@@ -116,8 +119,9 @@ function itemPageUrl(map: SteamMap) {
 }
 
 function itemDownloadUrl(map: SteamMap) {
-    // TODO: add
-    return ''
+    return typeof props.downloadUrlTemplate === 'string'
+        ? props.downloadUrlTemplate.replace(':id', map.id)
+        : props.downloadUrlTemplate?.(map.id)
 }
 
 async function fetchSteamMaps(options: Required<Props>) {
@@ -164,6 +168,22 @@ function goToNextMap(isClick?: boolean, dIndex = 1) {
         active.value = ((active.value + dIndex) < 0) ? (maps.value.length + dIndex) : active.value + dIndex
 }
 
+const ImgWithPlaceholder = defineComponent<{ image: string }>({
+    setup(props, ctx) {
+        const use = useImage({ src: props.image })
+
+        return () => use.isLoading.value ? h('div', {
+            class: 'steam-map-img', style: {
+                backgroundColor: 'var(--vp-c-bg)',
+                height: '225px'
+            }
+        }) : h(VPImage, {
+            class: 'steam-map-img',
+            image: props.image,
+        })
+    },
+})
+
 onMounted(async () => {
     const key = storage.themeKeys.value.useSteamProtocolUrl
     hasSetting.value = storage.getAny(key, false)
@@ -172,15 +192,31 @@ onMounted(async () => {
 
     if (props.displayTime < 0) return
     setInterval(goToNextMap, props.displayTime)
-
-    const {} = useParallax(containerRef)
 })
 </script>
 
 <style>
 /* If the component is added on the home page, hide the container that blocks interactions */
-.image-bg {
+.VPHero:has(.steam-maps) .image-bg {
     display: none;
+}
+
+.VPHero .image:has(.steam-maps) {
+    z-index: 5;
+}
+
+@media screen and (min-width: 960px) {
+    .image-container:has(.steam-maps) {
+        scale: 0.8;
+        width: 200px;
+    }
+}
+
+@media screen and (min-width: 1100px) {
+    .image-container:has(.steam-maps) {
+        scale: 1;
+        width: initial;
+    }
 }
 </style>
 
@@ -205,6 +241,12 @@ onMounted(async () => {
     justify-content: center;
 }
 
+.steam-map-title {
+    font-weight: bold;
+    text-overflow: ellipsis;
+    text-size-adjust: auto;
+}
+
 .steam-map-active:hover,
 .steam-maps-icon:hover,
 .VPImage:hover {
@@ -215,6 +257,7 @@ onMounted(async () => {
 :deep(.steam-map-img) {
     border-radius: 8px;
     width: 400px !important;
+    height: 225px;
     max-height: 225px;
     max-width: 75vw !important;
     margin: 10px 0px;
@@ -252,9 +295,12 @@ onMounted(async () => {
         padding: 6px !important;
         text-align: center !important;
     }
+}
 
+@media screen and (max-width: 640px) {
     :deep(.steam-map-img) {
         margin: 0px !important;
+        height: 175px;
     }
 }
 </style>

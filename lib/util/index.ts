@@ -1,3 +1,5 @@
 export * from './color'
 export * from './data'
+export * from './page'
 export * from './render'
+export * from './util'

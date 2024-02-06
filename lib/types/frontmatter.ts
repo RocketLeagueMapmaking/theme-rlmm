@@ -1,5 +1,5 @@
 import type { Props as SteamMapOptions } from '../components/global/SteamMaps.vue'
-import type { Props as EventsOptions } from '../components/global/EventShowcase.vue'
+import type { Props as EventsOptions } from '../components/global/ItemGrid.vue'
 
 import type { PromotionOptions } from '../layouts/Layout/sections/promotion'
 
@@ -17,6 +17,13 @@ import type {
 
 export interface NormalPageFrontmatter extends DefaultNormalPageFrontmatter {
     /**
+     * Control whether to show the ask for feedback block is enabled.
+     * Only shown when enabled in the theme configuration.
+     * @default true
+     */
+    feedback?: boolean
+
+    /**
      * Mark the page as not finished with a banner at the top of the page
      * @default true
      */
@@ -27,6 +34,12 @@ export interface NormalPageFrontmatter extends DefaultNormalPageFrontmatter {
      * @default []
      */
     blocks?: BlockRenderOptions
+
+    /**
+     * Adds related pages to the current page
+     * @default []
+     */
+    related?: string[]
 }
 
 export interface HomePageFrontmatter extends DefaultHomePageFrontmatter {
@@ -38,8 +51,8 @@ export interface HomePageFrontmatter extends DefaultHomePageFrontmatter {
     resources?: Feature[]
     sponsors?: {
         message?: string
-        action?: string
-        link: string
+        actionText?: string
+        actionLink: string
         data?: SponsorData
         dataUrl?: string
     }
