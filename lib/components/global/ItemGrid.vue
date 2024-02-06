@@ -158,7 +158,7 @@ a {
     }
 
     .showcase-item {
-        width: 90vw !important;
+        width: 80vw !important;
     }
 
     .showcase-item :deep(img) {

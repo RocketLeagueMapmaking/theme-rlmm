@@ -70,14 +70,14 @@ export default defineConfig({
                 items: [
                     {
                         text: 'Discord',
-                        link: '/'
+                        link: 'https://github.com/rocketleaguemapmaking/rl-docs'
                     },
                     {
                         text: 'GitHub',
                         items: [
                             {
                                 text: 'Discussions',
-                                link: '/'
+                                link: 'https://github.com/rocketleaguemapmaking/rl-docs'
                             }
                         ]
                     }
