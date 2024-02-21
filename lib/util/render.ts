@@ -25,7 +25,9 @@ export const renderText = <ToNode extends boolean = false>(
     const md = useMarkdown()
 
     const input = options?.maxLength && typeof text === 'string'
-        ? text.length > options.maxLength ? text.slice(0, options.maxLength) + '...' : text
+        ? text.length > options.maxLength
+            ? text.slice(0, options.maxLength) + (options.ellipsisText ?? '...')
+            : text
         : text
 
     const html = typeof input === 'string'
@@ -43,6 +45,7 @@ export const ThemeTextComponent = defineComponent<ThemeTextComponentOptions>(
             ...(props.props ?? {}),
             innerHTML: renderText(props.text, {
                 ...(props.options ?? {}),
+                preserve: false,
                 toVNode: false,
             }),
         })

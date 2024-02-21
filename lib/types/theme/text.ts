@@ -7,6 +7,12 @@ export interface ThemeTextOptions<ToNode extends boolean> {
     maxLength?: number
 
     /**
+     * If the text is truncated, add this text to the end of the text.
+     * @default '...'
+     */
+    ellipsisText?: string
+
+    /**
      * Preserve output as markdown if the text is markdown
      * @default false
      */
@@ -21,7 +27,7 @@ export interface ThemeTextOptions<ToNode extends boolean> {
 export interface ThemeTextComponentOptions {
     text: ThemeText
     tag?: string
-    options?: Omit<ThemeTextOptions<true>, 'toVNode'>
+    options?: Omit<ThemeTextOptions<true>, 'preserve' | 'toVNode'>
     props?: Record<string, any>
 }
 
