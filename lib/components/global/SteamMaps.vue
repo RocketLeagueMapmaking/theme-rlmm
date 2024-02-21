@@ -148,8 +148,8 @@ const render = {
         maxLength: props.maxLengthTitle,
         preserve: true
     }),
-    creator: (map: SteamMap) => renderText(map.title, {
-        maxLength: props.maxLengthTitle,
+    creator: (map: SteamMap) => renderText(map.creator.name, {
+        maxLength: props.maxLengthUsername,
         preserve: true
     }),
 }

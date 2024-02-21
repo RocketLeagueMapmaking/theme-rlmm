@@ -14,7 +14,7 @@ const { to } = defineProps<{
 }>()
 
 onMounted(() => {
-    document.styleSheets.item(0)?.insertRule(`${to} * { display: none }`)
-    document.styleSheets.item(0)?.insertRule(`${to} *:last-child { display: flex }`)
+    document.styleSheets.item(0)?.insertRule(`${to} * { display: none !important }`)
+    document.styleSheets.item(0)?.insertRule(`${to} *:last-child { display: flex !important }`)
 })
 </script>
