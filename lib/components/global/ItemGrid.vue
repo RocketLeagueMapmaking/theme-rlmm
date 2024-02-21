@@ -7,7 +7,7 @@
                 <div class="showcase-item" :style="{ }">
                     <VPImage :image="item.image" />
                     <h1>{{ item.title }}</h1>
-                    <p>{{ text }}</p>
+                    <p v-html="text"></p>
                 </div>
             </VPLink>
         </div>
@@ -29,9 +29,11 @@ import {
     renderText,
 } from '../../util'
 
+import type { ThemeText } from '../../types'
+
 export interface ShowcaseEvent {
     title: string
-    description?: string
+    description?: ThemeText
     image: string
     link: string
 }

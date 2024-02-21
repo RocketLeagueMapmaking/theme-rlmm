@@ -29,7 +29,7 @@ export const renderText = <ToNode extends boolean = false>(
         : text
 
     const html = typeof input === 'string'
-        ? md(input)
+        ? options?.preserve ? input : md(input)
         : input.html
 
     return (options?.toVNode

@@ -7,6 +7,12 @@ export interface ThemeTextOptions<ToNode extends boolean> {
     maxLength?: number
 
     /**
+     * Preserve output as markdown if the text is markdown
+     * @default false
+     */
+    preserve?: boolean
+
+    /**
      * Converts the output to a VNode instead of string
      */
     toVNode?: ToNode

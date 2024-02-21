@@ -9,11 +9,11 @@
                         @click="goToNextMap(true, -1)" />
                     <div class="steam-map-active" v-if="index === active" @click="goToNextMap(true)">
                         <p class="steam-map-title">
-                            {{ renderText(map.title, { maxLength: maxLengthTitle }) }}
+                            {{ render.title(map) }}
                         </p>
                         <!-- Only show creator name on large screens -->
                         <span class="only-large">
-                            By {{ renderText(map.creator.name, { maxLength: maxLengthUsername }) }}
+                            By {{ render.creator(map) }}
                         </span>
                         <VPLink :href="itemPageUrl(map)" :noIcon="true">
                             <ImgWithPlaceholder :image="map.preview.url" />
@@ -141,6 +141,17 @@ async function fetchSteamMaps(options: Required<Props>) {
     } else {
         return response
     }
+}
+
+const render = {
+    title: (map: SteamMap) => renderText(map.title, {
+        maxLength: props.maxLengthTitle,
+        preserve: true
+    }),
+    creator: (map: SteamMap) => renderText(map.title, {
+        maxLength: props.maxLengthTitle,
+        preserve: true
+    }),
 }
 
 function showIcon(index: number, type: SteamMapIconType) {
