@@ -1,0 +1,42 @@
+import { defineConfig } from '../../../lib/config'
+import themeConfig from './theme'
+
+const domain = 'https://theme-rlmm.pages.dev/'
+
+export default defineConfig({
+    title: "theme-rlmm",
+    description: "Testing playground for the map making guide",
+    themeConfig,
+
+    cleanUrls: true,
+    appearance: true,
+    lastUpdated: true,
+
+    markdown: {
+        headers: true,
+    },
+
+    srcDir: './guide',
+    srcExclude: ['**/flowchart/questions/*.md'],
+    sitemap: {
+        hostname: domain,
+    },
+
+    vite: {
+        publicDir: '../.vitepress/public',
+    },
+
+    head: [
+        ['link', { rel: 'manifest', href: domain + 'manifest.json' }],
+        ['meta', { name: 'theme-color', content: '#3eaf7c' }],
+        [
+            'script',
+            { id: 'register-sw' },
+            `;(() => {
+                if ('serviceWorker' in navigator) {
+                  navigator.serviceWorker.register('/sw.js')
+                }
+              })()`
+        ],
+    ],
+})
