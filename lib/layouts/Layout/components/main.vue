@@ -2,7 +2,7 @@
     <ParentLayout :class="{ 'banner-dismissed': !(banner != undefined && banner !== false) }">
         <template #layout-top>
             <Banner v-bind="banner" v-if="banner != undefined && banner !== false" />
-            <Replacer to=".VPHomeSponsors .love" v-if="$frontmatter.layout === 'home'">
+            <Replacer to=".VPHomeSponsors .love" v-if="showReplacer && $frontmatter.layout === 'home'">
                 <Icon :icon="theme.home?.sponsorLogo ?? 'fa-brands:patreon'" class="icon" width="28px" fill="currentColor" />
             </Replacer>
         </template>
@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { h, provide, type VNode } from 'vue'
+import { h, nextTick, onMounted, provide, ref, type VNode } from 'vue'
 import { useCssVar } from '@vueuse/core'
 import { useData, useRouter } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
@@ -56,13 +56,13 @@ import NavInbox from '../../../components/layout/Inbox.vue'
 import RelatedPages from '../../../components/layout/RelatedPages.vue'
 import Replacer from '../../../components/layout/Replacer.vue'
 
+import { renderHomePageSections } from '../sections/home'
 import { renderSidebarAction } from '../sections/sidebarAction'
 import { renderNotFinished } from '../sections/notFinished'
 import { renderBlocks } from '../sections/block'
 import { createAnalyticsDataCollector } from '../../../util'
 
 const props = defineProps<{
-    homepageSlots: Record<string, (() => VNode) | undefined> | undefined
     banner: false | BannerNotification | undefined
     notifications: ThemeNotification[]
 }>()
@@ -76,7 +76,19 @@ provide('notifications', props.notifications)
 
 const {
     theme,
+    frontmatter,
 } = useData<ThemeConfig>()
+
+const showReplacer = ref<boolean>(false)
+const homepageSlots = ref<Record<string, (() => VNode | undefined) | undefined>>({})
+
+const updateSlots = async () => {
+    showReplacer.value = false
+    homepageSlots.value = await renderHomePageSections(frontmatter) ?? {}
+    if (Object.keys(homepageSlots.value).length > 0) showReplacer.value = true
+}
+
+onMounted(updateSlots)
 
 const slots: { slotName: string, node: (() => VNode | undefined) }[] = [
     {
@@ -89,7 +101,10 @@ const slots: { slotName: string, node: (() => VNode | undefined) }[] = [
     }
 ]
 
-router.onAfterRouteChanged = createAnalyticsDataCollector(theme.value.analytics)
+router.onAfterRouteChanged = async (to) => {
+    await updateSlots()
+    return await createAnalyticsDataCollector(theme.value.analytics)(to)
+}
 
 function iterateStorage(
     items: Record<string, string> | undefined,

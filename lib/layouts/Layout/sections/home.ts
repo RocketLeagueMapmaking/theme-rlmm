@@ -1,4 +1,4 @@
-import { h, type VNode } from 'vue'
+import { h, type VNode, type Ref } from 'vue'
 import { VPHomeSponsors } from 'vitepress/theme'
 
 import { useStorage } from '../../../composables'
@@ -23,9 +23,10 @@ function getHomeFrontmatter (fm: Record<string, any>) {
 
 // TODO: move to seperate home component later?
 export async function renderHomePageSections (
-    frontmatter: Record<string, any>,
+    frontmatter: Ref<Record<string, any>>,
 ): Promise<Record<string, (() => VNode) | undefined> | undefined> {
-    const data = getHomeFrontmatter(frontmatter ?? {})
+    const data = getHomeFrontmatter(frontmatter.value)
+    console.debug('Checking if homepage data need to be fetched', data != undefined)
     if (!data) return undefined
 
     const events = data.events ? await fetchComponentData(data.events, []) : []

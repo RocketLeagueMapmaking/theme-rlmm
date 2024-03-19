@@ -1,3 +1,3 @@
-import defineDefaultLayout from './Layout/'
+import Layout from './theme.vue'
 
-export const Layout = defineDefaultLayout()
+export default Layout

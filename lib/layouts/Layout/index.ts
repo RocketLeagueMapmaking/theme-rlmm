@@ -7,50 +7,43 @@ import type {
     ThemeConfig,
 } from '../../types'
 
-import { renderHomePageSections } from './sections/home'
-
 import MainLayout from './components/main.vue'
 import LoadingLayout from './components/loading.vue'
 
-export default function defineDefaultLayout() {
-    return defineAsyncComponent({
-        loadingComponent: () => {
-            const {
-                theme: { value: theme },
-            } = useData<ThemeConfig>()
+export default defineAsyncComponent({
+    loadingComponent: () => {
+        const {
+            theme: { value: theme },
+        } = useData<ThemeConfig>()
 
-            return h(LoadingLayout, {
-                text: theme.home?.offlineText,
-            })
-        },
-        errorComponent: () => {
-            const {
-                theme: { value: theme },
-            } = useData<ThemeConfig>()
+        return h(LoadingLayout, {
+            text: theme.home?.offlineText,
+        })
+    },
+    errorComponent: () => {
+        const {
+            theme: { value: theme },
+        } = useData<ThemeConfig>()
 
-            return h(LoadingLayout, {
-                text: theme.home?.errorText ?? 'Failed to load...',
-            })
-        },
-        onError: console.error,
-        loader: async () => {
-            const {
-                theme: { value: theme },
-                frontmatter: fm,
-            } = useData<ThemeConfig>()
+        return h(LoadingLayout, {
+            text: theme.home?.errorText ?? 'Failed to load...',
+        })
+    },
+    onError: console.error,
+    delay: 0,
+    loader: async () => {
+        const {
+            theme: { value: theme },
+        } = useData<ThemeConfig>()
 
-            console.log('Loading layout...')
+        console.log('Loading layout...')
 
-            const banner = await fetchComponent<false | BannerNotification>(theme.banner)
-            const notifications = await fetchComponent(theme.notifications) ?? []
+        const banner = await fetchComponent<false | BannerNotification>(theme.banner)
+        const notifications = await fetchComponent(theme.notifications) ?? []
 
-            const homepageSlots = await renderHomePageSections(fm.value)
-
-            return h(MainLayout, {
-                homepageSlots,
-                banner,
-                notifications, 
-            })
-        }
-    })
-}
+        return h(MainLayout, {
+            banner,
+            notifications,
+        })
+    }
+})

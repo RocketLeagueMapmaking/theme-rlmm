@@ -3,7 +3,7 @@ import DefaultTheme from 'vitepress/theme'
 import './styles/style.css'
 
 import { enhanceApp } from './components/enhance'
-import { Layout } from './layouts/'
+import Layout from './layouts/'
 
 export * from './components/export'
 export * from './composables/'
