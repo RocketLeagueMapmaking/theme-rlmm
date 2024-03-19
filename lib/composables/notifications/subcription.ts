@@ -1,4 +1,4 @@
-import { onMounted, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 
 import { useStorage } from "../storage"
 import { useNotifications } from "./handler"
@@ -91,10 +91,14 @@ export function useNotificationSubscription<Data = unknown> (options: Subscripti
         if (sub) webSubscription.value = sub
     }
 
-    onMounted(async () => await fetchAll())
+    const validOptions = computed(() => typeof options.publicKey === 'string' && typeof options.subscribeUrl === 'string')
+    onMounted(async () => {
+        if (validOptions.value) await fetchAll()
+    })
 
     return {
         id,
+        validOptions,
         web: {
             data: webSubscription,
             subscribe: async () => await webSubcribe(),

@@ -56,7 +56,7 @@ function sort <T = never>(a: T, b: T) {
 }
 
 function mapToCategories <T = never>(items: T[]): { title: string | null, items: T[] }[] {
-    if (!props.groupByCategory || !props.categoryKey) return [{ title: null, items }]
+    if (!props.groupByCategory || (props.groupByCategory && !props.categoryKey)) return [{ title: null, items }]
     else return [...new Set<string>(items.map(i => i[props.categoryKey!]))]
         .sort((a, b) => a.localeCompare(b))
         .reduce((list, name) => { 

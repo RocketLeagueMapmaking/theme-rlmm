@@ -30,11 +30,11 @@ import { onClickOutside, useToNumber, useToggle } from '@vueuse/core';
 
 import { useStorage, useNotification } from '../../composables';
 import { renderText } from '../../util';
-import type { NavInboxIcon, ThemeConfig, ThemeNotification } from '../../types';
+import type { NavInboxIcon, NavInboxOptions, ThemeNotification } from '../../types';
 
 const props = defineProps<{
     notifications: ThemeNotification[]
-    options: NonNullable<ThemeConfig['notifications']>['inbox']
+    options: NavInboxOptions | undefined
 }>()
 
 const inboxRef = ref(null), inboxIconRef = ref(null)
