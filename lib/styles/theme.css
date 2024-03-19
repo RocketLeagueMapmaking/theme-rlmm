@@ -10,6 +10,11 @@ option {
     border-radius: 6px !important;
 }
 
+/* Missing in the default theme */
+.vpi-minus {
+    --icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12"/></svg>');
+}
+
 /**
  * Styles for theme switch component. Makes it round
  */

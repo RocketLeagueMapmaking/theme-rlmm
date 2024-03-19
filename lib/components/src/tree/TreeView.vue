@@ -2,9 +2,9 @@
     <div class="tree-container" v-if="baseItem">
         <slot name="header" :metadata="metadata"></slot>
 
-        <TreeItem :item="child" :items="<[]>treeItems" :search="search" :get-item="getItem" :is-parent-key="isParentKey"
+        <TreeItem :item="child" :search="search" :get-item="getItem" :is-parent-key="isParentKey"
             :id-key="idChildKey ?? idKey" :parent="child[isParentKey]" :main-bg-color="false" v-for="child in baseItem"
-            :key="child.name" :parents="[]" :name-key="nameChildKey">
+            :key="child[nameChildKey ?? idChildKey ?? idKey]" :parents="[]" :name-key="nameChildKey">
             <template #name="slotProps">
                 <slot name="item-name" v-bind="slotProps" />
             </template>
