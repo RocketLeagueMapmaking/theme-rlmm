@@ -1,3 +1,7 @@
+---
+title: Introduction
+---
+
 # Introduction
 
 This is a [VitePress](https://vitepress.dev) theme with Rocket League workshop components and other improvements that the default theme is missing.

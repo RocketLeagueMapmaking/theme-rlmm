@@ -1,6 +1,7 @@
 ---
 exposePages: true
 aside: false
+footer: false
 ---
 
 # Preferences
@@ -49,6 +50,10 @@ Hide new Steam maps on home page
 
 <template #tab-notifications>
 
+:::tip Workshop updates
+[See all sources](https://swagbot.pages.dev/feeds) for getting notifications on new and updated workshop items
+:::
+
 ### Inbox
 
 <PreferenceSetting storeKey="rlmm-hide-navinbox">
@@ -59,10 +64,6 @@ Hide notification inbox
 ### Push notifications
 
 Get push notifications for map making updates
-
-:::tip Workshop updates
-[See all sources](https://swagbot.pages.dev/feeds) for getting notifications on new and updated workshop items
-:::
 
 <VPButton
     text="Enable notifications"
@@ -82,7 +83,7 @@ Get push notifications for map making updates
 
 ### Guide updates
 
-<PreferenceSetting storeKey="rlmm-push-all">
+<!-- <PreferenceSetting storeKey="rlmm-push-all">
 
 On any changed file
 </PreferenceSetting>
@@ -100,9 +101,19 @@ Get only a notification when one of the selected pages is updated
 
 /{{ page.replace('index.md', '').replace('.md', '') }}
 </PreferenceSetting>
-:::
+::: -->
 
-<WatchSubscriptionManager :subscription="{}" watchPrefix="rlmm-page-"/>
+<WatchSubscriptionManager
+    :subscription="{}"
+    :settings="{
+        watchAll: { text: 'On any changed file', key: 'rlmm-push-all' },
+        watchPages: {
+            title: 'Watch individual pages',
+            description: 'Get only a notification when one of the selected pages is updated',
+            prefix: 'rlmm-page-',
+        }
+    }"
+/>
 
 </div>
 </template>
@@ -148,6 +159,15 @@ Rocket League installation folder
 >
 
 Open Steam urls in the Windows app
+</PreferenceSetting>
+
+<PreferenceSetting
+    storeKey="rlmm-urls-editcms"
+    :defaultValue="false"
+    type="switch"
+>
+
+Open `Edit this page` links in the CMS
 </PreferenceSetting>
 
 ### Experimental

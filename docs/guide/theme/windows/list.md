@@ -1,14 +1,21 @@
 ---
 title: List window
+outline: deep
 ---
 
 <script setup lang="ts">
 import { ListWindow, NotificationListWindow } from '../../../../lib/'
 </script>
 
-Component: `ListWindow`
+This component is not installed globally and must be imported from the theme:
 
-Options:
+```ts
+import { ListWindow } from 'rocketleaguemapmaking/theme-rlmm'
+```
+
+## Options
+
+Component: `ListWindow`
 
 | Option name     | Type                               | Default    | Description                                           |
 | --------------- | ---------------------------------- | ---------- | ----------------------------------------------------- |
@@ -28,13 +35,9 @@ List sort options:
 | ----------- | ------ | ------- | --------------------------------- |
 | key         | string | -       | The object key to use for sorting |
 
-This component is not installed globally and must be imported from the theme:
+## Examples
 
-```ts
-import { ListWindow } from 'rocketleaguemapmaking/theme-rlmm'
-```
-
-## Simple array
+### Simple array
 
 ```vue
 <ListWindow :data="[{ id: 'one', title: 'One' }, { id: 'two', title: 'Two' }]">
@@ -50,7 +53,7 @@ import { ListWindow } from 'rocketleaguemapmaking/theme-rlmm'
     </template>
 </ListWindow>
 
-## Data object
+### Data object
 
 ```vue
 <ListWindow
@@ -74,11 +77,25 @@ import { ListWindow } from 'rocketleaguemapmaking/theme-rlmm'
 
 A more advanced list window component is also exported for showing the current notifications: `NotificationListWindow`.
 
+This component is not installed globally and must be imported from the theme:
+
+```ts
+import { NotificationListWindow } from 'rocketleaguemapmaking/theme-rlmm'
+```
+
+### Options
+
+The data items for this list are the [theme notifications](../configuration#notifications).
+
+The options for this component are the [list options](#options), except for `data`, `dataUrl`, `dataKey`, `categoryKey` and `idKey`.
+
+### Example
+
 ```mdx
 <NotificationListWindow>
 <template #default="{ item }">
 
-### {{ item.title }} <Badge text="tag" type="info" />
+### {{ item.title }} <Badge v-for="tag in item.tags ?? []" :text="tag" type="info" />
 
 <p v-html="item.text"></p>
 
@@ -89,7 +106,7 @@ A more advanced list window component is also exported for showing the current n
 <NotificationListWindow>
 <template #default="{ item }">
 
-### {{ item.title }} <Badge text="tag" type="info" />
+### {{ item.title }} <Badge v-for="tag in item.tags ?? []" :text="tag" type="info" />
 
 <p v-html="item.text"></p>
 

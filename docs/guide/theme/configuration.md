@@ -1,3 +1,7 @@
+---
+title: Configuration
+---
+
 # Theme Configuration
 
 See the [official guide](https://vitepress.dev/guide/extending-default-theme#customizing-css) on how to customize css variables for custom colors, etc.
@@ -15,8 +19,8 @@ export default defineConfig({
 
 :::details Configuration changes
 
-- `transformPageData`: adds all pages paths to `$frontmatter.pages` if the frontmatter `exposePages: true` is on the current page.
-- `vite`: replaces built-in nav dropdown to add expanded view
+- `transformPageData`: adds all pages paths to `$frontmatter.pages` if [the frontmatter `exposePages: true`](frontmatter#exposepages) is on the current page.
+- `vite`: replaces built-in nav dropdown to add [an expanded view](#expanded-navbar)
 
 :::
 
@@ -41,7 +45,50 @@ Besides the default `$frontmatter` and `$params` frontmatter, the following prop
 
 ## Sidebar action
 
-To enable the `Edit preferences` button in the sidebar, customize `RLMMThemeConfig.sidebarAction`. The path will be the path of the markdown file you have where you show the preferences with [PreferenceSetting](components#preferencesetting) (and if you want to group combine it with the [TabsWindow](components#tabswindow) component) components.
+To enable the `Edit preferences` button in the sidebar, customize `ThemeConfig.sidebarAction`. The path will be the path of the markdown file you have where you show the preferences with [PreferenceSetting](components#preferencesetting) (and if you want to group combine it with the [TabsWindow](components#tabswindow) component) components.
+
+## Expanded Navbar
+
+:::danger Theme configuration
+To use this expanded view use [the theme configuration](#theme-configuration) in your config
+:::
+
+To enable a larger navigation dropdown menu (see the `Guide` nav dropdown) set the `expanded` property on **all items** to `true`.
+Note that all children on all items will not be used!
+
+Besides the default `NavItemWithLink` options, the following options can be set for each item:
+
+- `icon`: The [name of the Icon](components#icon) to show at the left side of the item
+- `description`: The description of the item
+- `badge`: The badge (text and type) to show at the right side of the item
+
+```ts
+const expandedNavItems = [
+    {
+        // Default NavItem options
+        text: 'UDK',
+        link: '/udk/',
+        // Set on all items to `true`
+        expanded: true,
+        description: 'Learn more about UDK',
+        icon: 'carbon:edit',
+    },
+    {
+        text: 'Blender',
+        expanded: true,
+        link: '/blender/',
+        description: 'Learn more about Blender',
+        icon: 'carbon:cube',
+    },
+    {
+        text: 'Kismet',
+        expanded: true,
+        link: '/udk/reference',
+        description: 'Learn more about kismet',
+        icon: 'carbon:branch'
+    },
+]
+```
 
 ## Notifications
 
@@ -50,7 +97,7 @@ To enable the `Edit preferences` button in the sidebar, customize `RLMMThemeConf
 You can display a notification banner at the top of the page
 
 ```ts
-export default defineConfigWithTheme<RLMMThemeConfig>({
+export default defineConfigWithTheme<ThemeConfig>({
     themeConfig: {
         banner: {
             data: {

@@ -1,3 +1,7 @@
+---
+title: Frontmatter
+---
+
 # Frontmatter
 
 > [!TIP] Frontmatter
@@ -126,6 +130,14 @@ Block options are:
 | color    | string                                  | -        | undefined |
 | type     | 'info' \| 'tip' \| 'warning' \| 'error' | -        | 'info'    |
 | position | 'top' \| 'bottom'                       | -        | 'top'     |
+
+### exposePages
+
+:::danger Theme config
+To use this option [the theme configuration](./configuration#theme-configuration) must be used
+:::
+
+Adds `{ pages: string[] }` to the current page frontmatter data
 
 ### related
 

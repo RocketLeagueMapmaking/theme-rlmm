@@ -5,9 +5,9 @@ title: Components
 
 There a few types of components installed globally:
 
-- `general`: useful components that don't fit any other category
-- `markdown`: component wrappers that you can use in markdown
-- `RL`: components that display something with Rocket League
+* `general`: useful components that don't fit any other category
+* `markdown`: component wrappers that you can use in markdown
+* `RL`: components that display something with Rocket League
 
 :::warning Markdown in templates
 
@@ -39,9 +39,9 @@ Renders a highlighted section. To place it at the top or bottom of the page use 
 
 Exposed slots:
 
-- default slot. Can't be used in combination with the other slots
-- `left`
-- `right`
+* default slot. Can't be used in combination with the other slots
+* `left`
+* `right`
 
 :::details Examples
 
@@ -118,14 +118,14 @@ Options:
 | Option name       | Type                               | Default     | Description                         |
 | ----------------- | ---------------------------------- | ----------- | ----------------------------------- |
 | amount            | `number`                           | `3`         | The max amount of items to show     |
-| title             | `string`                           | -           | The title at the top                |
+| title             | `string`                           | -          | The title at the top                |
 | description       | `string`                           | `undefined` | The description beneath the title   |
 | rowSize           | `number`                           | `3`         | The max amount of items on each row |
 | createUrl         | `(event: ShowcaseEvent) => string` | `undefined` | Create custom urls for each item    |
 | descriptionLength | `number`                           | `100`       | The max length of the description   |
 | data              | `ShowcaseEvent[]`                  | `[]`        | The item data                       |
 | dataUrl           | `string`                           | `null`      | The url to fetch items from         |
-| action            | `ItemGridAction`                   | -           | The action beneath the items        |
+| action            | `ItemGridAction`                   | -          | The action beneath the items        |
 
 If the action has a link, it will open the link on clicking.
 If the action has `totalItems`, it will show now the total amount of items and hide the action button.
@@ -156,7 +156,7 @@ The default slot is the text associated with the action. Use the `storeKey` prop
 
 | Option name           | Type                                            | Default     | Description                                               |
 | --------------------- | ----------------------------------------------- | ----------- | --------------------------------------------------------- |
-| storeKey              | `string`                                        | -           | The key to store in the local storage                     |
+| storeKey              | `string`                                        | \-          | The key to store in the local storage                     |
 | type                  | [setting type](#setting-types)                  | `'switch'`  | The type of option                                        |
 | renderValue           | `boolean`                                       | `false`     | Set to only show the setting value                        |
 | defaultValue          | `any`                                           | `false`     | The value when unset. Must be the same type as the option |
@@ -170,10 +170,10 @@ The default slot is the text associated with the action. Use the `storeKey` prop
 
 The allowed `type`s are:
 
-- `'switch'`: toggle for boolean values
-- `'input'`: input field for string values
-- `'select'`: select field for string array values
-- `'color'`: color pick
+* `'switch'`: toggle for boolean values
+* `'input'`: input field for string values
+* `'select'`: select field for string array values
+* `'color'`: color pick
 
 ```ts
 <PreferenceSetting storeKey="rlmm-path-udk" defaultValue="C:\UDK\RLMM\" type="input">
@@ -181,8 +181,8 @@ The allowed `type`s are:
 </PreferenceSetting>
 ```
 
-> [!TIP] Get settings value
-To get a setting value in a component, use the [`useSettings`](composables#usesettings) function
+> \[!TIP] Get settings value
+> To get a setting value in a component, use the [`useSettings`](composables#usesettings) function
 
 ### Show value
 
@@ -204,7 +204,7 @@ Your UDK folder
 
 ## ActionWindow <Badge type="info" text="markdown component" />
 
-- Alias: `Actions`
+* Alias: `Actions`
 
 A component that allows you to easily make advanced windows with actions at the bottom of the window to switch between different states or templates within states. Can be combined with [markdown file inclusion](https://vitepress.dev/guide/markdown#markdown-file-inclusion) to separate the actions and views. If you only have templates in the question files, exclude them from the build files using `srcExclude`.
 
@@ -216,7 +216,7 @@ See [the flowchart](../udk/index.md#flowchart)
 
 ## StepsWindow <Badge type="info" text="markdown component" />
 
-- Alias: `Steps`
+* Alias: `Steps`
 
 Make a step by step tutorial in markdown with this component. Note that only `length` items are shown, if you need more steps change this property to the amount you need!
 
@@ -260,8 +260,8 @@ do some trick
 
 do another trick
 
-- list item
-- another one
+* list item
+* another one
 
 </template>
 <template #step-2>
@@ -277,7 +277,7 @@ press start
 
 ## TabsWindow <Badge type="info" text="markdown component" />
 
-- Alias: `Tabs`
+* Alias: `Tabs`
 
 Splits a window with tabs
 
@@ -325,7 +325,6 @@ This is Tab C
 </template>
 
 </TabsWindow>
-
 ```
 
 <TabsWindow :tabs="['a', 'c', 'b']">
@@ -364,8 +363,7 @@ Shows the most recent published / updated maps on the Rocket League Steam worksh
 | maxLengthUsername   | `number`                      | `24`                  | The maximum length of the creator name                                                  |
 
 > [!TIP] Colored title
-The `title` option renders as HTML making it customisable to style.
-By default any `span` element in the title will be the brand color.
+> The `title` option renders as HTML making it customisable to style. By default any `span` element in the title will be the brand color.
 
 ```ts
 type AddSteamMapsAction = (map: SteamMap) => { text: string, link: string }[]
@@ -381,11 +379,11 @@ The local storage key `rlmm-urls-steam` is used to read the user settings
 
 Available options:
 
-- `'setting-windows'`: if on Windows and the setting is enabled, open urls in the Steam app
-- `'setting'`: if the setting is enabled, always open urls in the Steam app
-- `'app-windows'`: if on Windows, open urls in the Steam app
-- `'app'`: always open urls in the Steam app
-- `'browser'`: always open urls in the internet browser
+* `'setting-windows'`: if on Windows and the setting is enabled, open urls in the Steam app
+* `'setting'`: if the setting is enabled, always open urls in the Steam app
+* `'app-windows'`: if on Windows, open urls in the Steam app
+* `'app'`: always open urls in the Steam app
+* `'browser'`: always open urls in the internet browser
 
 ### Click action
 
@@ -406,11 +404,11 @@ This will open the map on clicking using the [url protocol](#url-protocol).
 
 ### Theme colors
 
-- `'brand'`
-- `'default'`
-- `'gray'`
-- `'green'`
-- `'indigo'`
-- `'red'`
-- `'yellow'`
-- `'purple'`
+* `'brand'`
+* `'default'`
+* `'gray'`
+* `'green'`
+* `'indigo'`
+* `'red'`
+* `'yellow'`
+* `'purple'`
