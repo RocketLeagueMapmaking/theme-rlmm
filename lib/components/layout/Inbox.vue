@@ -1,9 +1,8 @@
 <template>
-    <div class="nav-notification-inbox" v-if="hideInbox !== 'true' && options != undefined">
-        <div class="nav-notification-inbox-icon" @click="toggle()" ref="inboxIconRef">
-            <!-- TODO: add hover color -->
-            <Icon :icon="unread ? icons.unread.icon : icons.read.icon"
-                :color="unread ? icons.unread.color : icons.read.color" />
+    <div class="nav-notification-inbox" v-if="hideInbox !== 'true' && options != undefined && $frontmatter.inbox !== false">
+        <div class="nav-notification-inbox-icon" @click="toggle()" ref="inboxIconRef" :style="iconStyle">
+            <p v-if="options.nav?.text" v-html="renderText(resolveNavState(options.nav.text) ?? '')"></p>
+            <Icon :icon="currentIcon.icon" :color="currentIcon.color" />
         </div>
         <div class="nav-notification-inbox-content" v-if="open" ref="inboxRef">
             <div class="nav-notification-inbox-empty" v-if="inboxNotifications.length === 0" v-html="emptyText">
@@ -13,8 +12,23 @@
                 <p class="nav-notification-inbox-item-title">
                     {{ notification.title }}
                 </p>
+
+                <p class="nav-notification-inbox-item-date" v-if="options.renderTime">
+                    {{ typeof options.renderTime === 'boolean'
+                        ? new Date(notification.created_at).toDateString()
+                        : options.renderTime(notification.created_at)
+                    }}
+                </p>
+
                 <p class="nav-notification-inbox-item-description" v-html="notification.text">
                 </p>
+
+                <NotificationAction
+                    style="line-height: 30px;"
+                    v-if="options.renderAction"
+                    :action="notification.action"
+                    @clicked="() => options?.onClicked?.(notification.id)"
+                />
 
             </div>
             <div class="nav-notification-inbox-bottom" v-if="options.bottomText">
@@ -28,9 +42,11 @@
 import { computed, ref, watch } from 'vue';
 import { onClickOutside, useToNumber, useToggle } from '@vueuse/core';
 
+import NotificationAction from './internal/NotificationAction.vue';
+
 import { useStorage, useNotification } from '../../composables';
 import { renderText } from '../../util';
-import type { NavInboxIcon, NavInboxOptions, ThemeNotification } from '../../types';
+import type { NavInboxIcon, NavInboxOptions, NavStateOption, ThemeNotification } from '../../types';
 
 const props = defineProps<{
     notifications: ThemeNotification[]
@@ -51,13 +67,38 @@ const inboxNotifications = props.notifications
     .slice(0, props.options?.amount ?? 0)
     .sort((a, b) => useNotification(b).startTime - useNotification(a).startTime)
 
-const unread = computed(() => {
+const unreadCount = computed(() => {
     const last = useToNumber(lastOpened.value ?? '-1').value
 
-    return inboxNotifications.length > 0 && !hasRead.value && (last < 0 || inboxNotifications.some(n => {
-        const notif = useNotification(n)
-        return notif.isActive && notif.startTime > last
-    }))
+    return inboxNotifications.length === 0 || hasRead.value
+        ? 0
+        : (last < 0
+            ? inboxNotifications.length
+            : inboxNotifications.filter(n => {
+                const notif = useNotification(n)
+                return notif.isActive && notif.startTime > last
+            }).length
+        )
+})
+
+const unread = computed(() =>  unreadCount.value > 0)
+
+function resolveNavState <T>(state: NavStateOption<T>): T | undefined {
+    return typeof state === 'object' && state != null
+        ? 'read' in state || 'unread ' in state
+            ? state[unread.value ? 'unread' : 'read']
+            : state
+        : state
+}
+
+const iconStyle = computed(() => {
+    const style = props.options?.nav?.style
+    if (!style) return {}
+
+    const state = resolveNavState(style)
+    return (typeof state === 'object'
+        ? state
+        : typeof state === 'function' ? state(inboxNotifications.length, unreadCount.value) : state) ?? {}
 })
 
 const emptyText = computed(() => {
@@ -67,12 +108,12 @@ const emptyText = computed(() => {
 })
 
 const icons = computed(() => {
-    const { read, unread } = props.options?.icon ?? {}
+    const { read, unread } = props.options?.nav?.icon ?? props.options?.icon ?? {}
     const defaultIcons = {
         unread: 'carbon:notification-new',
         read: 'carbon:notification-filled'
     }
-    const colors = { main: '--vp-c-text-1', hover: '--vp-c-text-2' }
+    const colors = { main: '--vp-c-text-1', hover: 'var(--vp-c-text-2)' }
     const iconKey = (icon: NavInboxIcon | false | undefined, key: keyof Exclude<NavInboxIcon, string>) => {
         return icon != undefined && typeof icon === 'object' ? icon[key] : undefined
     }
@@ -93,6 +134,9 @@ const icons = computed(() => {
     }
 })
 
+const currentIcon = computed(() => unread.value ? icons.value.unread : icons.value.read)
+const currentHoverColor = computed(() => currentIcon.value.hoverColor)
+
 onClickOutside(inboxRef, () => {
     open.value = false
 }, { ignore: [inboxIconRef] })
@@ -101,6 +145,10 @@ watch(open, (isOpen) => {
     if (isOpen && !hasRead.value) {
         storage.set(storage.themeKeys.value.notificationInboxLastOpened, Date.now().toString())
         hasRead.value = true
+    }
+
+    if (isOpen) {
+        props.options?.onOpened?.()
     }
 })
 
@@ -134,7 +182,7 @@ function render(notification: ThemeNotification) {
 }
 
 .nav-notification-inbox-icon:hover {
-    color: var(--vp-c-text-1);
+    color: v-bind(currentHoverColor);
     transition: color 0.25s;
     cursor: pointer;
 }
@@ -170,6 +218,13 @@ function render(notification: ThemeNotification) {
 .nav-notification-inbox-item:not(:first-of-type),
 .nav-notification-inbox-bottom {
     border-top: 1px solid var(--vp-c-border);
+}
+
+.nav-notification-inbox-item-date {
+    font-weight: 400;
+    font-size: smaller;
+    font-style: italic;
+    margin-top: -6px;
 }
 
 .nav-notification-inbox-bottom {

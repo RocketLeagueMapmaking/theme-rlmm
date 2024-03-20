@@ -1,5 +1,36 @@
 import type { ThemeText } from "../text"
 
+export interface BaseNotificationAction {
+    /**
+     * The text of the action button
+     */
+    text: string
+
+    /**
+     * The default theme of the action button
+     * @default 'brand'
+     */
+    theme?: 'brand' | 'alt' | 'sponsor'
+
+    /**
+     * Add custom styles to the action button
+     * @default {}
+     */
+    style?: object
+
+    /**
+     * The destination of the button.
+     * For more complex handlers, use the onClicked in the theme configuration (available for some type of notifications).
+     */
+    href?: string
+
+    /**
+     * Whether to add an external link icon to the action button
+     * @default false
+     */
+    externalLinkIcon?: boolean
+}
+
 export interface BaseNotification {
     /**
      * The unique id of the banner.
@@ -44,6 +75,11 @@ export interface BaseNotification {
          */
         end?: number
     }
+
+    /**
+     * Adds an action button to show more or activate outside of the notification
+     */
+    action?: BaseNotificationAction
 }
 
 export interface ThemeNotification extends BaseNotification {
