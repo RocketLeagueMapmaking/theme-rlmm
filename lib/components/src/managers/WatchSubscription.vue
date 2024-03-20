@@ -27,12 +27,12 @@
             </details>
 
             <div class="watch-actions">
-                <div v-if="!util.data.subscription">
-                    <VPButton text="Add" />
+                <div v-if="!util.isNotSubscribed">
+                    <VPButton text="Add" @click="addSubscription()" />
                 </div>
                 <div v-else>
-                    <VPButton style="background-color: var(--vp-c-yellow-1);" text="Update" />
-                    <VPButton style="background-color: var(--vp-c-red-1);" text="Delete" />
+                    <VPButton style="background-color: var(--vp-c-yellow-1);" text="Update" @click="updateSubscription()" />
+                    <VPButton style="background-color: var(--vp-c-red-1);" text="Delete" @click="util.unsubsribe()" />
                 </div>
             </div>
         </div>
@@ -45,9 +45,18 @@ import {
     type SubscriptionOptions,
     useNotificationSubscription,
     useWatchedPages,
+    type WatchedPages,
 } from '../../../composables/'
 
 import PreferenceSetting from '../../global/PreferenceSetting.vue'
+
+type SubscriptionData =
+    | { type: 'page-update', pages: WatchedPages }
+
+type UserSubscriptionData = Record<
+    SubscriptionData['type'],
+    Omit<SubscriptionData, 'type'>
+>
 
 const props = defineProps<{
     subscription: SubscriptionOptions
@@ -63,15 +72,47 @@ const props = defineProps<{
             filter?: (path: string) => boolean   
         }
     }
-    // watchPrefix?: string
+    errorMessage?: string
 }>()
 
-const util = useNotificationSubscription(props.subscription)
+const util = useNotificationSubscription<UserSubscriptionData>(props.subscription)
 const watched = useWatchedPages(props.settings?.watchPages?.prefix)
 
-const errorMsg = 'Missing required subscriptions options!'
+const errorMsg = computed(() => props.errorMessage ?? 'Missing required subscriptions options!')
 
 onMounted(() => {
-    if (!util.validOptions.value) console.error(errorMsg)
+    if (!util.validOptions.value) console.error(errorMsg.value)
 })
+
+function getUserData (): UserSubscriptionData {
+    const pages = watched.getWatchedPages()
+
+    return {
+        "page-update": { pages }
+    }
+}
+
+async function addSubscription () {
+    const data = getUserData()
+
+    const hasSubscribed = await util.subscribe(data)
+    if (!hasSubscribed) alert('Failed to subscribe')
+}
+
+async function updateSubscription () {
+    const data = getUserData()
+    const old = util.data.settings.value
+
+    if (old) {
+        if (data['page-update'].pages === 'all' && old['page-update'].pages === 'all') return
+        else if (Array.isArray(data['page-update'].pages) && Array.isArray(old['page-update'].pages)) {
+            if (data['page-update'].pages.length === old['page-update'].pages.length) {
+                if (data['page-update'].pages.every(p => old['page-update'].pages.includes(p))) return
+            }
+        }
+    }
+
+    const hasUpdated = await util.settings.update(data)
+    if (!hasUpdated) alert('Failed to update settings')
+}
 </script>

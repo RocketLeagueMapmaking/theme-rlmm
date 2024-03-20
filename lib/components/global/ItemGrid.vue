@@ -2,12 +2,28 @@
     <div class="showcase vp-doc">
         <h1>{{ title }}</h1>
         <p style="text-align: center;" v-if="description">{{ description }}</p>
-        <div class="showcase-items" v-for="group in chunk(items.slice(0, showAmount), rowSize)">
+        <div class="showcase-items" v-for="group in groupedChunks">
             <VPLink v-for="{ item, text, url } in group.map(applyOptions)" :key="item.title" :href="url">
-                <div class="showcase-item" :style="{ }">
+                <div class="showcase-item">
                     <VPImage :image="item.image" />
-                    <h1>{{ item.title }}</h1>
+                    <div class="showcase-item-header">
+                        <h1>{{ item.title }}</h1>
+                        <Badge style="margin-left: 10px;" v-if="item.tag" :text="item.tag" /> 
+                    </div>
                     <p v-html="text"></p>
+                    <div class="showcase-item-actions">
+                        <VPButton
+                            style="margin: 6px 0px;"
+                            v-for="action in (item.actions ?? []).slice(0, Math.max(0, Math.min(2, maxItemActions)))"
+                            :key="action.link"
+                            :href="action.link"
+                            :text="action.text"
+                            :theme="action.theme ?? (action.primary ? 'brand' : 'alt')"
+                            :class="{
+                                'vp-external-link-icon': isExternal(action.link),
+                            }"
+                        />
+                    </div>
                 </div>
             </VPLink>
         </div>
@@ -20,7 +36,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, withDefaults } from 'vue'
+import { computed, onMounted, ref, withDefaults } from 'vue'
+import { useWindowSize } from '@vueuse/core';
 
 import {
     type ComponentData,
@@ -31,12 +48,22 @@ import {
 
 import type { ThemeText } from '../../types'
 
-export interface ShowcaseEvent {
+export interface GridItem {
     title: string
     description?: ThemeText
     image: string
-    link: string
+    link?: string
+    tag?: string
+    actions?: {
+        text: string
+        link: string
+        theme?: string
+        primary?: boolean
+    }[]
 }
+
+/** @deprecated */
+export type ShowcaseEvent  = GridItem
 
 export interface Props {
     title: string
@@ -53,9 +80,15 @@ export interface Props {
     }
     amount?: number
     rowSize?: number
+    disableExternalLinkIcons?: boolean
     descriptionLength?: number
-    createUrl?: (event: ShowcaseEvent) => string
-    data?: ShowcaseEvent[]
+    descriptionEllipsis?: string
+    createSlug?: (item: GridItem) => string
+    createUrl?: (item: GridItem) => string
+    useActionLink?: boolean
+    maxItemActions?: number
+    itemHeight?: string
+    data?: GridItem[]
     dataUrl?: string
 }
 
@@ -65,25 +98,48 @@ const props = withDefaults(defineProps<Props>(), {
     data: () => [],
     dataUrl: undefined,
     descriptionLength: 100,
+    disableExternalLinkIcons: false,
+    useActionLink: false,
+    maxItemActions: 2,
+    itemHeight: '400px',
 })
 
-const items = ref<ShowcaseEvent[]>([])
+const items = ref<GridItem[]>([])
 const showAmount = ref<number>(props.amount)
 const expanded = ref<boolean>(false)
 
-function applyOptions(event: ShowcaseEvent) {
-    const { action, descriptionLength } = props
+const { width } = useWindowSize()
+
+const groupedChunks = computed(() => {
+    if (props.rowSize <= 2) return chunk(items.value.slice(0, showAmount.value), props.rowSize)
+    else if (props.rowSize % 2 === 1) {
+        if (width.value >= 690 && width.value < 960) return chunk(items.value.slice(0, showAmount.value - (showAmount.value % 2 === 1 ? 1 : 0)), props.rowSize - 1)
+    } 
+
+    return chunk(items.value.slice(0, showAmount.value), props.rowSize)
+})
+
+function isExternal (link: string): boolean {
+    return !props.disableExternalLinkIcons
+        && typeof link === 'string'
+        && link.match(/^(?:[a-z]+:|\/\/)/i) != null
+}
+
+function applyOptions(item: GridItem) {
+    const { action, descriptionEllipsis, descriptionLength } = props
 
     return {
-        item: event,
-        text: renderText(event.description ?? '', {
+        item,
+        text: renderText(item.description ?? '', {
             maxLength: descriptionLength,
+            ellipsisText: descriptionEllipsis,
         }),
-        url: props.createUrl?.(event)
+        url: (!props.useActionLink ? item.link : undefined)
+            ?? props.createUrl?.(item)
             ?? ('link' in action
-                ? (action.link + '#' + event.title.replace(/ /g, '').toLowerCase())
-                : undefined)
-            ?? event.link,
+                    ? (action.link + '#' + props.createSlug?.(item) ?? item.title.replace(/ /g, '').toLowerCase())
+                    : undefined
+            ) ?? item.link,
     }
 }
 
@@ -94,8 +150,8 @@ function loadMore(amount: number) {
     showAmount.value = (amount < 0 ? items.value.length : amount)
 }
 
-async function fetchData(options: ComponentData<ShowcaseEvent[], { amount: number }>) {
-    return await fetchComponentData<ShowcaseEvent[], ShowcaseEvent[]>(options, [])
+async function fetchData(options: ComponentData<GridItem[], { amount: number }>) {
+    return await fetchComponentData<GridItem[], GridItem[]>(options, [])
         .then(items => items.data)
 }
 
@@ -131,12 +187,12 @@ a {
     background-color: var(--vp-c-bg-soft);
     border: 1px solid var(--vp-c-bg-soft);
     border-radius: 12px;
-    padding: 20px 30px;
+    padding: 16px;
     margin: 12px;
-    height: 300px;
+    height: v-bind(itemHeight);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
 }
 
@@ -146,15 +202,33 @@ a {
 }
 
 .showcase-item h1 {
-    font-size: larger;
+    font-size: x-large;
     font-weight: bolder;
+}
+
+.showcase-item :deep(p) {
+    margin: 0 !important;
 }
 
 .showcase-item :deep(img) {
     width: -webkit-fill-available;
 }
 
-@media (max-width: 960px) {
+.showcase-item-header {
+    display: flex;
+    align-items: center;
+}
+
+.showcase-item-actions {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.showcase-item-actions > *:first-child {
+    margin-right: 12px !important; 
+}
+
+@media (max-width: 690px) {
     .showcase-items {
         flex-wrap: wrap;
     }
@@ -165,7 +239,7 @@ a {
 
     .showcase-item :deep(img) {
         max-height: 40%;
-        aspect-ratio: calc(16 / 9);
+        /* aspect-ratio: calc(16 / 9); */
     }
 }
 </style>

@@ -73,7 +73,6 @@ function transformItem(item: Data['item']) {
 
 const getVersion = (data: unknown) => (data as Data['metadata']).version
 
-
 const { isSupported, copy } = useClipboard()
 
 async function copyPath(item: Record<string, string>, parents: string[]) {

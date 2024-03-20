@@ -53,8 +53,8 @@ export async function renderHomePageSections (
     const steamOptions = data.hero && 'steam' in data.hero ? data.hero.steam : undefined
 
     return {
-        'home-hero-image': !hideSteamSetting && steamOptions && steamOptions.enabled !== false
-            ? () => renderIf(steamOptions, () => h(SteamMaps, steamOptions))
+        'home-hero-image': steamOptions && ((!hideSteamSetting && steamOptions.enabled) || (steamOptions.enabled !== false && hideSteamSetting !== steamOptions.enabled))
+            ? () => renderIf(steamOptions, () => h(SteamMaps, { ...steamOptions, enabled: true }))
             : undefined,
         'home-features-after': () => h('div', children),
     } as Record<string, undefined | (() => VNode)>
