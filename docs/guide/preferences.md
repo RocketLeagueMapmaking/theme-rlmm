@@ -12,6 +12,8 @@ import { useNotifications, useStorage, ListWindow, WatchSubscriptionManager } fr
 
 const NotificationManager = useNotifications()
 const storage = useStorage()
+
+import { __pageData as homePage } from './index.md'
 </script>
 
 <TabsWindow :activeTabStyle="{ backgroundColor: 'var(--vp-c-bg-soft)' }" :tabs="['general', 'notifications', 'guide', 'advanced']">
@@ -44,7 +46,10 @@ Hide sidebar action button
 
 <PreferenceSetting storeKey="rlmm-home-hidesteam">
 
-Hide new Steam maps on home page
+{{ homePage.frontmatter.hero.steam.enabled
+    ? 'Hide new Steam maps on home page'
+    : 'Show new Steam maps on home page'
+}}
 </PreferenceSetting>
 </template>
 
@@ -82,26 +87,6 @@ Get push notifications for map making updates
 />
 
 ### Guide updates
-
-<!-- <PreferenceSetting storeKey="rlmm-push-all">
-
-On any changed file
-</PreferenceSetting>
-
-:::details Watch individual pages
-
-Get only a notification when one of the selected pages is updated
-
-<PreferenceSetting
-    :storeKey="`rlmm-page-${page.replace(/\//g, '_').replace('.md', '')}`"
-    v-for="page in $frontmatter.pages"
-    :key="page"
-    type="switch"
->
-
-/{{ page.replace('index.md', '').replace('.md', '') }}
-</PreferenceSetting>
-::: -->
 
 <WatchSubscriptionManager
     :subscription="{}"

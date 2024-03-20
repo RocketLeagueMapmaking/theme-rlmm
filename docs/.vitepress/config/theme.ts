@@ -164,10 +164,17 @@ export default <ThemeConfig> {
     banner: {
         data: {
             id: 'banner-contest-6',
+            action: {
+                text: 'Sponsor contests',
+                externalLinkIcon: true,
+                theme: 'brand',
+                href: 'https://patreon.com/rocketleaguemapmaking',
+                style: { color: 'inherit' },
+            },
             created_at: 1705000000000,
             dismissable: true,
             color: 'linear-gradient(90deg, var(--vp-c-brand-3) 0%, var(--vp-c-brand-1) 50%, var(--vp-c-indigo-3) 100%)',
-            text: 'Map making contest 6 is now active! [Read the announcement](https://discord.com/channels/711882968200904715/711883463871037510/1169509851832000523)'
+            text: 'Map making contest 6 is now over! [See the winners](https://discord.com/channels/711882968200904715/711883463871037510/1169509851832000523)'
         }
     },
 
@@ -178,6 +185,7 @@ export default <ThemeConfig> {
     notifications: {
         inbox: {
             amount: 3,
+            renderAction: true,
             bottomText: 'You can [watch guide pages](/preferences) or follow the [Discord channel](/discord) to follow all framework updates.'
         },
 
@@ -189,6 +197,10 @@ export default <ThemeConfig> {
                 text: '[Not so dummy assets](https://github.com/RocketLeagueMapmaking/RL_NotSoDummyAssets) are now live! Make your live easier with **visible** dummy assets! [Download](https://rocketleaguemapmaking.com/resources/downloads.html) the assets to get started',
                 inbox: true,
                 tags: ['tools'],
+                action: {
+                    text: 'More info',
+                    externalLinkIcon: true,
+                },
             },
             {
                 id: 'inbox-2',

@@ -4,8 +4,11 @@ title: Frontmatter
 
 # Frontmatter
 
-> [!TIP] Frontmatter
-> You can use the [Frontmatter VSCode extension](https://marketplace.visualstudio.com/items?itemName=eliostruyf.vscode-front-matter-beta) to have a better UI for editing frontmatter
+## CMS
+
+A Content Management System will make editing the frontmatter a bit easier. Some Git based or file based CMS recommendations:
+
+- [Frontmatter VSCode extension](https://marketplace.visualstudio.com/items?itemName=eliostruyf.vscode-front-matter-beta): You can use the extension to have a better UI for editing frontmatter inside VSCode. See the exported `frontmatter.json` for an example configuration.
 
 ## Home page
 
@@ -82,6 +85,21 @@ Type: [`HeroAction[]`](https://vitepress.dev/reference/default-theme-home-page#h
 
 ## Normal page
 
+### banner
+
+Whether to show top banner on the page or not
+
+- Type: `boolean`
+- Default: `true`
+
+To disable the banner on the current page:
+
+```md
+---
+banner: false
+---
+```
+
 ### feedback
 
 Whether to show feedback on the page or not
@@ -101,6 +119,9 @@ feedback: false
 
 Mark pages as not finished with a warning at the top of the page
 
+- Type: `boolean`
+- Default: `true`
+
 ```md
 ---
 finished: false
@@ -110,6 +131,9 @@ finished: false
 ### blocks
 
 Add blocks / banners to a page
+
+- Type: `BlockRenderOptions[]` (see options below)
+- Default: `[]`
 
 ```md
 ---
@@ -139,8 +163,27 @@ To use this option [the theme configuration](./configuration#theme-configuration
 
 Adds `{ pages: string[] }` to the current page frontmatter data
 
+- Type: `boolean`
+- Default: `false`
+
+### inbox
+
+Whether to show the notification inbox or not
+
+- Type: `boolean`
+- Default: `true`
+
+To disable the inbox on the current page:
+
+```md
+---
+inbox: false
+---
+```
+
 ### related
 
 Adds links to pages that could be interesting based on the current page.
 
 - Type: `string[]`
+- Default: `[]`

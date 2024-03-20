@@ -115,17 +115,23 @@ Places items in a grid like layout
 
 Options:
 
-| Option name       | Type                               | Default     | Description                         |
-| ----------------- | ---------------------------------- | ----------- | ----------------------------------- |
-| amount            | `number`                           | `3`         | The max amount of items to show     |
-| title             | `string`                           | -          | The title at the top                |
-| description       | `string`                           | `undefined` | The description beneath the title   |
-| rowSize           | `number`                           | `3`         | The max amount of items on each row |
-| createUrl         | `(event: ShowcaseEvent) => string` | `undefined` | Create custom urls for each item    |
-| descriptionLength | `number`                           | `100`       | The max length of the description   |
-| data              | `ShowcaseEvent[]`                  | `[]`        | The item data                       |
-| dataUrl           | `string`                           | `null`      | The url to fetch items from         |
-| action            | `ItemGridAction`                   | -          | The action beneath the items        |
+| Option name              | Type                          | Default     | Description                                  |
+| ------------------------ | ----------------------------- | ----------- | -------------------------------------------- |
+| amount                   | `number`                      | `3`         | The max amount of items to show              |
+| title                    | `string`                      | -           | The title at the top                         |
+| description              | `string`                      | `undefined` | The description beneath the title            |
+| rowSize                  | `number`                      | `3`         | The max amount of items on each row          |
+| createUrl                | `(event: GridItem) => string` | `undefined` | Create custom urls for each item             |
+| createSlug               | `(item: GridItem) => string`  | `undefined` | For action links, overwrite the slug         |
+| useActionLink            | `boolean`                     | `false`     | Overwrite the item link to use `action.link` |
+| maxItemActions           | `number`                      | `2`         | The max. actions for an item. Max is 2       |
+| descriptionLength        | `number`                      | `100`       | The max length of the description            |
+| descriptionEllipsis      | `string`                      | `'...'`     | The ellipsis for long descriptions           |
+| disableExternalLinkIcons | `boolean`                     | `false`     | For actions, disable the link icon           |
+| itemHeight               | `string`                      | `'400px'`   | Set the height of the items                  |
+| data                     | `GridItem[]`                  | `[]`        | The item data                                |
+| dataUrl                  | `string`                      | `null`      | The url to fetch items from                  |
+| action                   | `ItemGridAction`              | -           | The action beneath the items                 |
 
 If the action has a link, it will open the link on clicking.
 If the action has `totalItems`, it will show now the total amount of items and hide the action button.
@@ -181,7 +187,7 @@ The allowed `type`s are:
 </PreferenceSetting>
 ```
 
-> \[!TIP] Get settings value
+> [!TIP] Get settings value
 > To get a setting value in a component, use the [`useSettings`](composables#usesettings) function
 
 ### Show value
@@ -371,7 +377,7 @@ type SteamDownloadUrlTemplate = string | (id: string) => string
 ```
 
 > [!INFO] Hide on home page
-> The `hideHomeSteamMaps` local storage option for the key will allow to hide the Steam maps component to be hidden on the home page
+> The `hideHomeSteamMaps` local storage option for the key will allow to hide the Steam maps component to be hidden on the home page if the steam maps are enabled by default. Otherwise the storage option will allow to show the Steam maps component.
 
 ### Url protocol
 

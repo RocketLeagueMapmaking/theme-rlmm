@@ -51,7 +51,7 @@ To define your custom object and have the tree search for the correct properties
 | nameChildKey  | string | `idChildKey` | The key of `Item` children to use for `v-bind:key`. Use this if children can have the same id |
 | parentListKey | string | undefined    | The key of `Item` that has a list (`string[]`) of ids it is extending from                    |
 | parentKey     | string | undefined    | The key of `Item` that has a parent id                                                        |
- 
+
 ### Search value
 
 Searching the tree is done by concatenating the parents of an item with a dot and looking for items that match the prefix from the search.
