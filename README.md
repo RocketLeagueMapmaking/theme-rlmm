@@ -7,7 +7,8 @@ Note that is theme is solely intended for the RLMM guide. While making some gene
 
 ## Documentation
 
-See the [sandbox website][docs] for the documentation of all theme options and components.
+See the [documentation][docs] for all theme options and components.
+This theme also exports types for theme configuration and more. The types will be updated first and the documentation might miss small features, so use types as a source of truth.
 
 ## Local development
 
@@ -16,6 +17,9 @@ Requirements:
 - node v18+
 
 ```sh
+# Install
+npm ci
+# Run locally
 npm run docs:dev
 ```
 

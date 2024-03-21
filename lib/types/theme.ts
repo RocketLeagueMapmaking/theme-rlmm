@@ -4,7 +4,7 @@ import type {
     BannerOptions,
     NavItem,
     PageBlockOptions,
-    SidebarActionOptions,
+    SideActionItemOptions,
     StorageOptions,
     ThemeNotificationOptions,
 } from './theme/'
@@ -28,7 +28,7 @@ export interface ThemeConfig extends DefaultTheme.Config {
     /**
      * Customize how the action button are displayed
      */
-	sidebarAction?: SidebarActionOptions
+	sidebarAction?: SideActionItemOptions
 
     /**
      * Options for displaying a banner at the top of the layout

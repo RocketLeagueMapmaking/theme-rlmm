@@ -1,23 +1,41 @@
-export interface SidebarActionOptions {
+import type { StyleValue } from "vue"
+import type { DefaultTheme } from "vitepress"
+
+export interface SidebarButtonOptions {
     /**
      * The path to open when clicking on the button
      */
-    path: string
+    href: string
 
     /**
      * The style of the button
      * @default 'alt'
      */
-    buttonTheme?: 'brand' | 'alt'
+    theme?: 'brand' | 'alt' | 'sponsor'
 
     /**
      * The text on the action button
      */
-    title: string
+    text: string
 
     /**
-     * Where to place the action button on the sidebar 
+     * Apply custom styles to the action button
+     */
+    style?: StyleValue
+}
+
+export type SideActionSidebarItem =
+    | SidebarButtonOptions
+    | (() => ({ name: string, style?: StyleValue, props: object, content?: string }))
+
+export interface SideActionItemOptions {
+    /**
+     * Where to place the action item on the sidebar 
      * @default 'top'
      */
     position?: 'top' | 'bottom'
+
+    action: 
+        | { type: 'button', item: SidebarButtonOptions }
+        | { type: 'item', item: Omit<DefaultTheme.SidebarItem, 'items'> & { items: SideActionSidebarItem[] } }
 }

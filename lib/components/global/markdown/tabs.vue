@@ -28,13 +28,17 @@ const props = withDefaults(defineProps<{
     hideSelector?: boolean,
     tabStyle?: object,
     activeTabStyle?: object,
+    alignLeft?: boolean
 }>(), {
     hideSelector: false,
+    alignLeft: false,
     tabStyle: () => ({}),
     activeTabStyle: () => ({}),
 })
 
 const hideSelectorActions = ref(false)
+const justifyTabContent = props.alignLeft ? 'space-start' : 'space-between'
+const textMargin = props.alignLeft ? '10px 0 0 0 !important' : '10px auto 0 auto !important'
 
 function toSlug(name: string): string {
     return name.replace(/ /g, '_').toLowerCase()
@@ -78,7 +82,7 @@ onMounted(() => {
 .tabs-actions {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: v-bind(justifyTabContent);
     flex-wrap: nowrap;
     align-items: center;
     overflow-x: auto;
@@ -87,7 +91,7 @@ onMounted(() => {
 .tabs-actions p {
     padding: 10px 50px;
     /* Important because custom blocks apply a different margin to the first text */
-    margin: 10px auto 0 auto !important;
+    margin: v-bind(textMargin);
 }
 
 .tabs-actions p.active {

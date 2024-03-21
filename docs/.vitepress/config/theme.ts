@@ -223,8 +223,34 @@ export default <ThemeConfig> {
     },
 
     sidebarAction: {
-        path: '/preferences',
-        title: 'Edit preferences',
+        action: {
+            type: 'item',
+            item: {
+                text: 'Guide Options',
+                collapsed: true,
+                items: [
+                    () => ({
+                        name: 'PreferenceSetting',
+                        props: {
+                            storeKey: 'rlmm-hideinbox',
+                            type: 'switch',
+                        },
+                        style: {
+                            padding: '2px 0',
+                            margin: '10px 0',
+                            borderRadius: '6px',
+                            backgroundColor: 'var(--vp-c-bg-soft)',
+                        },
+                        content: 'Hide inbox',
+                    }),
+                    {
+                        text: 'Edit preferences',
+                        href: '/preferences',
+                        theme: 'alt',
+                    },
+                ],
+            },
+        }
     },
 
     storage: {

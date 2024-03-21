@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { h, nextTick, onMounted, provide, ref, type VNode } from 'vue'
+import { h, onMounted, provide, ref, type VNode } from 'vue'
 import { useCssVar } from '@vueuse/core'
 import { useData, useRouter } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
@@ -50,6 +50,8 @@ import type {
     ThemeNotification,
 } from '../../../types'
 
+import { createAnalyticsDataCollector } from '../../../util'
+
 import Banner from '../../../components/layout/Banner.vue'
 import Feedback from '../../../components/layout/Feedback.vue'
 import NavInbox from '../../../components/layout/Inbox.vue'
@@ -57,10 +59,10 @@ import RelatedPages from '../../../components/layout/RelatedPages.vue'
 import Replacer from '../../../components/layout/Replacer.vue'
 
 import { renderHomePageSections } from '../sections/home'
-import { renderSidebarAction } from '../sections/sidebarAction'
 import { renderNotFinished } from '../sections/notFinished'
 import { renderBlocks } from '../sections/block'
-import { createAnalyticsDataCollector } from '../../../util'
+
+import sidebarActionComponent from '../sections/sidebarActionComponent.vue'
 
 const props = defineProps<{
     banner: false | BannerNotification | undefined
@@ -92,7 +94,9 @@ onMounted(updateSlots)
 
 const slots: { slotName: string, node: (() => VNode | undefined) }[] = [
     {
-        node: () => renderSidebarAction(theme.value.sidebarAction),
+        node: () => theme.value.sidebarAction
+            ? h(sidebarActionComponent, { options: theme.value.sidebarAction })
+            : undefined,
         slotName: `sidebar-nav-${theme.value.sidebarAction?.position === 'bottom' ? 'after' : 'before'}`,
     },
     {

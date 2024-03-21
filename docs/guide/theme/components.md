@@ -294,6 +294,7 @@ Splits a window with tabs
 | activeTabKey   | `string`   | `false`  | The local storage key that will be the default tab on opening. Not used when `activeTab` is set |
 | tabStyle       | `object`   | `false`  | Optional style for every tab name                                                               |
 | activeTabStyle | `object`   | `false`  | Optional style for the active tab name                                                          |
+| alignLeft      | `boolean`  | `false`  | Set the tabs to align on the side                                                               |
 
 Each tab is a separate `<template>` with the name `tab-${name_in_snake_case}`
 
@@ -334,6 +335,20 @@ This is Tab C
 ```
 
 <TabsWindow :tabs="['a', 'c', 'b']">
+
+<template #tab-a>
+This is Tab A
+</template>
+<template #tab-b>
+This is Tab B
+</template>
+<template #tab-c>
+This is Tab C
+</template>
+
+</TabsWindow>
+
+<TabsWindow :tabs="['a', 'c', 'b']" :alignLeft="true">
 
 <template #tab-a>
 This is Tab A
