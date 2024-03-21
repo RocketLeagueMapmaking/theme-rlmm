@@ -32,6 +32,11 @@ Use dark theme
 Use greener background
 </PreferenceSetting>
 
+<PreferenceSetting storeKey="rlmm-bg-legacy" documentClassToToggle="legacy-colors" :defaultValue="true">
+
+Use old colors
+</PreferenceSetting>
+
 <PreferenceSetting storeKey="rlmm-accent-color" type="color" cssVariable="--vp-c-brand-1">
 
 Accent color

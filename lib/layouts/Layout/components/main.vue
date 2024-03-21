@@ -46,6 +46,7 @@ import DefaultTheme from 'vitepress/theme'
 import { useStorage } from '../../../composables'
 import type {
     BannerNotification,
+    StorageData,
     ThemeConfig,
     ThemeNotification,
 } from '../../../types'
@@ -110,24 +111,29 @@ router.onAfterRouteChanged = async (to) => {
     return await createAnalyticsDataCollector(theme.value.analytics)(to)
 }
 
-function iterateStorage(
-    items: Record<string, string> | undefined,
-    fn: (value: string, stored: string) => void,
+function iterateStorage<T>(
+    items: StorageData<T> | undefined,
+    fn: (value: string, stored: string | null, defaultValue?: T) => void,
 ) {
     for (const [value, localKey] of Object.entries(items ?? {})) {
-        const stored = storage.useKey<never>(localKey, null)
-        if (stored.value) fn(value, stored.value)
+        const key = typeof localKey === 'string' ? localKey : localKey.key
+        const defaultValue = typeof localKey !== 'string' ? localKey.defaultValue : undefined
+
+        const stored = storage.useKey<never>(key, null)
+        fn(value, stored.value, defaultValue)
     }
 }
 
 // Apply colors from local storage
 if (theme.value.storage) {
-    iterateStorage(theme.value.storage.colorKeys, (cssName, value) => {
-        useCssVar(cssName).value = value
+    iterateStorage(theme.value.storage.colorKeys, (cssName, value, defaultValue) => {
+        if ((value != null && !['true', 'false'].includes(value)) || defaultValue != undefined) {
+            useCssVar(cssName).value = (value ?? defaultValue)!
+        }
     })
 
-    iterateStorage(theme.value.storage.pageClasses, (className, enabled) => {
-        if (enabled === 'true') document.documentElement.classList.add(className)
+    iterateStorage(theme.value.storage.pageClasses, (className, enabled, defaultValue) => {
+        if (enabled === 'true' || (enabled == null && defaultValue)) document.documentElement.classList.add(className)
     })
 }
 </script>

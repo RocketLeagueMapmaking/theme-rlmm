@@ -260,7 +260,11 @@ export default <ThemeConfig> {
         },
 
         pageClasses: {
-            'green-bg': 'rlmm-bg-green'
+            'green-bg': 'rlmm-bg-green',
+            'legacy-colors': {
+                key: 'rlmm-bg-legacy',
+                defaultValue: true,
+            },
         },
     }
 }
