@@ -91,8 +91,6 @@ const updateSlots = async () => {
     if (Object.keys(homepageSlots.value).length > 0) showReplacer.value = true
 }
 
-onMounted(updateSlots)
-
 const slots: { slotName: string, node: (() => VNode | undefined) }[] = [
     {
         node: () => theme.value.sidebarAction
@@ -125,15 +123,20 @@ function iterateStorage<T>(
 }
 
 // Apply colors from local storage
-if (theme.value.storage) {
-    iterateStorage(theme.value.storage.colorKeys, (cssName, value, defaultValue) => {
-        if ((value != null && !['true', 'false'].includes(value)) || defaultValue != undefined) {
-            useCssVar(cssName).value = (value ?? defaultValue)!
-        }
-    })
 
-    iterateStorage(theme.value.storage.pageClasses, (className, enabled, defaultValue) => {
-        if (enabled === 'true' || (enabled == null && defaultValue)) document.documentElement.classList.add(className)
-    })
-}
+onMounted(async () => {
+    if (theme.value.storage) {
+        iterateStorage(theme.value.storage.colorKeys, (cssName, value, defaultValue) => {
+            if ((value != null && !['true', 'false'].includes(value)) || defaultValue != undefined) {
+                useCssVar(cssName).value = (value ?? defaultValue)!
+            }
+        })
+
+        iterateStorage(theme.value.storage.pageClasses, (className, enabled, defaultValue) => {
+            if (enabled === 'true' || (enabled == null && defaultValue)) document.documentElement.classList.add(className)
+        })
+    }
+
+    await updateSlots()
+})
 </script>

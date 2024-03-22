@@ -36,8 +36,6 @@ export default defineAsyncComponent({
             theme: { value: theme },
         } = useData<ThemeConfig>()
 
-        console.log('Loading layout...')
-
         const banner = await fetchComponent<false | BannerNotification>(theme.banner)
         const notifications = await fetchComponent(theme.notifications) ?? []
 

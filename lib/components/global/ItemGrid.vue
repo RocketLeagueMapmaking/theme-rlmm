@@ -137,7 +137,7 @@ function applyOptions(item: GridItem) {
         url: (!props.useActionLink ? item.link : undefined)
             ?? props.createUrl?.(item)
             ?? ('link' in action
-                    ? (action.link + '#' + props.createSlug?.(item) ?? item.title.replace(/ /g, '').toLowerCase())
+                    ? (action.link + '#' + (props.createSlug?.(item) ?? item.title.replace(/ /g, '').toLowerCase()))
                     : undefined
             ) ?? item.link,
     }
