@@ -15,6 +15,12 @@
     --vp-c-bg-elv: #10322c;
 }
 
+.dark.legacy-colors {
+    --vp-c-text-1: #e2e2e2;
+    --vp-c-border: #4e4e4e;
+    --vp-c-bg: #25272a;
+}
+
 :root {
     --vp-c-brand-1: var(--vp-c-green-1);
     --vp-c-brand-2: var(--vp-c-green-2);

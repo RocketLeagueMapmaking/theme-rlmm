@@ -1,4 +1,4 @@
-import { onMounted, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 
 import { useStorage } from "../storage"
 import { useNotifications } from "./handler"
@@ -7,14 +7,6 @@ export interface SubscriptionOptions {
     subscribeUrl: string
     publicKey: string
 }
-
-// type SubscriptionData =
-//     | { type: 'page-update', pages: WatchedPages }
-
-// type UserSubscriptionData = Record<
-//     SubscriptionData['type'],
-//     Omit<SubscriptionData, 'type'>
-// >
 
 function useDeviceId () {
     const idKey = 'device-notifications-push-id'
@@ -91,10 +83,16 @@ export function useNotificationSubscription<Data = unknown> (options: Subscripti
         if (sub) webSubscription.value = sub
     }
 
-    onMounted(async () => await fetchAll())
+    const isNotSubscribed = computed(() => webSubscription.value == undefined && subscriptionData.value == undefined)
+    const validOptions = computed(() => typeof options.publicKey === 'string' && typeof options.subscribeUrl === 'string')
+    onMounted(async () => {
+        if (validOptions.value) await fetchAll()
+    })
 
     return {
         id,
+        validOptions,
+        isNotSubscribed,
         web: {
             data: webSubscription,
             subscribe: async () => await webSubcribe(),
@@ -112,8 +110,10 @@ export function useNotificationSubscription<Data = unknown> (options: Subscripti
         },
         fetch: fetchAll,
         subscribe: async (options: Data) => {
-            await webSubcribe()
-            return await settingsData.subscribe(options)
+            const p1 = await webSubcribe()
+            const p2 = await settingsData.subscribe(options)
+
+            return p1 && p2
         },
         unsubsribe: async () => {
             const p1 = await webUnsubscribe()

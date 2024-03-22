@@ -90,7 +90,7 @@ function getStyle (item) {
     padding: 10px 20px;
 }
 
-.expanded-item-container:nth-last-of-type() {
+.expanded-item-container:not(:last-of-type) {
     border-bottom: 1px solid var(--vp-c-border);
 }
 

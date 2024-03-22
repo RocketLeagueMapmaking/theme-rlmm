@@ -1,20 +1,27 @@
 <template>
-    <div class="tree-item" :class="{ 'main-item': mainBgColor }" v-if="showItem(item)">
+    <div class="tree-item" :class="{ 'main-item': mainBgColor, open: parent && open }" v-if="showItem(item)">
         <div class="child-items">
             <div class="name-box">
-                <VPIconChevronRight class="icon" @click="toggle" v-if="!open && parent" />
-                <VPIconChevronDown class="icon" @click="toggle" v-if="open && parent" />
+                <Transition name="fade-icon" mode="out-in">
+                    <span v-if="parent && open" class="icon vpi-chevron-down" @click="toggle" />
+                    <span v-else-if="parent" class="icon vpi-chevron-right" @click="toggle" />
+                </Transition>
                 <slot name="name" :item="item" />
             </div>
 
-            <VPIconPlus class="icon" v-if="!showDetails" @click="toggleDetails" />
-            <VPIconMinus class="icon" v-if="showDetails" @click="toggleDetails" />
+            <Transition name="fade-icon" mode="out-in">
+                <span v-if="!showDetails" class="icon vpi-plus" @click="toggleDetails" />
+                <span v-else class="icon vpi-minus" @click="toggleDetails" />
+            </Transition>
         </div>
 
-        <div class="item-details" :class="{ 'main-item': mainBgColor }" v-if="showDetails">
-            <slot name="details" :item="item" :parents="parents" />
-        </div>
+        <Transition name="section">
+            <div class="item-details" v-if="showDetails">
+                <slot name="details" :item="item" :parents="parents" />
+            </div>
+        </Transition>
 
+        <Transition name="section">
         <div class="item-children" v-if="parent && open">
             <TreeItem v-for="child in getItem(item[idKey], items ?? [])" :main-bg-color="!mainBgColor"
                 :parent="child[isParentKey]" :is-parent-key="isParentKey" :key="child[nameKey ?? idKey]" :item="<any>child" :get-item="getItem"
@@ -27,18 +34,12 @@
                 </template>
             </TreeItem>
         </div>
+    </Transition>
     </div>
 </template>
 
 <script setup lang="ts" generic="Item extends Record<string, any>">
 import { type Ref, computed, inject, ref } from 'vue';
-
-import {
-    VPIconChevronDown,
-    VPIconChevronRight,
-    VPIconMinus,
-    VPIconPlus,
-} from '../../theme';
 
 const open = ref(false), showDetails = ref(false)
 
@@ -79,6 +80,21 @@ function toggleDetails () {
 }
 </script>
 
+<style>
+:root {
+    --tree-animation-len: 0.1s;
+    --tree-bg: var(--vp-custom-block-details-bg);
+    --tree-bg-alt: var(--vp-custom-block-details-code-bg);
+}
+
+/* Tone down the animation to avoid vestibular motion triggers. */
+@media (prefers-reduced-motion) {
+    :root {
+        --tree-animation-len: 0s;
+    }
+}
+</style>
+
 <style scoped>
 .icon {
     fill: var(--vp-c-neutral);
@@ -95,15 +111,20 @@ function toggleDetails () {
 }
 
 .tree-item {
-    /* height: 60px; */
-    border-radius: 6px;
-    background-color: var(--vp-custom-block-details-bg);
-    margin: 10px 0;
-    padding: 16px 6px 16px 10px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    background-color: var(--tree-bg);
+    margin: 6px 0;
+    padding: 10px 0px 10px 20px;
+    word-wrap: break-word;
+}
+
+.tree-item .open {
+    padding-bottom: 1px !important;
 }
 
 .main-item {
-    background-color: var(--vp-c-bg);
+    background-color: var(--tree-bg-alt);
 }
 
 .child-items, .name-box {
@@ -115,6 +136,33 @@ function toggleDetails () {
 .name-box {
     max-width: 80vw;
     overflow-x: auto;
+    word-wrap: break-word;
+    flex-wrap: wrap;
+}
+
+/* transitions */
+.fade-icon-enter-active,
+.fade-icon-leave-active {
+  transition: opacity var(--tree-animation-len) ease;
+}
+
+.fade-icon-enter-from,
+.fade-icon-leave-to {
+  opacity: 0;
+}
+
+.section-enter-active {
+  transition: all var(--tree-animation-len) ease-in;
+}
+
+.section-leave-active {
+    transition: all var(--tree-animation-len) ease-out;
+}
+
+.section-enter-from,
+.section-leave-to {
+    transform: translateY(-20px);
+    opacity: 0;
 }
 </style>
 

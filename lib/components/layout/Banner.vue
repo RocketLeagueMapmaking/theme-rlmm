@@ -1,7 +1,9 @@
 <!-- From vitepress issue: https://github.com/faker-js/faker/pull/1487/files -->
 <template>
     <div v-if="isMounted" ref="el" class="banner" :style="{ background: bgColor }">
-        <div class="text" v-html="html">
+        <div class="text">
+            <div v-html="html"></div>
+            <NotificationAction :action="action" @clicked="() => themeOptions?.onClicked?.(id)" />
         </div>
 
         <button type="button" :aria-label="dismissLabel" @click="dismiss" v-if="dismissable">
@@ -17,6 +19,8 @@
 import { computed, onMounted, ref, watchEffect } from 'vue';
 import { useElementSize, useMounted } from '@vueuse/core';
 import { useData } from 'vitepress'
+
+import NotificationAction from './internal/NotificationAction.vue';
 
 import { useNotifications } from '../../composables';
 import { getThemeColor, renderText } from '../../util';
@@ -121,6 +125,15 @@ html {
 
 .text {
     flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.text .VPButton {
+    margin-left: 20px;
+    border-radius: 20px !important;
 }
 
 .text:deep(a) {

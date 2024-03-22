@@ -1,26 +1,34 @@
 <template>
     <div class="search-box vp-doc">
-        <slot name="search-input">
-            <input :placeholder="text.searchPlaceholder" class="search-filter" v-model="search">
-        </slot>
+        <div class="search-controls">
+            <slot name="search-input" :search="search">
+                <input :placeholder="text.searchPlaceholder" class="search-filter" v-model="search">
+            </slot>
 
-        <slot name="reset-btn" :reset="reset" :value="search">
-            <VPButton theme="alt" :text="text.reset" @click="reset" />
-        </slot>
+            <slot name="reset-btn" :reset="reset" :value="search">
+                <VPButton theme="alt" :text="text.reset" @click="reset" />
+            </slot>
 
-        <span class="search-filter-box" v-for="filter, index in filters" :key="filter.itemKey">
-            <select v-if="filter.type === 'select'" @change="(event) => {
-                // @ts-ignore
-                changeFilter(event.target.value, index)
-            }" :value="filterValues[index]" class="search-filter">
-                <option value="">{{ getEmptySelectOption(filter) }}</option>
-                <option v-for="option in filter.options" :key="option">
-                    {{ option }}
-                </option>
-            </select>
-            <VPSwitch v-else-if="filter.type === 'switch'" v-model="filterValues[index]"
-                :class="{ enabled: filterValues[index] }" />
-        </span>
+            <span class="search-filter-box" v-for="filter, index in filters" :key="filter.itemKey">
+                <select v-if="filter.type === 'select'" @change="(event) => {
+                    // @ts-ignore
+                    changeFilter(event.target.value, index)
+                }" :value="filterValues[index]" class="search-filter">
+                    <option value="">{{ getEmptySelectOption(filter) }}</option>
+                    <option v-for="option in filter.options" :key="option">
+                        {{ option }}
+                    </option>
+                </select>
+                <div v-else-if="filter.type === 'switch'" class="search-filter switch">
+                    <p>{{ filter.label }}</p>
+                    <VPSwitch
+                        v-model="filterValues[index]"
+                        :class="{ enabled: filterValues[index] }"
+                        @click="() => changeFilter(!filterValues[index], index)"
+                    />
+                </div>
+            </span>
+        </div>
 
         <slot :filter="filterItem" :search="search">
         </slot>
@@ -41,7 +49,7 @@ type BaseSearchFilter<Type extends string, Options extends object> = {
 
 export type SearchFilter =
     | BaseSearchFilter<'select', { options: string[] }>
-    | BaseSearchFilter<'switch', {}>
+    | BaseSearchFilter<'switch', { label: string, invert?: boolean }>
 
 const props = withDefaults(defineProps<{
     searchKey: string
@@ -59,13 +67,15 @@ const props = withDefaults(defineProps<{
     }),
 })
 
+const invert = (filter: { invert?: boolean }, value: boolean) => filter.invert ? !value : value
+
 const search = ref<string | null>(null)
-const filterValues = ref<string[]>(props.filters.map(() => ''))
+const filterValues = ref<(string | boolean)[]>(props.filters.map((i) => i.type === 'select' ? '' : invert(i, false)))
 
 const params = useUrlSearchParams('history')
 const searchParam = props.urlSearchParam ?? 'search'
 
-const empty = (value: string | null) => value == null || value.length === 0
+const empty = (value: string | boolean | null) => value == null || (typeof value === 'string' ? value.length === 0 : !value)
 
 watch(search, (value) => {
     if (params[searchParam] !== value && !empty(value)) params[searchParam] = value!
@@ -74,8 +84,10 @@ watch(search, (value) => {
 
 watch(filterValues, (filters) => {
     for (let i = 0; i < filters.length; i++) {
+        const filter = filters[i]
         const key = props.filters[i].searchParam ?? props.filters[i].itemKey
-        if (params[key] !== filters[i] && filters[i].length > 0) params[key] = filters[i]
+
+        if (params[key] !== filter && (typeof filter === 'string' ? filter.length > 0 : true)) params[key] = filters[i].toString()
     }
 })
 
@@ -84,7 +96,7 @@ onMounted(() => {
 })
 
 
-function changeFilter(value: string, index: number): void {
+function changeFilter(value: string | boolean, index: number): void {
     console.debug('Changing filter', props.filters[index].itemKey, value)
     filterValues.value = filterValues.value.map((v, i) => i === index ? value : v)
 }
@@ -92,6 +104,7 @@ function changeFilter(value: string, index: number): void {
 function reset() {
     filterValues.value = props.filters.map(() => '')
     search.value = ''
+    params[searchParam] = <never>null
 }
 
 function getEmptySelectOption (filter: SearchFilter) {
@@ -100,6 +113,7 @@ function getEmptySelectOption (filter: SearchFilter) {
 
 function filterItem(item: object): boolean {
     const matchSearch = search.value == null
+        || search.value.length === 0
         || item[props.searchKey].toLowerCase().includes(search.value.toLowerCase())
 
     return matchSearch && (props.filters.length === 0 || props.filters.every((filter, i) => {
@@ -109,7 +123,7 @@ function filterItem(item: object): boolean {
                 // Filter is equal to item value
                 || filterValues.value[i] === item[filter.itemKey]
         } else if (filter.type === 'switch') {
-            return filterValues.value[i] === item[filter.itemKey]
+            return empty(invert(filter, <boolean>filterValues.value[i])) || filterValues.value[i] === item[filter.itemKey]
         } else {
             // Ignore invalid filter
             return true
@@ -124,7 +138,28 @@ function filterItem(item: object): boolean {
     border-radius: 6px;
 }
 
-.search-box>*:not(:first-child) {
+.search-filter.switch {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+}
+
+.search-filter.switch p {
+    padding-right: 8px;
+}
+
+.search-controls {
+    display: flex;
+    height: inherit;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.search-controls > *:not(:first-child) {
     margin-left: 10px;
+    margin-top: 5px;
 }
 </style>

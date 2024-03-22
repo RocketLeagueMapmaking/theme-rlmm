@@ -78,8 +78,16 @@ function toUrl (url?: string) {
     background-image: v-bind(toUrl(background));
     background-repeat: no-repeat;
     background-size: cover;
-    background-blend-mode: luminosity;
+    background-blend-mode: screen;
     background-position: top;
+}
+
+html:not(.dark) .steam-stats-container {
+    background-color: var(--vp-c-black);
+}
+
+html:not(.dark) .steam-stats-container p {
+    color: var(--vp-c-gray-1) !important;
 }
 
 .steam-stats-container .title {

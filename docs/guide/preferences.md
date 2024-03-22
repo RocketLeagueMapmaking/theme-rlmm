@@ -1,6 +1,7 @@
 ---
 exposePages: true
 aside: false
+footer: false
 ---
 
 # Preferences
@@ -11,6 +12,8 @@ import { useNotifications, useStorage, ListWindow, WatchSubscriptionManager } fr
 
 const NotificationManager = useNotifications()
 const storage = useStorage()
+
+import { __pageData as homePage } from './index.md'
 </script>
 
 <TabsWindow :activeTabStyle="{ backgroundColor: 'var(--vp-c-bg-soft)' }" :tabs="['general', 'notifications', 'guide', 'advanced']">
@@ -29,6 +32,11 @@ Use dark theme
 Use greener background
 </PreferenceSetting>
 
+<PreferenceSetting storeKey="rlmm-bg-legacy" documentClassToToggle="legacy-colors" :defaultValue="true">
+
+Use old colors
+</PreferenceSetting>
+
 <PreferenceSetting storeKey="rlmm-accent-color" type="color" cssVariable="--vp-c-brand-1">
 
 Accent color
@@ -43,11 +51,18 @@ Hide sidebar action button
 
 <PreferenceSetting storeKey="rlmm-home-hidesteam">
 
-Hide new Steam maps on home page
+{{ homePage.frontmatter.hero.steam.enabled
+    ? 'Hide new Steam maps on home page'
+    : 'Show new Steam maps on home page'
+}}
 </PreferenceSetting>
 </template>
 
 <template #tab-notifications>
+
+:::tip Workshop updates
+[See all sources](https://swagbot.pages.dev/feeds) for getting notifications on new and updated workshop items
+:::
 
 ### Inbox
 
@@ -59,10 +74,6 @@ Hide notification inbox
 ### Push notifications
 
 Get push notifications for map making updates
-
-:::tip Workshop updates
-[See all sources](https://swagbot.pages.dev/feeds) for getting notifications on new and updated workshop items
-:::
 
 <VPButton
     text="Enable notifications"
@@ -82,27 +93,17 @@ Get push notifications for map making updates
 
 ### Guide updates
 
-<PreferenceSetting storeKey="rlmm-push-all">
-
-On any changed file
-</PreferenceSetting>
-
-:::details Watch individual pages
-
-Get only a notification when one of the selected pages is updated
-
-<PreferenceSetting
-    :storeKey="`rlmm-page-${page.replace(/\//g, '_').replace('.md', '')}`"
-    v-for="page in $frontmatter.pages"
-    :key="page"
-    type="switch"
->
-
-/{{ page.replace('index.md', '').replace('.md', '') }}
-</PreferenceSetting>
-:::
-
-<WatchSubscriptionManager :subscription="{}" watchPrefix="rlmm-page-"/>
+<WatchSubscriptionManager
+    :subscription="{}"
+    :settings="{
+        watchAll: { text: 'On any changed file', key: 'rlmm-push-all' },
+        watchPages: {
+            title: 'Watch individual pages',
+            description: 'Get only a notification when one of the selected pages is updated',
+            prefix: 'rlmm-page-',
+        }
+    }"
+/>
 
 </div>
 </template>
@@ -148,6 +149,15 @@ Rocket League installation folder
 >
 
 Open Steam urls in the Windows app
+</PreferenceSetting>
+
+<PreferenceSetting
+    storeKey="rlmm-urls-editcms"
+    :defaultValue="false"
+    type="switch"
+>
+
+Open `Edit this page` links in the CMS
 </PreferenceSetting>
 
 ### Experimental

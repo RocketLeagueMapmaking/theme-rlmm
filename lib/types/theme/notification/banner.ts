@@ -41,7 +41,13 @@ export interface BannerOptions {
     cooldown?: number
 
     /**
-     * 
+     * Hook that gets called when a user presses the banner action button
+     * @param id the id of the banner that is being clicked
+     */
+    onClicked?: (id: string) => void
+
+    /**
+     * Hook that gets called when a user dismisses a banner
      * @param id the id of the banner that is being dismissed
      */
     onDismissed?: (id: string) => void

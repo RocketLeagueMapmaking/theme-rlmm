@@ -1,3 +1,8 @@
+export type StorageData<Type> = Record<string,
+    | string
+    | { key: string, defaultValue?: Type }
+>
+
 export interface StorageOptions {
     /**
      * The local storage keys that is used by components and the theme
@@ -29,11 +34,11 @@ export interface StorageOptions {
      * A set of CSS colors to apply on loading the page
      * @example { '--vp-c-bg': 'localstore-key' }
      */
-    colorKeys?: Record<string, string>
+    colorKeys?: StorageData<string>
 
     /**
      * Apply classes to the page based on local storage items
      * @example { 'green-bg': 'use-green-bg-setting' }
      */
-    pageClasses?: Record<string, string>
+    pageClasses?: StorageData<boolean>
 }

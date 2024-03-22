@@ -5,15 +5,15 @@
                 <p class="steam-maps-title" v-if="title.length > 0" v-html="title">
                 </p>
                 <div class="steam-map" v-for="map, index in maps" :key="map.id">
-                    <VPIconChevronLeft class="steam-maps-icon" v-if="showIcon(index, 'left')"
+                    <span class="steam-maps-icon vpi-chevron-left" v-if="showIcon(index, 'left')"
                         @click="goToNextMap(true, -1)" />
                     <div class="steam-map-active" v-if="index === active" @click="goToNextMap(true)">
                         <p class="steam-map-title">
-                            {{ renderText(map.title, { maxLength: maxLengthTitle }) }}
+                            {{ render.title(map) }}
                         </p>
                         <!-- Only show creator name on large screens -->
                         <span class="only-large">
-                            By {{ renderText(map.creator.name, { maxLength: maxLengthUsername }) }}
+                            By {{ render.creator(map) }}
                         </span>
                         <VPLink :href="itemPageUrl(map)" :noIcon="true">
                             <ImgWithPlaceholder :image="map.preview.url" />
@@ -26,7 +26,7 @@
                                 :text="action.text" :href="action.link" />
                         </div>
                     </div>
-                    <VPIconChevronRight class="steam-maps-icon" v-if="showIcon(index, 'right')"
+                    <span class="steam-maps-icon vpi-chevron-right" v-if="showIcon(index, 'right')"
                         @click="goToNextMap(true)" />
                 </div>
             </div>
@@ -42,7 +42,7 @@
 import { computed, defineComponent, h, onMounted, ref, withDefaults } from 'vue'
 import { useImage } from '@vueuse/core'
 
-import { VPIconChevronLeft, VPIconChevronRight, VPImage } from '../theme'
+import { VPImage } from '../theme'
 
 import { usePlatform, useStorage } from '../../composables/'
 import { renderText } from '../../util'
@@ -143,6 +143,17 @@ async function fetchSteamMaps(options: Required<Props>) {
     }
 }
 
+const render = {
+    title: (map: SteamMap) => renderText(map.title, {
+        maxLength: props.maxLengthTitle,
+        preserve: true
+    }),
+    creator: (map: SteamMap) => renderText(map.creator.name, {
+        maxLength: props.maxLengthUsername,
+        preserve: true
+    }),
+}
+
 function showIcon(index: number, type: SteamMapIconType) {
     const enabled = typeof props.iconsEnabled === 'boolean'
         ? props.iconsEnabled
@@ -201,8 +212,8 @@ onMounted(async () => {
     display: none;
 }
 
-.VPHero .image:has(.steam-maps) {
-    z-index: 5;
+.VPHero .image-container:has(.steam-maps) {
+    z-index: 10;
 }
 
 @media screen and (min-width: 960px) {
@@ -234,11 +245,14 @@ onMounted(async () => {
 .steam-maps-icon {
     fill: var(--vp-c-neutral);
     min-width: 30px;
+    width: 30px;
+    height: 40px;
 }
 
 .steam-map {
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .steam-map-title {

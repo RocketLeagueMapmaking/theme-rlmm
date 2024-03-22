@@ -1,4 +1,4 @@
-import { h, type VNode } from 'vue'
+import { h, type VNode, type Ref } from 'vue'
 import { VPHomeSponsors } from 'vitepress/theme'
 
 import { useStorage } from '../../../composables'
@@ -23,9 +23,10 @@ function getHomeFrontmatter (fm: Record<string, any>) {
 
 // TODO: move to seperate home component later?
 export async function renderHomePageSections (
-    frontmatter: Record<string, any>,
+    frontmatter: Ref<Record<string, any>>,
 ): Promise<Record<string, (() => VNode) | undefined> | undefined> {
-    const data = getHomeFrontmatter(frontmatter ?? {})
+    const data = getHomeFrontmatter(frontmatter.value)
+    console.debug('Checking if homepage data need to be fetched', data != undefined)
     if (!data) return undefined
 
     const events = data.events ? await fetchComponentData(data.events, []) : []
@@ -52,8 +53,8 @@ export async function renderHomePageSections (
     const steamOptions = data.hero && 'steam' in data.hero ? data.hero.steam : undefined
 
     return {
-        'home-hero-image': !hideSteamSetting && steamOptions && steamOptions.enabled !== false
-            ? () => renderIf(steamOptions, () => h(SteamMaps, steamOptions))
+        'home-hero-image': steamOptions && ((!hideSteamSetting && steamOptions.enabled) || (steamOptions.enabled !== false && hideSteamSetting !== steamOptions.enabled))
+            ? () => renderIf(steamOptions, () => h(SteamMaps, { ...steamOptions, enabled: true }))
             : undefined,
         'home-features-after': () => h('div', children),
     } as Record<string, undefined | (() => VNode)>

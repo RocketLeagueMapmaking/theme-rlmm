@@ -23,7 +23,7 @@ export const ThemeDefaultConfig = {
     }
 } satisfies UserConfig<ThemeConfig>
 
-export function defineConfig (config: UserConfig<ThemeConfig>) {
+export function defineConfig(config: UserConfig<ThemeConfig>) {
     return defineConfigWithTheme({
         ...config,
         extends: ThemeDefaultConfig,

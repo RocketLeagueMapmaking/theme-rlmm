@@ -16,7 +16,7 @@ hero:
           link: /udk/
     steam:
         title: <span>New</span> Steam workshop
-        enabled: true
+        enabled: false
         amount: 3
 features:
     - title: UDK Guide
@@ -70,7 +70,7 @@ promotion:
         - text: Read more
           href: https://learn.skillquest.io/landing/1699993747535x796931164922708000
 sponsors:
-    message: Patreon shoutout.
+    message: Patreon shoutout
     actionLink: https://patreon.com/rocketleaguemapmaking
     actionText: Become a supporter
     dataUrl: https://docs.rocketleaguemapmaking.workers.dev/sponsors

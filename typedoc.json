@@ -4,6 +4,7 @@
     "out": "docs/reference/",
     "githubPages": false,
     "plugin": [
-        "typedoc-plugin-markdown"
+        "typedoc-plugin-markdown",
+        "typedoc-plugin-vue"
     ]
 }
