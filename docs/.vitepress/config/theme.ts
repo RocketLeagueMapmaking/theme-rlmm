@@ -153,7 +153,8 @@ export default <ThemeConfig> {
                         link: '/theme/windows/guide'
                     }
                 ],
-            }
+            },
+            { text: 'Theme reference', link: '/reference/README' },
         ]
     },
 
