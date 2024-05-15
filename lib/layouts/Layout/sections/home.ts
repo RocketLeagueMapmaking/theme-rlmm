@@ -49,7 +49,7 @@ export async function renderHomePageSections (
     ].filter((child): child is NonNullable<typeof child> => child != undefined)
 
     const storage = useStorage()
-    const hideSteamSetting = storage.useKey('rlmm-home-hidesteam', null).value === 'true'
+    const hideSteamSetting = storage.useKey(storage.themeKeys.value.hideHomeSteamMaps, null).value === 'true'
     const steamOptions = data.hero && 'steam' in data.hero ? data.hero.steam : undefined
 
     return {

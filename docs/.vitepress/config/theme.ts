@@ -180,7 +180,24 @@ export default <ThemeConfig> {
     },
 
     blocks: {
-        feedback: true,
+        feedback: {
+            answers: {
+                no: {
+                    form: {
+                        fields: [
+                            { type: 'textarea', text: 'Feedback' }
+                        ]
+                    },
+                },
+                yes: {
+                    form: {
+                        fields: [
+                            { type: 'textarea', text: 'Feedback' }
+                        ]
+                    },
+                } 
+            }
+        },
     },
 
     notifications: {
@@ -233,7 +250,7 @@ export default <ThemeConfig> {
                     () => ({
                         name: 'PreferenceSetting',
                         props: {
-                            storeKey: 'rlmm-hideinbox',
+                            storeKey: 'rlmm-hide-navinbox',
                             type: 'switch',
                         },
                         style: {

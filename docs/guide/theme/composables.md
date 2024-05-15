@@ -70,10 +70,20 @@ const subscriptionHandler = await useNotificationSubscription<UserSettings>({
 
 The server route is expected to have the following methods implemented:
 
-- `POST`
+- `POST` with body of type `PostSubscriptionBody`
 - `GET ?id=<device_id>`
-- `PATCH ?id=<device_id>`
+- `PATCH ?id=<device_id>` with body of type `PatchSubscriptionBody`
 - `DELETE ?id=<device_id>`
+
+```ts
+interface PostSubscriptionBody {
+    deviceId: string
+    subscription: PushSubscriptionJSON
+    data: UserSettings
+}
+
+type PatchSubscriptionBody = Partial<UserSettings>
+```
 
 :::details Iterate pages
 

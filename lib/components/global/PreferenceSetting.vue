@@ -39,6 +39,8 @@ type SettingType =
     | 'input'
     | 'color'
 
+type SettingValue = string | boolean | number
+
 const props = withDefaults(defineProps<{
     isAppearance?: boolean
     type?: SettingType
@@ -46,7 +48,7 @@ const props = withDefaults(defineProps<{
     storeKey: string
     cssVariable?: string
     options?: string[]
-    defaultValue?: any
+    defaultValue?: SettingValue
     renderValue?: boolean
     documentClassToToggle?: string
     onChanged?: ((data: { key: string, value: boolean | string | number }) => void)
@@ -85,8 +87,7 @@ function onChange() {
 onMounted(() => {
     const storage = useStorage();
 
-    // TODO: remove any
-    value.value = storage.useKey<any>(props.storeKey, cssColor?.value ?? props.defaultValue).value
+    value.value = storage.useKey(props.storeKey, ((cssColor?.value ?? props.defaultValue) as unknown as null)).value ?? <boolean>false
 
     if (typeof value.value === 'string' && cssColor) {
         cssColor.value = value.value.toString()

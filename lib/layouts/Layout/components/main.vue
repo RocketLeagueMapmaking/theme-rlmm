@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { h, onMounted, provide, ref, type VNode } from 'vue'
+import { h, nextTick, onMounted, provide, ref, type VNode } from 'vue'
 import { useCssVar } from '@vueuse/core'
 import { useData, useRouter } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
@@ -86,6 +86,14 @@ const showReplacer = ref<boolean>(false)
 const homepageSlots = ref<Record<string, (() => VNode | undefined) | undefined>>({})
 
 const updateSlots = async () => {
+    // TODO: remove when https://github.com/vuejs/vitepress/pull/3654 is merged
+    nextTick(() => {
+        document.querySelector('.VPSidebarItem .is-active')?.scrollIntoView({
+            block: 'center',
+            behavior: 'smooth',
+        })
+    })
+
     showReplacer.value = false
     homepageSlots.value = await renderHomePageSections(frontmatter) ?? {}
     if (Object.keys(homepageSlots.value).length > 0) showReplacer.value = true

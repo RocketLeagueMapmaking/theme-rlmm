@@ -4,39 +4,39 @@
             <p v-html="renderText(text)"></p>
             <div class="feedback-question-actions">
                 <div :class="{ [`feedback-question-action-${ctx}`]: true, active: ctx === answer }" @click="onClick(ctx)"
-                    :title="answers[ctx]?.title" :aria-label="answers[ctx]?.label" :key="ctx" v-for="ctx in types">
-                    <span v-if="answers[ctx]?.enabled !== false">
-                        <Icon :icon="answers[ctx]?.icon" v-if="answers[ctx]?.icon" />
-                        <p v-else-if="answers[ctx]?.text" v-html="renderText(answers[ctx]!.text!)">
+                    :title="options[ctx]?.title" :aria-label="options[ctx]?.label" :key="ctx" v-for="ctx in types">
+                    <span v-if="options[ctx]?.enabled !== false">
+                        <Icon :icon="options[ctx]?.icon" v-if="options[ctx]?.icon" />
+                        <p v-else-if="options[ctx]?.text" v-html="renderText(options[ctx]!.text!)">
                         </p>
                     </span>
                 </div>
             </div>
         </div>
         <!-- Form to show when clicking on an answer -->
-        <div class="feedback-form" v-if="form?.enabled && answer && getFields(answer).length > 0">
+        <div class="feedback-form" v-if="form?.enabled && answer && !submitted && getFields(answer).length > 0">
             <div class="feedback-form-fields">
-                <div class="feedback-form-field" v-for="field in getFields(answer)">
+                <div class="feedback-form-field" v-for="field, i in getFields(answer)">
                     <p>
                         {{ field.text }}
                     </p>
-                    <input v-if="field.type === 'input'" :placeholder="field.placeholder">
-                    <textarea v-else-if="field.type === 'textarea'" :placeholder="field.placeholder"></textarea>
+                    <input v-if="field.type === 'input'" :placeholder="field.placeholder" v-model="fieldAnswers[i]">
+                    <textarea v-else-if="field.type === 'textarea'" :placeholder="field.placeholder" v-model="fieldAnswers[i].value"></textarea>
                 </div>
             </div>
             <div class="feedback-form-actions">
                 <VPButton theme="alt" :text="form.cancelText ?? 'Cancel'" @click="answer = undefined" />
-                <VPButton :text="form.submitText ?? 'Submit'" @click="onClick(answer, true)" />
+                <VPButton :text="form.submitText ?? 'Submit'" @click="onClick(answer!, true)" />
             </div>
         </div>
         <div v-if="submitted">
-            <component v-if="renderAfterSubmitted" :is="renderAfterSubmitted?.()" />
+            <component v-if="renderAfterSubmitted" :is="renderAfterSubmitted?.(answer!)" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, h, ref } from 'vue';
+import { computed, h, mergeProps, ref } from 'vue';
 import { onContentUpdated, useData } from 'vitepress';
 
 import { renderText } from '../../util';
@@ -49,28 +49,39 @@ type FeedbackType = keyof NonNullable<FeedbackOptions['answers']>
 const types: FeedbackType[] = ['yes', 'no']
 const answer = ref<FeedbackType>(), submitted = ref(false)
 
+const defaultAnswers: Required<FeedbackOptions['answers']> = {
+    yes: {
+        enabled: true,
+        title: 'This page was useful',
+        label: 'This page was useful',
+        icon: 'carbon:thumbs-up',
+    },
+    no: {
+        enabled: true,
+        title: 'This page was not useful',
+        label: 'This page was not useful',
+        icon: 'carbon:thumbs-down',
+    },
+}
+
 const props = withDefaults(defineProps<FeedbackOptions>(), {
     text: 'Was this page helpful?',
     position: 'bottom-left',
     form: () => ({
         enabled: true,
     }),
-    answers: () => ({
-        yes: {
-            enabled: true,
-            title: 'This page was useful',
-            label: 'This page was useful',
-            icon: 'carbon:thumbs-up',
-        },
-        no: {
-            enabled: true,
-            title: 'This page was not useful',
-            label: 'This page was not useful',
-            icon: 'carbon:thumbs-down',
-        },
-    }),
-    renderAfterSubmitted: () => h('p', 'Thanks for submitting!'),
+    answers: () => ({}),
+    renderAfterSubmitted: (answer: 'yes' | 'no') => h('p', `Thanks for submitting: ${answer}!`),
 })
+
+const options: Required<NonNullable<FeedbackOptions['answers']>> = {
+    // @ts-expect-error
+    yes: mergeProps(props.answers.yes ?? defaultAnswers.yes, defaultAnswers.yes),
+    // @ts-expect-error
+    no: mergeProps(props.answers.no ?? defaultAnswers.no, defaultAnswers.no),
+}
+
+const fieldAnswers = Array.from({ length: Math.max(options.no.form?.fields.length ?? 0, options.yes.form?.fields.length ?? 0) }, () => ref<string>(''))
 
 const pageData = computed(() => page.value)
 const showFeedback = computed(() => {
@@ -78,28 +89,42 @@ const showFeedback = computed(() => {
         && (frontmatter.value.finished !== false ? true : props.showNotFinished ?? false)
 })
 
-// Switched page, reset options
-onContentUpdated(() => {
+function reset () {
     submitted.value = false
     answer.value = undefined
-})
+}
+
+// Switched page, reset options
+onContentUpdated(() => reset())
 
 function getFields(ctx: FeedbackType) {
-    return props.answers[ctx]?.form?.fields ?? []
+    return options[ctx]?.form?.fields ?? []
 }
 
 async function onClick(ctx: FeedbackType, isForm = false) {
+    const isChanging = answer.value !== ctx
+
+    if (submitted.value && isChanging) {
+        return
+    }
+
     answer.value = ctx
-    if (!isForm && props.form?.enabled && getFields(ctx).length > 0) return
+    if (!isForm && props.form?.enabled && getFields(ctx).length > 0) {
+        if (isChanging) fieldAnswers.forEach(a => a.value = '')
+        return
+    }
+    const fields = fieldAnswers.map(a => a.value)
 
-    await props.answers[ctx]?.onClick?.(pageData.value)
-    await props.onClick?.(ctx, pageData.value)
+    await options[ctx]?.onClick?.(pageData.value, fields)
+    await props.onClick?.(ctx, pageData.value, fields)
 
-    if (props.answers[ctx]?.onClick == undefined && props.onClick == undefined) {
-        console.log(`New feedback collected: ${ctx}`)
+    if (options[ctx]?.onClick == undefined && props.onClick == undefined) {
+        console.log(`New feedback collected: ${ctx}\nFields:\n${fields.join('\n')}`)
     }
 
     submitted.value = true
+    fieldAnswers.forEach(a => a.value = '')
+    setTimeout(() => reset(), 5000)
 }
 
 </script>

@@ -1,7 +1,7 @@
 import type { Awaitable, PageData } from "vitepress"
 
 import type { ThemeText } from "./text"
-import { RenderFunction } from "vue"
+import { RenderFunction, VNodeChild } from "vue"
 
 export type BlockPosition =
     | 'top'
@@ -62,7 +62,7 @@ interface BaseFeedbackOptions<Args extends unknown[]> {
     onClick?: (...args: Args) => Awaitable<void>
 }
 
-export interface FeedbackAnswerOptions extends BaseFeedbackOptions<[page: PageData]> {
+export interface FeedbackAnswerOptions<Answer extends string> extends BaseFeedbackOptions<[page: PageData, fields: string[]]> {
     enabled?: boolean
     icon?: string
     title?: string
@@ -74,17 +74,16 @@ export interface FeedbackAnswerOptions extends BaseFeedbackOptions<[page: PageDa
             placeholder?: string
         }[]
     }
-    renderAfterSubmitted?: RenderFunction
+    renderAfterSubmitted?: (ctx: Answer) => VNodeChild
 }
 
-export interface FeedbackOptions extends BaseFeedbackOptions<[answer: 'yes' | 'no', page: PageData]> {
+export interface FeedbackOptions extends BaseFeedbackOptions<[answer: 'yes' | 'no', page: PageData, fields: string[]]> {
     showNotFinished?: boolean
     position?:
         | 'bottom-left'
         | 'bottom-right'
     answers?: {
-        yes?: FeedbackAnswerOptions
-        no?: FeedbackAnswerOptions
+        [Answer in 'yes' | 'no']?: FeedbackAnswerOptions<Answer>
     }
 
     form?: {
@@ -93,7 +92,7 @@ export interface FeedbackOptions extends BaseFeedbackOptions<[answer: 'yes' | 'n
         cancelText?: string
     }
 
-    renderAfterSubmitted?: RenderFunction
+    renderAfterSubmitted?: (ctx: 'yes' | 'no') => VNodeChild
 }
 
 export interface RelatedPagesOptions {

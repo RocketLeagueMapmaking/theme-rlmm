@@ -8,7 +8,7 @@
         </div>
         <hr class="tabs-divider">
         <div v-for="name, index in getNames()" :key="name">
-            <slot :name="`tab-${toSlug(name)}`" v-if="index === active" />
+            <slot :name="toSlug(name)" v-if="index === active" />
         </div>
     </div>
 </template>
@@ -16,6 +16,7 @@
 <script setup lang="ts">
 import { onMounted, ref, withDefaults } from 'vue'
 import { useStorage } from '../../../composables/';
+import { useUrlSearchParams } from '@vueuse/core';
 
 const active = ref(0);
 const props = withDefaults(defineProps<{
@@ -26,22 +27,27 @@ const props = withDefaults(defineProps<{
         hideSelectorOnSet?: boolean
     },
     hideSelector?: boolean,
+    searchParam?: string | null,
+    updateSearchParam?: boolean,
     tabStyle?: object,
     activeTabStyle?: object,
     alignLeft?: boolean
 }>(), {
     hideSelector: false,
     alignLeft: false,
+    searchParam: null,
+    updateSearchParam: true,
     tabStyle: () => ({}),
     activeTabStyle: () => ({}),
 })
 
+const params = useUrlSearchParams()
 const hideSelectorActions = ref(false)
 const justifyTabContent = props.alignLeft ? 'space-start' : 'space-between'
 const textMargin = props.alignLeft ? '10px 0 0 0 !important' : '10px auto 0 auto !important'
 
 function toSlug(name: string): string {
-    return name.replace(/ /g, '_').toLowerCase()
+    return 'tab-' + name.replace(/ /g, '_').toLowerCase()
 }
 
 function getNames(): string[] {
@@ -58,10 +64,14 @@ function changeActive(index: number | string): void {
         : index
 
     active.value = value
+
+    if (props.searchParam != null && props.updateSearchParam) {
+        params[props.searchParam] = toSlug(props.tabs[value]).slice(4)
+    }
 }
 
 onMounted(() => {
-    const { hideSelector, startTab, storage } = props
+    const { hideSelector, searchParam, startTab, storage } = props
 
     hideSelectorActions.value = hideSelector
     if (startTab != undefined) changeActive(startTab)
@@ -73,6 +83,13 @@ onMounted(() => {
             if (storage.hideSelectorOnSet != undefined) {
                 hideSelectorActions.value = storage.hideSelectorOnSet
             }
+        }
+    }
+
+    if (searchParam != null) {
+        const tabParam = params[searchParam]?.toString()
+        if (tabParam && tabParam.length && props.tabs.map(toSlug).includes(toSlug(tabParam))) {
+            changeActive(tabParam)
         }
     }
 })

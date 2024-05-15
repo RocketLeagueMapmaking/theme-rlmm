@@ -11,9 +11,9 @@
                 v-if="settings.watchAll"
                 :storeKey="settings.watchAll.key"
                 :text="settings.watchAll.text"
-            />
+            ><p>{{ settings.watchAll.text }}</p></PreferenceSetting>
 
-            <details v-if="settings.watchPages">
+            <details v-if="settings.watchPages" class="details custom-block">
                 <summary>{{ settings.watchPages.title }}</summary>
                 {{ settings.watchPages.description }}
 
@@ -27,11 +27,11 @@
             </details>
 
             <div class="watch-actions">
-                <div v-if="!util.isNotSubscribed">
+                <div v-if="util.isNotSubscribed.value">
                     <VPButton text="Add" @click="addSubscription()" />
                 </div>
                 <div v-else>
-                    <VPButton style="background-color: var(--vp-c-yellow-1);" text="Update" @click="updateSubscription()" />
+                    <VPButton style="background-color: var(--vp-c-yellow-1); margin-right: 10px;" text="Update" @click="updateSubscription()" />
                     <VPButton style="background-color: var(--vp-c-red-1);" text="Delete" @click="util.unsubsribe()" />
                 </div>
             </div>
@@ -45,21 +45,21 @@ import {
     type SubscriptionOptions,
     useNotificationSubscription,
     useWatchedPages,
+    useStorage,
     type WatchedPages,
 } from '../../../composables/'
 
 import PreferenceSetting from '../../global/PreferenceSetting.vue'
 
-type SubscriptionData =
-    | { type: 'page-update', pages: WatchedPages }
-
-type UserSubscriptionData = Record<
-    SubscriptionData['type'],
-    Omit<SubscriptionData, 'type'>
->
+type UserSubscriptionData = {
+    pages: WatchedPages
+    inbox: boolean
+    events: boolean
+}
 
 const props = defineProps<{
     subscription: SubscriptionOptions
+    storageKeys: Record<Exclude<keyof UserSubscriptionData, 'pages'>, string>
     settings: {
         watchAll?: {
             key: string
@@ -86,9 +86,12 @@ onMounted(() => {
 
 function getUserData (): UserSubscriptionData {
     const pages = watched.getWatchedPages()
+    const storage = useStorage()
 
     return {
-        "page-update": { pages }
+        pages,
+        events: storage.useKey(props.storageKeys.events, null).value === 'true',
+        inbox: storage.useKey(props.storageKeys.inbox, null).value === 'true',
     }
 }
 
@@ -104,11 +107,16 @@ async function updateSubscription () {
     const old = util.data.settings.value
 
     if (old) {
-        if (data['page-update'].pages === 'all' && old['page-update'].pages === 'all') return
-        else if (Array.isArray(data['page-update'].pages) && Array.isArray(old['page-update'].pages)) {
-            if (data['page-update'].pages.length === old['page-update'].pages.length) {
-                if (data['page-update'].pages.every(p => old['page-update'].pages.includes(p))) return
+        const newPages = data.pages, oldPages = old.pages
+        if (newPages === 'all' && oldPages === 'all') return
+        else if (Array.isArray(newPages) && Array.isArray(oldPages)) {
+            if (newPages.length === oldPages.length) {
+                if (newPages.every(p => oldPages.includes(p))) return
             }
+        }
+
+        if (Object.keys(data).filter(k => k !== 'pages').every(key => data[key] === old[key])) {
+            return
         }
     }
 

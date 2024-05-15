@@ -51,17 +51,3 @@ export const ThemeTextComponent = defineComponent<ThemeTextComponentOptions>(
         })
     }
 )
-
-/** @deprecated */
-export const renderTitle = (
-    options: { md: markdownit, enabled?: boolean, tag?: string },
-    text: string,
-) => h(options.tag ?? 'h2', {
-    id: options.enabled
-        ? text
-            .toLowerCase()
-            .replace(/ /g,'-')
-            .replace(/[-]+/g, '-')
-            .replace(/[^\w-]+/g,'')
-        : undefined,
-}, [text])

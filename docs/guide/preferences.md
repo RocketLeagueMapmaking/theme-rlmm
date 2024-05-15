@@ -16,7 +16,7 @@ const storage = useStorage()
 import { __pageData as homePage } from './index.md'
 </script>
 
-<TabsWindow :activeTabStyle="{ backgroundColor: 'var(--vp-c-bg-soft)' }" :tabs="['general', 'notifications', 'guide', 'advanced']">
+<TabsWindow :activeTabStyle="{ backgroundColor: 'var(--vp-c-bg-soft)' }" :tabs="['general', 'notifications', 'guide', 'advanced']" searchParam="tab">
 
 <template #tab-general>
 
@@ -84,17 +84,35 @@ Get push notifications for map making updates
 <VPButton
     text="Send test notification"
     theme="alt"
-    v-if="NotificationManager.hasPermission"
-    @click="NotificationManager.showNotification('Notification', {
+    @click="NotificationManager.worker.value.showNotification('Test notification', {
         icon: '/icons/logo_rlmm_round_144.png',
         body: 'Your notifications are working'
     })"
 />
 
-### Guide updates
+<PreferenceSetting storeKey="rlmm-push-inbox">
+
+Inbox push notifications
+</PreferenceSetting>
+
+<PreferenceSetting storeKey="rlmm-push-events">
+
+Events & contests notifications
+</PreferenceSetting>
+
+### Guide updates <Badge text="experimental" type="warning" />
+
+Get a push notification when the map making guide is updated. You can choose to get a notification when any page is updated or when a selection of pages is updated.
 
 <WatchSubscriptionManager
-    :subscription="{}"
+    :subscription="{
+        subscribeUrl: 'https://docs.rocketleaguemapmaking.workers.dev/notifications/subscriptions',
+        publicKey: 'BDzwCC5BWRxdvRMOlTg8mYv7EANfO0KHWpFGkfOccKPFRtl30p5xA9vIGfcuTgrDa1OSJeN9DBxzGI-ngk7e3-A',
+    }"
+    :storageKeys="{
+        events: 'rlmm-push-events',
+        inbox: 'rlmm-push-inbox',
+    }"
     :settings="{
         watchAll: { text: 'On any changed file', key: 'rlmm-push-all' },
         watchPages: {
@@ -109,6 +127,13 @@ Get push notifications for map making updates
 </template>
 
 <template #tab-guide>
+
+<ActionBlock>
+<slot name="left">
+<p>Take new user experience tour</p>
+</slot>
+<slot name="right"><VPButton text="Start" /></slot>
+</ActionBlock>
 
 ### Launcher
 
@@ -151,16 +176,16 @@ Rocket League installation folder
 Open Steam urls in the Windows app
 </PreferenceSetting>
 
+### Developer
+
 <PreferenceSetting
     storeKey="rlmm-urls-editcms"
     :defaultValue="false"
     type="switch"
 >
 
-Open `Edit this page` links in the CMS
+Show `Edit this page` links for the CMS
 </PreferenceSetting>
-
-### Experimental
 
 :::details Nightly builds
 Feeling adventurous? Try out on of these experimental builds:
@@ -177,6 +202,8 @@ Feeling adventurous? Try out on of these experimental builds:
     </template>
 </ListWindow>
 :::
+
+### Experimental
 
 <PreferenceSetting storeKey="rlmm-use-editor" defaultValue="UDK" type="select" :options="['UDK']">
 

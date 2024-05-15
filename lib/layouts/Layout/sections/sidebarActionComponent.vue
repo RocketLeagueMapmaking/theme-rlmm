@@ -18,8 +18,12 @@ type SidebarItemOptions = Exclude<SideActionItemOptions['action']['item'], Sideb
 
 function getSidebarOptions(options: SidebarItemOptions) {
     const { items, ...item } = options
+
+    // Have one item to enable the carrot icon in the sidebar
     return {
-        items: [],
+        items: [
+            { text: '', }
+        ],
         ...item,
     } satisfies DefaultTheme.SidebarItem
 }
@@ -34,11 +38,11 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="sidebar-action">
+    <div class="sidebar-action" :class="options?.position ?? 'top'">
         <VPButton v-if="options != undefined && options.action.type === 'button'" v-bind="options.action.item" />
 
         <div v-else-if="options != undefined && options.action.type === 'item'">
-            <SidebarItem :depth="2" :item="getSidebarOptions(options.action.item)" />
+            <SidebarItem :depth="4" :item="getSidebarOptions(options.action.item)" />
 
             <div class="sidebar-action-items">
                 <div class="sidebar-action-item" :style="typeof item === 'function' ? item().style : item.style"
@@ -56,7 +60,17 @@ onMounted(() => {
 <style scoped>
 .sidebar-action {
     display: v-bind(displayItem);
+}
+
+.sidebar-action.top {
     margin-top: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.sidebar-action.bottom {
+    border-top: 1px solid var(--vp-c-divider);
+    padding-top: 8px;
 }
 
 .sidebar-action .VPButton {
@@ -65,5 +79,9 @@ onMounted(() => {
 
 .sidebar-action:has(.VPSidebarItem.collapsed) .sidebar-action-items {
     display: none;
+}
+
+.sidebar-action-items {
+    margin-top: -10px;
 }
 </style>

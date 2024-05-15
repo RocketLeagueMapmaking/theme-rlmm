@@ -12,9 +12,25 @@ function useDeviceId () {
     const idKey = 'device-notifications-push-id'
     const storage = useStorage()
 
-    const id = storage.useKey<string>(idKey, <never>crypto.randomUUID())
+    const id = storage.useKey<string>(idKey, null, { writeDefaults: false })
+    if (!id.value) id.value = crypto.randomUUID()
 
     return id
+}
+
+function urlBase64ToUint8Array(base64String: string) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
 }
 
 export function useNotificationSubscription<Data = unknown> (options: SubscriptionOptions) {
@@ -30,14 +46,12 @@ export function useNotificationSubscription<Data = unknown> (options: Subscripti
         return await fetch(options.subscribeUrl + (includeId ? `?id=${id.value}` : ''), {
             method,
             body,
-            headers: {
-                'Content-Type': 'application/json',
-            },
         })
     }
 
     const webSubcribe = async () => {
-        const subscription = await pushManager?.subscribe({ applicationServerKey: options.publicKey, userVisibleOnly: true })
+        const subscription = await worker.value?.pushManager?.subscribe({ applicationServerKey: urlBase64ToUint8Array(options.publicKey), userVisibleOnly: true })
+        console.log([subscription, options.publicKey])
         if (subscription) webSubscription.value = subscription.toJSON()
 
         return subscription
@@ -51,7 +65,7 @@ export function useNotificationSubscription<Data = unknown> (options: Subscripti
             if (!webSubscription.value || !id.value) throw new Error()
 
             const data = await fetchData('POST', false, JSON.stringify({
-                subcription: webSubscription.value,
+                subscription: webSubscription.value,
                 deviceId: id.value,
                 data: options,
             })).then(res => res.ok ? res.json() : undefined)
@@ -78,7 +92,7 @@ export function useNotificationSubscription<Data = unknown> (options: Subscripti
             .then(res => res.ok ? res.json() : undefined)
         if (data) subscriptionData.value = data
 
-        const sub = await pushManager?.getSubscription()
+        const sub = await worker.value?.pushManager?.getSubscription()
             .then(s => s?.toJSON())
         if (sub) webSubscription.value = sub
     }

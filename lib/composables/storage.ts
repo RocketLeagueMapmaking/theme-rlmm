@@ -1,14 +1,14 @@
 import { onMounted, ref } from "vue"
 import { inBrowser, useData } from "vitepress"
 
-import { RLMMThemeConfig } from "../types"
+import { ThemeConfig } from "../types"
 import { useLocalStorage, useSessionStorage } from "@vueuse/core"
 
 // export type WatchedPages =
 //     | 'all'
 //     | string[]
 
-export type ThemeStorageKeys = NonNullable<Required<NonNullable<RLMMThemeConfig['storage']>['keys']>>
+export type ThemeStorageKeys = NonNullable<Required<NonNullable<ThemeConfig['storage']>['keys']>>
 
 export function useStorage<Key extends string = string>() {
     const storage = ref<Storage | null>(null)
@@ -27,7 +27,7 @@ export function useStorage<Key extends string = string>() {
         if (!inBrowser || !window || !window.localStorage) return console.error('No storage found!')
         storage.value = window.localStorage
 
-        const { theme } = useData<RLMMThemeConfig>()
+        const { theme } = useData<ThemeConfig>()
         const options = theme.value.storage?.keys
 
         keys.value = Object.entries(defaultKeys)
@@ -72,7 +72,7 @@ export function useStorage<Key extends string = string>() {
             return list(prefix, value)
         },
 
-        useKey: <T>(...params: Parameters<typeof useLocalStorage<T>>) => {
+        useKey: <T extends string | number>(...params: Parameters<typeof useLocalStorage<T>>) => {
             return useLocalStorage(params[0], params[1], params[2] ?? { writeDefaults: false })
         },
         useSessionKey: useSessionStorage,

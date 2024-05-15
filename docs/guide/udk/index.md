@@ -41,7 +41,7 @@ import { ListWindow } from '../../../lib/'
 
 Publishing a Rocket League custom map to the Steam workshop works different if you own the game on Steam or not.
 
-<TabsWindow :tabs="['Steam', 'Epic Games']" :storage="{ key: 'rlmm-platform' }">
+<TabsWindow :tabs="['Steam', 'Epic Games']" :alignLeft="true" :storage="{ key: 'rlmm-platform' }">
 
 <template #tab-steam>
 Use SteamCMD
