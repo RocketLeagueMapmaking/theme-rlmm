@@ -7,7 +7,6 @@
         "davidanson.vscode-markdownlint",
         "christian-kohler.npm-intellisense",
         "christian-kohler.path-intellisense",
-        "zixuanchen.vitest-explorer",
         "eliostruyf.vscode-front-matter",
         "bierner.github-markdown-preview",
         "vue.vscode-typescript-vue-plugin",
