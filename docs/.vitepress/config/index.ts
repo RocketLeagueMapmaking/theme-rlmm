@@ -26,6 +26,12 @@ export default defineConfig({
         publicDir: '../.vitepress/public',
     },
 
+    transformPageData(pageData, ctx) {
+        if (pageData.relativePath === 'components.md') {
+            pageData.frontmatter.outline = 1
+        }
+    },
+
     head: [
         ['link', { rel: 'manifest', href: domain + 'manifest.json' }],
         ['meta', { name: 'theme-color', content: '#3eaf7c' }],

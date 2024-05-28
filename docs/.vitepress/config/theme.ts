@@ -154,7 +154,7 @@ export default <ThemeConfig> {
                     }
                 ],
             },
-            { text: 'Theme reference', link: '/reference/README' },
+            { text: 'Theme reference', link: '/components' },
         ]
     },
 

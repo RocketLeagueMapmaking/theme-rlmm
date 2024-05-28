@@ -6,7 +6,7 @@ hero:
     name: Rocket League
     text: Map Making
     tagline: Guides, resources, downloads and more!
-    image: https://cdn.discordapp.com/icons/711882968200904715/a_f6d19be947ea81e1eb801e879557440d.gif?size=2048&quality=lossless
+    image: /icons/logo_rlmm_round_1440.png
     actions:
         - theme: brand
           text: Get started

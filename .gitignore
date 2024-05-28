@@ -2,7 +2,7 @@ node_modules
 .frontmatter
 .vscode/*
 !.vscode/extensions.json
-reference
+docs/guide/components.md
 dist
 cache
 .tgz
