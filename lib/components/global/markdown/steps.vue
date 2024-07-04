@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { useSlots, withDefaults } from 'vue'
+import { useSlots } from 'vue'
 
 import { getThemeColor } from '../../../util'
 

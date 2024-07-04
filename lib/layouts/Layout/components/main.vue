@@ -142,6 +142,11 @@ onMounted(async () => {
             if (enabled === 'true' || (enabled == null && defaultValue)) document.documentElement.classList.add(className)
         })
     }
+
+    if (theme.value.compactThemeSwitcher) {
+        document.body.classList.add('compact-theme')
+    }
+
     await updateSlots()
 })
 </script>

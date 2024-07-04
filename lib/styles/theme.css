@@ -15,20 +15,32 @@ option {
     --icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12"/></svg>');
 }
 
+/* Correct for banners */
+
+.VPLocalNavOutlineDropdown .items {
+    top: calc(var(--vp-layout-top-height) + 40px);
+}
+
+@media (max-width: 1400px) {
+    :not(.banner-dismissed) .VPContent.has-sidebar {
+        margin-top: 0px;
+    }
+}
+
 /**
  * Styles for theme switch component. Makes it round
  */
 
-.VPSwitchAppearance {
+.compact-theme .VPSwitchAppearance {
     width: 22px !important;
     height: 21.5px !important;
 }
 
-.dark .VPSwitchAppearance .check {
+.dark .compact-theme .VPSwitchAppearance .check {
     transform: translateX(0px) !important;
 }
 
-.VPSwitch.enabled .check {
+.compact-theme .VPSwitch.enabled .check {
     background-color: var(--vp-c-brand-3);
     transform: translateX(18px);
 }

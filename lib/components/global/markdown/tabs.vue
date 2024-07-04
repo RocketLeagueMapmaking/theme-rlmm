@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, withDefaults } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useStorage } from '../../../composables/';
 import { useUrlSearchParams } from '@vueuse/core';
 

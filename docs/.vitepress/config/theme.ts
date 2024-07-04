@@ -179,6 +179,8 @@ export default <ThemeConfig> {
         }
     },
 
+    compactThemeSwitcher: true,
+
     blocks: {
         feedback: {
             answers: {

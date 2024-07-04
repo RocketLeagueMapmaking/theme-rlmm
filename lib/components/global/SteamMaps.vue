@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineComponent, h, onMounted, ref, withDefaults } from 'vue'
+import { computed, defineComponent, h, onMounted, ref } from 'vue'
 import { useImage } from '@vueuse/core'
 
 import { VPImage } from '../theme'

@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts" generic="Item = Record<string, never>">
-import { onMounted, ref, withDefaults } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import { fetchComponentData } from '../../../util';
 

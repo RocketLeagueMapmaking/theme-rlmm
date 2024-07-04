@@ -31,12 +31,12 @@
         <VPButton size="big" :theme="action.theme ?? 'brand'" v-if="'link' in action" :text="action.text"
             :href="action.link" />
         <VPButton size="big" :theme="action.theme ?? 'brand'" v-else-if="!expanded" :text="action.text"
-            @click="loadMore(action.totalItems)" />
+            @click="loadMore('totalItems' in action ? action.totalItems : -1)" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, withDefaults } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useWindowSize } from '@vueuse/core';
 
 import {
@@ -66,8 +66,22 @@ export interface GridItem {
 export type ShowcaseEvent  = GridItem
 
 export interface Props {
+    /**
+     * The title above the items
+     */
     title: string
+
+    /**
+     * A small text describing what items are
+     */
     description?: string
+
+    /**
+     * The action to show below the items.
+     * Can either:
+     * - show more items
+     * - link to another page
+     */
     action:
     | {
         link: string
@@ -78,10 +92,29 @@ export interface Props {
         totalItems: number
         theme?: 'brand' | 'alt'
     }
+
+    /**
+     * The total amount of items to show
+     */
     amount?: number
+
+    /**
+     * The amount of items in each row
+     */
     rowSize?: number
+
+    /**
+     * Do not show external links in actions
+     */
     disableExternalLinkIcons?: boolean
+    /**
+     * The maximum length of an item's description
+     */
     descriptionLength?: number
+
+    /**
+     * The text to render at the end of the description when cut off
+     */
     descriptionEllipsis?: string
     createSlug?: (item: GridItem) => string
     createUrl?: (item: GridItem) => string
@@ -180,6 +213,14 @@ a {
     flex-direction: row;
     justify-content: center;
     align-items: flex-start;
+}
+
+.showcase-items .VPLink:only-child {
+    width: 50% !important;
+}
+
+.showcase-items:has(.VPLink:only-child) {
+    justify-content: flex-start;
 }
 
 .showcase-item {

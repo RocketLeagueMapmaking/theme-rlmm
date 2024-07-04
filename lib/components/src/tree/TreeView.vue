@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts" generic="Item extends Record<string, any>, Metadata extends object | null = null, BeforeLoadedItem extends object = Item">
-import { type UnwrapRef, onMounted, ref, withDefaults, provide } from 'vue';
+import { type UnwrapRef, onMounted, ref, provide } from 'vue';
 
 import { fetchComponentData } from '../../../util';
 

@@ -14,7 +14,7 @@
             </div>
         </div>
         <!-- Form to show when clicking on an answer -->
-        <div class="feedback-form" v-if="form?.enabled && answer && !submitted && getFields(answer).length > 0">
+        <div class="feedback-form" v-if="form?.enabled && answer && !submitted">
             <div class="feedback-form-fields">
                 <div class="feedback-form-field" v-for="field, i in getFields(answer)">
                     <p>
