@@ -15,14 +15,14 @@ This is a [VitePress](https://vitepress.dev) theme with Rocket League workshop c
 npm install rocketleaguemapmaking/theme-rlmm
 ```
 
-Or you can install from [GitHub Packages](https://github.com/RocketLeagueMapmaking/theme-rlmm/pkgs/npm/theme-rlmm).
+It is recommended to pin the theme to the commit you want to avoid breaking changes.
 
 ## Using the theme
 
 First make an empty TypeScript file in `/.vitepress/theme/index.ts` and add:
 
 ```ts
-import Theme from 'theme-rlmm'
+import Theme from '@rocketleaguemapmaking/theme-rlmm'
 
 export default Theme
 ```
@@ -30,7 +30,7 @@ export default Theme
 Then in your configuration file:
 
 ```ts
-import { defineConfig } from 'theme-rlmm'
+import { defineConfig } from '@rocketleaguemapmaking/theme-rlmm'
 
 export default defineConfig({
     // ...

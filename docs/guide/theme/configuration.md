@@ -9,7 +9,7 @@ See the [official guide](https://vitepress.dev/guide/extending-default-theme#cus
 The theme comes with an `defineConfig` utility function that will add some configurations. These configuration can also be applied manually by using the exported `ThemeDefaultConfig`.
 
 ```ts
-import { defineConfig } from 'theme-rlmm'
+import { defineConfig } from '@rocketleaguemapmaking/theme-rlmm'
 
 export default defineConfig({
     // Config options with typings and jsdocs
@@ -28,7 +28,7 @@ If you don't want to use configuration changes of this theme, use the exported t
 
 ```ts
 import { defineConfigWithTheme } from 'vitepress'
-import { type ThemeConfig } from 'theme-rlmm'
+import { type ThemeConfig } from '@rocketleaguemapmaking/theme-rlmm'
 
 export default defineConfigWithTheme<ThemeConfig>({
     // Config options with typings and jsdocs

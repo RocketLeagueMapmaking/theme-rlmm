@@ -22,7 +22,7 @@ option {
 }
 
 @media (max-width: 1400px) {
-    :not(.banner-dismissed) .VPContent.has-sidebar {
+    :not(.banner-dismissed):not(:has(.VPLocalNav.empty)) .VPContent.has-sidebar {
         margin-top: 0px;
     }
 }

@@ -103,7 +103,7 @@ And then on the page itself escape the file extension and format the route:
 
 ```mdx
 <script setup>
-import { useWatchedPages } from 'vitepress-theme-rlmm'
+import { useWatchedPages } from '@rocketleaguemapmaking/theme-rlmm'
 const watched = useWatchedPages('rlmm-page-')
 </script>
 
@@ -124,7 +124,7 @@ const watched = useWatchedPages('rlmm-page-')
 Utility to interact with the local storage
 
 ```ts
-import { useSettings } from 'vitepress-theme-rlmm'
+import { useSettings } from '@rocketleaguemapmaking/theme-rlmm'
 
 const settings = useSettings()
 const enabled = ref(false)
