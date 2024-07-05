@@ -1,5 +1,6 @@
 export * from './blocks'
 export * from './nav'
+export * from './router'
 export * from './sidebar'
 export * from './sponsors'
 export * from './steam'

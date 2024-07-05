@@ -88,10 +88,17 @@ const homepageSlots = ref<Record<string, (() => VNode | undefined) | undefined>>
 const updateSlots = async () => {
     // TODO: remove when https://github.com/vuejs/vitepress/pull/3654 is merged
     nextTick(() => {
-        document.querySelector('.VPSidebarItem .is-active')?.scrollIntoView({
-            block: 'center',
-            behavior: 'smooth',
-        })
+        const scrollOptions = theme.value.router?.scrollIntoView ?? {}
+
+        const sidebarScrollOptions: ScrollIntoViewOptions | undefined = !(scrollOptions.sidebar ?? true)
+            ? undefined
+            : typeof scrollOptions.sidebar === 'object'
+                ? scrollOptions.sidebar
+                : { behavior: 'smooth', block: 'center' }
+
+        if (sidebarScrollOptions) {
+            document.querySelector('.VPSidebarItem .is-active')?.scrollIntoView(sidebarScrollOptions)
+        }
     })
 
     showReplacer.value = false
@@ -112,8 +119,19 @@ const slots: { slotName: string, node: (() => VNode | undefined) }[] = [
     }
 ]
 
+router.onBeforeRouteChange = async (to) => {
+    const redirectTo = theme.value.router?.redirects?.[to]
+
+    if (redirectTo) {
+        router.go(redirectTo)
+        return false
+    }
+}
+
 router.onAfterRouteChanged = async (to) => {
     await updateSlots()
+    await theme.value.router?.onRouteChanged?.(to)
+
     return await createAnalyticsDataCollector(theme.value.analytics)(to)
 }
 

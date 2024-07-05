@@ -4,6 +4,7 @@ import type {
     BannerOptions,
     NavItem,
     PageBlockOptions,
+    RouterOptions,
     SideActionItemOptions,
     StorageOptions,
     ThemeNotificationOptions,
@@ -57,6 +58,11 @@ export interface ThemeConfig extends DefaultTheme.Config {
      * @default false
      */
     compactThemeSwitcher?: boolean
+
+    /**
+     * @experimental
+     */
+    router?: RouterOptions
 
     /**
      * Options for storing additional (theme) settings in local storage.
