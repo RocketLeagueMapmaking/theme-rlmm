@@ -1,6 +1,6 @@
 import { ThemeConfig } from "../../../lib/";
 
-export default <ThemeConfig> {
+export default <ThemeConfig>{
     externalLinkIcon: true,
     editLink: {
         pattern: 'https://github.com/rocketleaguemapmaking/theme-rlmm/tree/main/docs/guide/:path',
@@ -34,7 +34,7 @@ export default <ThemeConfig> {
                     text: 'Discord',
                     link: 'https://github.com/rocketleaguemapmaking/rl-docs'
                 },
-                { 
+                {
                     text: 'Admin',
                     link: '/admin/index.html',
                     target: '_self',
@@ -52,29 +52,33 @@ export default <ThemeConfig> {
         },
         {
             text: 'Guide',
-            // link: '/udk/',
             items: [
                 {
-                    text: 'UDK',
-                    expanded: true,
-                    link: '/udk/',
-                    description: 'Learn more about UDK',
-                    icon: 'carbon:edit'
-                },
-                {
-                    text: 'Blender',
-                    expanded: true,
-                    link: '/blender/',
-                    description: 'Learn more about Blender',
-                    icon: 'carbon:cube',
-                },
-                {
-                    text: 'Kismet',
-                    expanded: true,
-                    link: '/udk/reference',
-                    description: 'Learn more about kismet',
-                    icon: 'carbon:branch'
-                },
+                    text: '_expanded',
+                    component: 'ExpandedNavMenu',
+                    props: {
+                        items: [
+                            {
+                                text: 'UDK',
+                                link: '/udk/',
+                                description: 'Learn more about UDK',
+                                icon: 'carbon:edit'
+                            },
+                            {
+                                text: 'Blender',
+                                link: '/blender/',
+                                description: 'Learn more about Blender',
+                                icon: 'carbon:cube',
+                            },
+                            {
+                                text: 'Kismet',
+                                link: '/udk/reference',
+                                description: 'Learn more about kismet',
+                                icon: 'carbon:branch'
+                            },
+                        ]
+                    }
+                }
             ]
         },
     ],
@@ -197,7 +201,7 @@ export default <ThemeConfig> {
                             { type: 'textarea', text: 'Feedback' }
                         ]
                     },
-                } 
+                }
             }
         },
     },
@@ -236,8 +240,8 @@ export default <ThemeConfig> {
                 created_at: 1704000000000,
                 title: 'Improved setup script',
                 text: '[The UDK installer](https://github.com/RocketLeagueMapmaking/UDK_RL_Setup) has been improved to remove some manual configuration and steps. Try it out and [let us know](https://discord.com/channels/711882968200904715/712403230516052038) if you run into issues ',
-                inbox: true, 
-                tags: ['tools'],        
+                inbox: true,
+                tags: ['tools'],
             }
         ]
     },

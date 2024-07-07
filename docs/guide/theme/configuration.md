@@ -20,7 +20,6 @@ export default defineConfig({
 :::details Configuration changes
 
 - `transformPageData`: adds all pages paths to `$frontmatter.pages` if [the frontmatter `exposePages: true`](frontmatter#exposepages) is on the current page.
-- `vite`: replaces built-in nav dropdown to add [an expanded view](#expanded-navbar)
 
 :::
 
@@ -49,11 +48,7 @@ To enable the `Edit preferences` button in the sidebar, customize `ThemeConfig.s
 
 ## Expanded Navbar
 
-:::danger Theme configuration
-To use this expanded view use [the theme configuration](#theme-configuration) in your config
-:::
-
-To enable a larger navigation dropdown menu (see the `Guide` nav dropdown) set the `expanded` property on **all items** to `true`.
+To enable a larger navigation dropdown menu (see the `Guide` nav dropdown) use the `ExpandedNavMenu` component.
 Note that all children on all items will not be used!
 
 Besides the default `NavItemWithLink` options, the following options can be set for each item:
@@ -65,28 +60,39 @@ Besides the default `NavItemWithLink` options, the following options can be set 
 ```ts
 const expandedNavItems = [
     {
-        // Default NavItem options
         text: 'UDK',
         link: '/udk/',
-        // Set on all items to `true`
-        expanded: true,
         description: 'Learn more about UDK',
         icon: 'carbon:edit',
     },
     {
         text: 'Blender',
-        expanded: true,
         link: '/blender/',
         description: 'Learn more about Blender',
         icon: 'carbon:cube',
     },
     {
         text: 'Kismet',
-        expanded: true,
         link: '/udk/reference',
         description: 'Learn more about kismet',
         icon: 'carbon:branch'
     },
+]
+
+export default nav: DefaultTheme.NavItem[] = [
+    {
+        text: 'Guide',
+        items: [
+            {
+                // Identifier / key text
+                text: '_expanded',
+                component: 'ExpandedNavMenu',
+                props: {
+                    items: expandedNavItems,
+                }
+            }
+        ]
+    }
 ]
 ```
 

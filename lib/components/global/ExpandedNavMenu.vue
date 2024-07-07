@@ -1,36 +1,30 @@
 <template>
-    <BaseMenu :items="items">
-        <template #item="{ item }">
-            <div v-if="item">
-                <VPLink
-                    :class="{ active: isActiveLink(page.relativePath, item.activeMatch || item.link, !!item.activeMatch) }"
-                    :href="item.link" :target="item.target" :rel="item.rel">
-                    <div class="expanded-item-container" :style="getStyle(item)">
-                        <div class="expanded-item">
-                            <Icon v-if="item.icon" :icon="item.icon" width="28" />
-                            <div class="expanded-item-text">
-                                <p>{{ item.text }}</p>
-                                <p class="description" v-if="item.description">{{ item.description }}</p>
-                            </div>
-                        </div>
-                        <div class="expanded-badge">
-                            <Badge v-if="item.badge?.text" :type="item.badge?.type ?? 'info'" :text="item.badge.text" />
+    <div v-for="item in items">
+        <div v-if="item">
+            <VPLink
+                :class="{ active: isActiveLink(page.relativePath, item.activeMatch || item.link, !!item.activeMatch) }"
+                :href="item.link" :target="item.target" :rel="item.rel">
+                <div class="expanded-item-container" :style="getStyle(item)">
+                    <div class="expanded-item">
+                        <Icon v-if="item.icon" :icon="item.icon" width="28" />
+                        <div class="expanded-item-text">
+                            <p>{{ item.text }}</p>
+                            <p class="description" v-if="item.description">{{ item.description }}</p>
                         </div>
                     </div>
-                </VPLink>
-            </div>
-        </template>
-        <template #default>
-            <slot />
-        </template>
-    </BaseMenu>
+                    <div class="expanded-badge">
+                        <Badge v-if="item.badge?.text" :type="item.badge?.type ?? 'info'" :text="item.badge.text" />
+                    </div>
+                </div>
+            </VPLink>
+        </div>
+    </div>
 </template>
 
 <script lang="ts" setup>
 import { useData } from 'vitepress';
 import { isActive } from 'vitepress/dist/client/shared'
 
-import BaseMenu from './internal/Menu.vue'
 import { ThemeConfig } from '../../types';
 
 const props = defineProps<{
@@ -42,10 +36,10 @@ const isActiveLink: IsActive = isActive
 
 const { page } = useData<ThemeConfig>()
 
-function getStyle (item) {
+function getStyle(item) {
     const isNotLast = props.items?.findIndex(x => x.text === item.text) !== (props.items?.length ?? - 0) - 1
 
-    return { 
+    return {
         borderBottom: isNotLast
             ? '1px solid var(--vp-c-border)'
             : undefined
@@ -110,18 +104,18 @@ function getStyle (item) {
 
 /* Link */
 .link {
-  display: block;
-  /* border-radius: 6px; */
-  color: var(--vp-c-text-1);
-  transition: background-color 0.25s, color 0.25s;
+    display: block;
+    /* border-radius: 6px; */
+    color: var(--vp-c-text-1);
+    transition: background-color 0.25s, color 0.25s;
 }
 
 .link:hover {
-  color: var(--vp-c-brand-1);
-  background-color: var(--vp-c-default-soft);
+    color: var(--vp-c-brand-1);
+    background-color: var(--vp-c-default-soft);
 }
 
 .link.active {
-  color: var(--vp-c-brand-1);
+    color: var(--vp-c-brand-1);
 }
 </style>
