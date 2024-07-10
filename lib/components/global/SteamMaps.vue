@@ -2,8 +2,16 @@
     <Suspense v-if="enabled">
         <div class="container" ref="containerRef">
             <div class="steam-maps">
-                <p class="steam-maps-title" v-if="title.length > 0" v-html="title">
+                <p
+                    class="steam-maps-title"
+                    :class="{ 'details': componentDetails != undefined }"
+                    v-if="componentTitle && componentTitle.length > 0"
+                    v-html="componentTitle"
+                    :title="componentDetails"
+                    @click="onComponentTitleClick"
+                >
                 </p>
+
                 <div class="steam-map" v-for="map, index in maps" :key="map.id">
                     <span class="steam-maps-icon vpi-chevron-left" v-if="showIcon(index, 'left')"
                         @click="goToNextMap(true, -1)" />
@@ -52,10 +60,23 @@ type SteamMapIconType =
     | 'left'
     | 'right'
 
+type SteamSortType =
+    | 'created'
+    | 'updated'
+
 export interface Props {
     amount?: number
-    title?: string
-    sortBy?: 'created' | 'updated'
+    title?:
+        | string
+        | {
+            text: string
+            title?: string
+            switchSortBy?: {
+                prefix: Record<SteamSortType, string>
+                initial: SteamSortType
+            }
+        }
+    sortBy?: SteamSortType
     urlProtocol?:
     | 'setting'
     | 'setting-windows'
@@ -97,6 +118,26 @@ const props = withDefaults(defineProps<Props>(), {
     maxLengthUsername: 24,
 })
 
+const currentSortBy = ref<SteamSortType>(typeof props.title !== 'string' ? props.title.switchSortBy?.initial ?? props.sortBy : props.sortBy)
+
+const componentDetails = computed(() => typeof props.title === 'string' ? undefined : props.title.title)
+const componentTitle = computed(() => {
+    if (typeof props.title === 'string' || !props.title) return props.title
+    else if (props.title.switchSortBy == undefined) return props.title.text
+    else {
+        const prefix = props.title.switchSortBy.prefix[currentSortBy.value]
+        return `<span>${prefix}</span> ${props.title.text}`
+    }
+})
+
+async function onComponentTitleClick () {
+    if (typeof props.title === 'string' || props.title.switchSortBy == undefined) return
+    const options: SteamSortType[] = ['created', 'updated']
+
+    currentSortBy.value = options.filter(o => o !== currentSortBy.value)[0]
+    maps.value = await fetchSteamMaps(props)
+}
+
 function itemPageUrl(map: SteamMap) {
     const { id } = map
     const url = `https://steamcommunity.com/sharedfiles/filedetails/?id=${id}`
@@ -125,8 +166,8 @@ function itemDownloadUrl(map: SteamMap) {
 }
 
 async function fetchSteamMaps(options: Required<Props>) {
-    const { amount, handleException, sortBy } = options
-    const url = `https://ghostrider-05.com/workshop/raw/recent?amount=${amount}&time_key=${sortBy}`
+    const { amount, handleException } = options
+    const url = `https://ghostrider-05.com/workshop/raw/recent?amount=${amount}&time_key=${currentSortBy.value}`
 
     const response = await fetch(url)
         .then(res => res.json() as Promise<SteamMap[]>)
@@ -240,6 +281,11 @@ onMounted(async () => {
 
 .steam-maps-title :deep(span) {
     color: var(--vp-c-brand-1);
+}
+
+.steam-maps-title.details:hover {
+    cursor: pointer;
+    font-style: italic;
 }
 
 .steam-maps-icon {

@@ -46,8 +46,9 @@ export const enhanceApp: EnhanceFunction = async (ctx) => {
     app.component('ActionBlock', ActionBlock)
     app.component('ExpandedNavMenu', ExpandedNavMenu)
     app.component('ItemGrid', ItemGrid)
-    /** @deprecated */
-    app.component('EventShowcase', ItemGrid)
     app.component('PreferenceSetting', PreferenceSetting)
     app.component('SteamMaps', SteamMaps)
+
+    /** @deprecated */
+    app.component('EventShowcase', ItemGrid)
 }
