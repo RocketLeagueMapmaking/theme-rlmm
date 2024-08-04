@@ -31,6 +31,38 @@ export interface BaseNotificationAction {
     externalLinkIcon?: boolean
 }
 
+export enum ThemeNotificationContext {
+    /**
+     * Only on {projectname}.pages.dev
+     */
+    PagesDev = 0,
+
+    /**
+     * Only on {commit}.{projectname}.pages.dev
+     */
+    PagesDevCommit = 1,
+
+    /**
+     * Only on {branch}.{projectname}.pages.dev
+     */
+    PagesDevBranch = 2,
+
+    /**
+     * Only on localhost using docs:dev
+     */
+    LocalDev = 3,
+
+    /**
+     * Only on localhost using docs:preview
+     */
+    LocalPreview = 4,
+
+    /**
+     * Only on the production website
+     */
+    Production = 5,
+}
+
 export interface BaseNotification {
     /**
      * The unique id of the banner.
@@ -75,6 +107,11 @@ export interface BaseNotification {
          */
         end?: number
     }
+
+    /**
+     * The allowed context(s) where to show this notification
+     */
+    contexts?: ThemeNotificationContext[]
 
     /**
      * Adds an action button to show more or activate outside of the notification

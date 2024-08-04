@@ -1,4 +1,5 @@
-import { ThemeConfig } from "../../../lib/";
+import type { ThemeConfig } from "../../../lib/";
+import { ThemeNotificationContext } from "../../../lib/config";
 
 export default <ThemeConfig>{
     externalLinkIcon: true,
@@ -167,20 +168,32 @@ export default <ThemeConfig>{
     ],
 
     banner: {
-        data: {
-            id: 'banner-contest-6',
-            action: {
-                text: 'Sponsor contests',
-                externalLinkIcon: true,
-                theme: 'brand',
-                href: 'https://patreon.com/rocketleaguemapmaking',
-                style: { color: 'inherit' },
+        data: [
+            {
+                id: 'local-dev',
+                created_at: 1705000000000,
+                color: 'linear-gradient(90deg, var(--vp-c-red-3) 0%, var(--vp-c-brand-1) 50%, var(--vp-c-red-3) 100%)',
+                text: 'You are browsing the beta docs!',
+                contexts: [
+                    ThemeNotificationContext.LocalDev,
+                    ThemeNotificationContext.PagesDevCommit,
+                ],
             },
-            created_at: 1705000000000,
-            dismissable: true,
-            color: 'linear-gradient(90deg, var(--vp-c-brand-3) 0%, var(--vp-c-brand-1) 50%, var(--vp-c-indigo-3) 100%)',
-            text: 'Map making contest 6 is now over! [See the winners](https://discord.com/channels/711882968200904715/711883463871037510/1169509851832000523)'
-        }
+            {
+                id: 'banner-contest-6',
+                action: {
+                    text: 'Sponsor contests',
+                    externalLinkIcon: true,
+                    theme: 'brand',
+                    href: 'https://patreon.com/rocketleaguemapmaking',
+                    style: { color: 'inherit' },
+                },
+                created_at: 1705000000000,
+                dismissable: true,
+                color: 'linear-gradient(90deg, var(--vp-c-brand-3) 0%, var(--vp-c-brand-1) 50%, var(--vp-c-indigo-3) 100%)',
+                text: 'Map making contest 6 is now over! [See the winners](https://discord.com/channels/711882968200904715/711883463871037510/1169509851832000523)'
+            }
+        ],
     },
 
     compactThemeSwitcher: true,

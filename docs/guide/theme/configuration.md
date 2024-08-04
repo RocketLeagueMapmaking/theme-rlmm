@@ -85,7 +85,7 @@ export default nav: DefaultTheme.NavItem[] = [
         items: [
             {
                 // Identifier / key text
-                text: '_expanded',
+                text: 'expanded_menu',
                 component: 'ExpandedNavMenu',
                 props: {
                     items: expandedNavItems,
@@ -98,6 +98,17 @@ export default nav: DefaultTheme.NavItem[] = [
 
 ## Notifications
 
+All theme notifications (banner and inbox) have the following options:
+
+- `id`: this is used to identify if this notification has been dismissed in the local storage.
+- `time`: this can be used to set custom start and end times for when to show the notification
+- `contexts`: this can be used to only show the notification on local development, staging or production.
+
+A notification will be shown if:
+
+- `contexts` is defined: if the current site is present in one of the contexts
+- `time` is defined: if the current epoch is after `time.begin`, if specified, and before `time.end`, if specified.
+
 ### Banner
 
 You can display a notification banner at the top of the page
@@ -108,12 +119,24 @@ export default defineConfigWithTheme<ThemeConfig>({
         banner: {
             data: {
                 id: 'banner-unique',
-                html: 'My banner!',
+                text: 'My banner!',
             },
         },
     },
 })
 ```
+
+Banners can also have a cooldown (set on the banner or in the theme options) that allow the banner to appear again after N days from when an user dismissed the banner, if the banner has the option to be dismissed. The default cooldown is to never show banners again.
+
+You can also set the banner data to an array of banner notifications. The first valid banner will be shown from the array. When that banner is dismissed, the next valid banner (if any) will be shown if `showNextBannerAfterDismiss` is set. Otherwise the next valid banner will be shown on the next page mount.
+
+A banner is valid to be shown if general notifications conditions are met and if:
+
+- `$frontmatter.banner` is not `false` on the current page
+- `themeConfig.banner` has banner data
+- `themeConfig.banner.enabled` does not return `false` for the current page
+- `banner.id` is a string
+- a banner is not dismissed or the cooldown for the banner has been over
 
 ### Push notifications
 

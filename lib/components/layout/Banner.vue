@@ -1,12 +1,12 @@
 <!-- From vitepress issue: https://github.com/faker-js/faker/pull/1487/files -->
 <template>
-    <div v-if="isMounted" ref="el" class="banner" :style="{ background: bgColor }">
+    <div v-if="isMounted && banner" ref="el" class="banner" :style="{ background: bgColor }">
         <div class="text">
             <div v-html="html"></div>
-            <NotificationAction :action="action" @clicked="() => themeOptions?.onClicked?.(id)" />
+            <NotificationAction :action="banner.action" @clicked="() => themeOptions?.onClicked?.(banner!.id)" />
         </div>
 
-        <button type="button" :aria-label="dismissLabel" @click="dismiss" v-if="dismissable">
+        <button type="button" :aria-label="dismissLabel" @click="dismiss" v-if="banner.dismissable ?? true">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                 <path
                     d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
@@ -26,7 +26,8 @@ import { useNotifications } from '../../composables';
 import { getThemeColor, renderText } from '../../util';
 import type { BannerNotification, ThemeConfig } from '../../types'
 
-const banner = defineProps<BannerNotification>();
+const props = defineProps<{ banners: BannerNotification[] }>();
+const banner = ref<BannerNotification>()
 
 const { 
     page,
@@ -34,7 +35,17 @@ const {
 } = useData<ThemeConfig>()
 
 const className = 'banner-dismissed'
-const bgColor = getThemeColor(banner.color ?? themeOptions?.color ?? 'brand')
+const MS_IN_DAY = 8.64e7
+const DEFAULT_COOLDOWN = -1
+
+function parseTime (ms: string) {
+    try {
+        return parseInt(ms)
+    } catch {
+        return 0
+    }
+}
+
 const dismissLabel = themeOptions?.dismissButtonLabel ?? 'Dismiss banner'
 
 const el = ref<HTMLElement>();
@@ -52,34 +63,52 @@ watchEffect(() => {
     }
 });
 
-const html = computed(() => renderText(banner.text))
+const html = computed(() => renderText(banner.value?.text ?? ''))
+const bgColor = computed(() => getThemeColor(banner.value?.color ?? themeOptions?.color ?? 'brand'))
 
 const restore = (key: string | undefined, cls: string) => {
-    const saved = key ? localStorage.getItem(key) : undefined;
-    const pageEnabled = themeOptions?.enabled?.(page.value) ?? true;
+    if (!key) return false
+    let isRestored = false
 
-    const show = saved ? saved !== 'false' && saved > new Date().toString() : false && pageEnabled
-    if (show || key == undefined || !notifications.isActive(banner)) {
-        document.documentElement.classList.add(cls);
+    const saved = localStorage.getItem(key);
+    const pageEnabled = themeOptions?.enabled?.(page.value, key) ?? true;
+
+    const isDismissed = saved ? (saved === 'false' || (Date.now() < parseTime(saved))) : false
+    if (!isDismissed && pageEnabled && key != undefined) {
+        document.documentElement.classList.remove(cls);
+        isRestored = true
     }
+
+    return isRestored
 };
 
-const dismiss = () => {
-    if (!banner.id) return console.error('Cannot dismiss no banner!')
+function setActiveBanner (setBanner = true) {
+    document.documentElement.classList.add(className);
+    if (!setBanner) return
 
-    const cooldown = banner.cooldown ?? themeOptions?.cooldown ?? -1
+    for (const notification of props.banners.filter(b => notifications.isActive(b))) {
+        if (banner.value == undefined) {
+            if (restore(notification.id, className)) banner.value = notification
+        }
+    }
+}
+
+const dismiss = () => {
+    if (!banner.value?.id) return console.error('Cannot dismiss no banner!')
+
+    const cooldown = banner.value.cooldown ?? themeOptions?.cooldown ?? DEFAULT_COOLDOWN
 
     localStorage.setItem(
-        banner.id,
-        cooldown < 0 ? 'false' : (Date.now() + 8.64e7 * cooldown).toString() // current time + n day
+        banner.value.id,
+        cooldown < 0 ? 'false' : (Date.now() + MS_IN_DAY * cooldown).toString() // current time + n day
     );
-    document.documentElement.classList.add(className);
 
-    themeOptions?.onDismissed?.(banner.id)
+    themeOptions?.onDismissed?.(banner.value.id)
+    setActiveBanner(themeOptions?.showNextBannerAfterDismiss ?? false)
 };
 
 onMounted(() => {
-    restore(banner.id, className)
+    setActiveBanner()
 })
 </script>
 

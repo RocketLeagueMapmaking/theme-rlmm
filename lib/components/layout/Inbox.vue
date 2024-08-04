@@ -44,7 +44,7 @@ import { onClickOutside, useToNumber, useToggle } from '@vueuse/core';
 
 import NotificationAction from './internal/NotificationAction.vue';
 
-import { useStorage, useNotification } from '../../composables';
+import { useStorage, useNotifications } from '../../composables';
 import { renderText } from '../../util';
 import type { NavInboxIcon, NavInboxOptions, NavStateOption, ThemeNotification } from '../../types';
 
@@ -56,16 +56,18 @@ const props = defineProps<{
 const inboxRef = ref(null), inboxIconRef = ref(null)
 const hasRead = ref(false)
 
+const notifications = useNotifications()
 const storage = useStorage()
 const [open, toggle] = useToggle()
 
 const hideInbox = storage.useKey<string>(storage.themeKeys.value.hideNotificationInbox, null)
 const lastOpened = storage.useKey<string>(storage.themeKeys.value.notificationInboxLastOpened, null)
 
-const inboxNotifications = props.notifications
-    .filter(n => n.inbox === true)
-    .slice(0, props.options?.amount ?? 0)
-    .sort((a, b) => useNotification(b).startTime - useNotification(a).startTime)
+const inboxNotifications = notifications.filter(props.notifications, {
+    inbox: true,
+    max: props.options?.amount ?? 0,
+    sort: true,
+})
 
 const unreadCount = computed(() => {
     const last = useToNumber(lastOpened.value ?? '-1').value
@@ -74,10 +76,7 @@ const unreadCount = computed(() => {
         ? 0
         : (last < 0
             ? inboxNotifications.length
-            : inboxNotifications.filter(n => {
-                const notif = useNotification(n)
-                return notif.isActive && notif.startTime > last
-            }).length
+            : inboxNotifications.filter(n => notifications.isUnread(n, last)).length
         )
 })
 

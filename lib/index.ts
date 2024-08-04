@@ -9,6 +9,7 @@ export * from './components/export'
 export * from './composables/'
 
 export type * from './types'
+export { ThemeNotificationContext } from './types'
 
 export default {
     extends: DefaultTheme,

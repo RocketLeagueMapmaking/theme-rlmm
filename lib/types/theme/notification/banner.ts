@@ -22,10 +22,11 @@ export interface BannerNotification extends BaseNotification {
 
 export interface BannerOptions {
     /**
-     * Whether to show the banner on the current page
+     * Whether to show a banner on the current page
      * @param page The current page data
+     * @param id The id of the banner
      */
-    enabled?: (page: PageData) => boolean
+    enabled?: (page: PageData, id: string) => boolean
 
     /**
      * The (default) banner background color
@@ -55,7 +56,9 @@ export interface BannerOptions {
     /**
      * The data of the notification banner to display
      */
-    data?: BannerNotification
+    data?:
+        | BannerNotification
+        | BannerNotification[]
 
     /**
      * The url to fetch the notification.
@@ -68,4 +71,11 @@ export interface BannerOptions {
      * @default 'Dismiss banner'
      */
     dismissButtonLabel?: string
+
+    /**
+     * When a banner has been dismissed & another banner is valid to be shown,
+     * directly show that banner. Otherwise the banner will be shown on the next mount.
+     * @default false
+     */
+    showNextBannerAfterDismiss?: boolean
 }

@@ -6,6 +6,8 @@ title: Composables
 
 ## useNotifications
 
+You can use this composable to check if the user has granted access for sending push notifications and asking permission otherwise.
+
 :::details Example
 
 ```mdx
@@ -54,7 +56,11 @@ const NotificationManager = useNotifications()
 
 :::
 
+This also has methods related to [theme notifications](configuration#notifications).
+
 ### Subscriptions
+
+To have permission for sending notifications at any time, use the [Push API](https://developer.mozilla.org/en-US/docs/Web/API/Push_API) with the `useNotificationSubscription` composable.
 
 ```ts
 interface UserSettings {

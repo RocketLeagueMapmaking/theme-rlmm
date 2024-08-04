@@ -1,6 +1,8 @@
 import { defineConfigWithTheme, type UserConfig } from 'vitepress'
 import type { ThemeConfig } from './types'
 
+export { ThemeNotificationContext } from './types'
+
 export const ThemeDefaultConfig = {
     transformPageData(pageData, ctx) {
         if (pageData.frontmatter.exposePages === true) {

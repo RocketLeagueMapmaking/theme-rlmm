@@ -36,7 +36,7 @@ export default defineAsyncComponent({
             theme: { value: theme },
         } = useData<ThemeConfig>()
 
-        const banner = await fetchComponent<false | BannerNotification>(theme.banner)
+        const banner = await fetchComponent<false | BannerNotification | BannerNotification[]>(theme.banner)
         const notifications = await fetchComponent(theme.notifications) ?? []
 
         return h(MainLayout, {
