@@ -1,6 +1,10 @@
 import type { ThemeConfig } from "../../../lib/";
 import { ThemeNotificationContext } from "../../../lib/config";
 
+export const rewrites: Record<string, string> = {
+    'udk/00_start.md': 'udk/start.md',
+}
+
 export default <ThemeConfig>{
     externalLinkIcon: true,
     editLink: {
@@ -94,6 +98,10 @@ export default <ThemeConfig>{
                         link: '/udk/'
                     },
                     {
+                        text: 'Start',
+                        link: '/udk/start',
+                    },
+                    {
                         text: 'References',
                         link: '/udk/reference',
                     }
@@ -166,6 +174,8 @@ export default <ThemeConfig>{
     socialLinks: [
         { icon: 'github', link: 'https://github.com/rocketleaguemapmaking/rl-docs' }
     ],
+
+    // theme-rlmm options
 
     banner: {
         data: [
@@ -257,6 +267,10 @@ export default <ThemeConfig>{
                 tags: ['tools'],
             }
         ]
+    },
+
+    router: {
+        redirects: rewrites,
     },
 
     sidebarAction: {
