@@ -29,6 +29,7 @@ import { ThemeConfig } from '../../types';
 
 const props = defineProps<{
     items?: any[]
+    screenMenu?: boolean
 }>()
 
 type IsActive = (currentPath: string, matchPath: string, asRegex?: boolean) => boolean
