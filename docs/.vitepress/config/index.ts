@@ -1,5 +1,5 @@
 import { defineConfig } from '../../../lib/config'
-import themeConfig from './theme'
+import themeConfig, { rewrites } from './theme'
 
 const domain = 'https://theme-rlmm.pages.dev/'
 
@@ -15,6 +15,8 @@ export default defineConfig({
     markdown: {
         headers: true,
     },
+
+    rewrites,
 
     srcDir: './guide',
     srcExclude: ['**/flowchart/questions/*.md'],

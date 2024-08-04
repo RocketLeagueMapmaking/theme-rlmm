@@ -106,6 +106,21 @@ const updateSlots = async () => {
     if (Object.keys(homepageSlots.value).length > 0) showReplacer.value = true
 }
 
+function redirectRoute (to: string) {
+    const redirects = theme.value.router?.redirects ?? {}
+    const options = [to + '.md', to.slice(0, -'.html'.length) + '.md']
+
+    const index = options.findIndex(route => redirects[route])
+    const redirectTo: string | undefined = index > - 1 ? redirects[options[index]] : undefined
+
+    console.debug('Checking custom redirect', { to, redirect: redirectTo, redirects, options })
+
+    if (redirectTo) {
+        router.go(redirectTo.slice(0, -'.md'.length))
+        return false
+    } else return true
+}
+
 const slots: { slotName: string, node: (() => VNode | undefined) }[] = [
     {
         node: () => theme.value.sidebarAction
@@ -120,12 +135,7 @@ const slots: { slotName: string, node: (() => VNode | undefined) }[] = [
 ]
 
 router.onBeforeRouteChange = async (to) => {
-    const redirectTo = theme.value.router?.redirects?.[to]
-
-    if (redirectTo) {
-        router.go(redirectTo)
-        return false
-    }
+    return redirectRoute(to)
 }
 
 router.onAfterRouteChanged = async (to) => {
@@ -150,6 +160,12 @@ function iterateStorage<T>(
 
 // Apply colors from local storage
 onMounted(async () => {
+    if (theme.value.router?.redirectOnMounted ?? true) {
+        if (!redirectRoute(document.location.pathname.slice(1))) {
+            return
+        }
+    }
+
     if (theme.value.storage) {
         iterateStorage(theme.value.storage.colorKeys, (cssName, value, defaultValue) => {
             if ((value != null && !['true', 'false'].includes(value)) || defaultValue != undefined) {
