@@ -1,7 +1,7 @@
 # theme-rlmm
 
 > [!NOTE]
-> This is the (future) theme for [the Rocket League map making guide][docs_repo]. For guide content related issues, go to the [docs repo][docs_repo]
+> This is the theme for [the Rocket League map making guide][docs_repo]. For guide content related issues, go to the [docs repo][docs_repo]
 
 Note that is theme is solely intended for the RLMM guide. While making some generic theme improvements, it will also export Rocket League (custom maps) related components. This project does not follow semver, can introduce breaking changes and may have hardcoded configuration for the RLMM repo.
 
@@ -38,4 +38,4 @@ Currently planned features can be found in the [GitHub project][project].
 
 [docs_repo]: https://github.com/rocketleaguemapmaking/rl-docs
 [docs]: https://theme-rlmm.pages.dev/
-[project]: https://github.com/orgs/RocketLeagueMapmaking/projects/3?pane=issue&itemId=19820595
+[project]: https://github.com/orgs/RocketLeagueMapmaking/projects/3
