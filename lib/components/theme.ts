@@ -5,7 +5,7 @@ import {
     VPImage,
 } from 'vitepress/theme'
 
-import VPFeatures from 'vitepress/dist/client/theme-default/components/VPFeatures.vue'
+import VPFeatures, { type Feature } from 'vitepress/dist/client/theme-default/components/VPFeatures.vue'
 import VPLink from 'vitepress/dist/client/theme-default/components/VPLink.vue'
 import VPSwitch from 'vitepress/dist/client/theme-default/components/VPSwitch.vue'
 import VPSwitchAppearance from 'vitepress/dist/client/theme-default/components/VPSwitchAppearance.vue'
@@ -28,4 +28,5 @@ export {
     VPLink,
     VPSwitch,
     VPSwitchAppearance,
+    type Feature,
 }
