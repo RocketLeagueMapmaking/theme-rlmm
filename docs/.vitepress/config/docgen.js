@@ -1,6 +1,9 @@
 export default {
     componentsRoot: 'lib/components/',
-    components: '**/*.vue',
+    components: [
+        'global/**/*.vue',
+        'src/**/*.vue',
+    ],
     outDir: 'docs/guide',
     outFile: 'components.md',
 }

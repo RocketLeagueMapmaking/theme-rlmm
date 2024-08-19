@@ -33,6 +33,11 @@ This will render as markdown text:
 In a markdown editor, you will also see the second example highlighted indicating that it will be rendered as markdown.
 :::
 
+See [the component reference](../components.md).
+
+<details class="details custom-block">
+<summary>Legacy reference</summary>
+
 ## ActionBlock <Badge type="info" text="general component" />
 
 Renders a highlighted section. To place it at the top or bottom of the page use the [`blocks`](./frontmatter.md#blocks) frontmatter option on a page.
@@ -420,6 +425,8 @@ This will open the map on clicking using the [url protocol](#url-protocol).
 <SteamMaps :amount="1" :displayTime="-1" :disableClick="true"/>
 
 :::
+
+</details>
 
 ## Misc
 

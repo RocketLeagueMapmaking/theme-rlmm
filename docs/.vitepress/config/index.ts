@@ -31,6 +31,7 @@ export default defineConfig({
     transformPageData(pageData, ctx) {
         if (pageData.relativePath === 'components.md') {
             pageData.frontmatter.outline = 1
+            pageData.frontmatter.aside = 'left'
         }
     },
 

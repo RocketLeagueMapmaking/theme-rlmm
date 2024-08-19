@@ -91,7 +91,7 @@ onMounted(() => {
 
     if (typeof value.value === 'string' && cssColor) {
         cssColor.value = value.value.toString()
-    } else if (cssColor) {
+    } else if (cssColor?.value) {
         value.value = cssColor.value
     }
 

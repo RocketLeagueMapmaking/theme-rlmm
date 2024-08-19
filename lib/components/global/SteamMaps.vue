@@ -1,6 +1,6 @@
 <template>
     <Suspense v-if="enabled">
-        <div class="container" ref="containerRef">
+        <div class="container" :style="containerStyle" ref="containerRef">
             <div class="steam-maps">
                 <p
                     class="steam-maps-title"
@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineComponent, h, onMounted, ref } from 'vue'
+import { computed, defineComponent, h, onMounted, ref, type StyleValue } from 'vue'
 import { useImage } from '@vueuse/core'
 
 import { VPImage } from '../theme'
@@ -64,35 +64,95 @@ type SteamSortType =
     | 'created'
     | 'updated'
 
+interface SteamTitleOptions {
+    /**
+     * The text for the title.
+     */
+    text: string
+    /**
+     * The content for the title attribute. Shown on hovering the text.
+     */
+    title?: string
+    /**
+     * Allow switching between new or updated maps
+     */
+    switchSortBy?: {
+        /**
+         * @default true if initial and prefix are provided
+         */
+        enabled?: boolean
+        prefix: Record<SteamSortType, string>
+        initial: SteamSortType
+    }
+}
+
 export interface Props {
+    /**
+     * The amount of maps to display
+     */
     amount?: number
+    /**
+     * The title above the map(s)
+     */
     title?:
         | string
-        | {
-            text: string
-            title?: string
-            switchSortBy?: {
-                prefix: Record<SteamSortType, string>
-                initial: SteamSortType
-            }
-        }
+        | SteamTitleOptions
+    /**
+     * Whether to show recent published or updated maps
+     */
     sortBy?: SteamSortType
+    /**
+     * Where to open Steam urls
+     */
     urlProtocol?:
     | 'setting'
     | 'setting-windows'
     | 'app'
     | 'app-windows'
     | 'browser'
+    /**
+     * The amount of ms before the next map is shown. Set to a negative number to disable this
+     */
     displayTime?: number
+    /**
+     * Change the [clicking behaviour](#click-action)
+     */
     disableClick?: boolean
+    /**
+     * Option to disable the component
+     */
     enabled?: boolean
+    /**
+     * Whether to have the arrow icons enabled, or only the left or right arrow.
+     */
     iconsEnabled?:
     | boolean
     | Record<SteamMapIconType, boolean>
+    /**
+     * The template to use for downloading maps
+     */
     downloadUrlTemplate?: string | ((id: string) => string) | null
+    /**
+     * The maximum length of the map title
+     */
     maxLengthTitle?: number
+    /**
+     * The maximum length of the creator name
+     */
     maxLengthUsername?: number
+    /**
+     * Additional styles for the component's container
+     */
+    containerStyle?: StyleValue
+    /**
+     * Method to handle errors / empty responses
+     * @param err The error that is thrown
+     */
     handleException?: (err: unknown) => void
+    /**
+     * Add more actions beside the default ones (view, download)
+     * @param map The map that is currently displayed
+     */
     addActions?: (map: SteamMap) => { text: string, link: string }[]
 }
 
@@ -116,14 +176,24 @@ const props = withDefaults(defineProps<Props>(), {
     downloadUrlTemplate: null,
     maxLengthTitle: 30,
     maxLengthUsername: 24,
+    containerStyle: () => ({}),
 })
+
+defineSlots<{
+    /**
+     * The content to render when fetching the maps failed
+     * @default 'Loading...'
+     * @param props 
+     */
+    fallback(props: {}): any
+}>()
 
 const currentSortBy = ref<SteamSortType>(typeof props.title !== 'string' ? props.title.switchSortBy?.initial ?? props.sortBy : props.sortBy)
 
 const componentDetails = computed(() => typeof props.title === 'string' ? undefined : props.title.title)
 const componentTitle = computed(() => {
     if (typeof props.title === 'string' || !props.title) return props.title
-    else if (props.title.switchSortBy == undefined) return props.title.text
+    else if (props.title.switchSortBy == undefined || props.title.switchSortBy.enabled === false) return props.title.text
     else {
         const prefix = props.title.switchSortBy.prefix[currentSortBy.value]
         return `<span>${prefix}</span> ${props.title.text}`
@@ -131,7 +201,7 @@ const componentTitle = computed(() => {
 })
 
 async function onComponentTitleClick () {
-    if (typeof props.title === 'string' || props.title.switchSortBy == undefined) return
+    if (typeof props.title === 'string' || props.title.switchSortBy == undefined || props.title.switchSortBy.enabled === false) return
     const options: SteamSortType[] = ['created', 'updated']
 
     currentSortBy.value = options.filter(o => o !== currentSortBy.value)[0]
