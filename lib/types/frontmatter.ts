@@ -6,6 +6,7 @@ import type { PromotionOptions } from '../layouts/Layout/sections/promotion'
 import type {
     BlockRenderOptions,
     SponsorData,
+    ThemeText,
 } from './theme/'
 
 import type {
@@ -42,6 +43,13 @@ export interface NormalPageFrontmatter extends DefaultNormalPageFrontmatter {
     related?: string[]
 }
 
+export interface NormalPageExposedFrontmatter extends NormalPageFrontmatter {
+    /**
+     * The paths of all site pages
+     */
+    pages: string[]
+}
+
 export interface HomePageFrontmatter extends DefaultHomePageFrontmatter {
     hero?: 
         | Hero
@@ -59,4 +67,5 @@ export interface HomePageFrontmatter extends DefaultHomePageFrontmatter {
 
     promotion?: PromotionOptions
     events?: EventsOptions
+    offlineText?: ThemeText
 }
