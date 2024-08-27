@@ -20,6 +20,7 @@ hero:
            title: Click to switch between created or updated maps
            switchSortBy:
               initial: created
+              enabled: true
               prefix:
                 created: New
                 updated: Updated

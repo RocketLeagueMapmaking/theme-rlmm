@@ -1,7 +1,7 @@
 import { defineConfig } from '../../../lib/config'
 import themeConfig, { rewrites } from './theme'
 
-const domain = 'https://theme-rlmm.pages.dev/'
+const domain = 'https://theme-rlmm.pages.dev'
 
 export default defineConfig({
     title: "theme-rlmm",
@@ -31,11 +31,12 @@ export default defineConfig({
     transformPageData(pageData, ctx) {
         if (pageData.relativePath === 'components.md') {
             pageData.frontmatter.outline = 1
+            pageData.frontmatter.aside = 'left'
         }
     },
 
     head: [
-        ['link', { rel: 'manifest', href: domain + 'manifest.json' }],
+        ['link', { rel: 'manifest', href: domain + '/manifest.json' }],
         ['meta', { name: 'theme-color', content: '#3eaf7c' }],
         [
             'script',

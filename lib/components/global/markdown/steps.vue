@@ -15,15 +15,15 @@ import { useSlots } from 'vue'
 import { getThemeColor } from '../../../util'
 
 const { color, length } = withDefaults(defineProps<{
+    /**
+     * The maximum amount of steps that are rendered
+     */
     length?: number
-    color?:
-    | 'brand'
-    | 'red'
-    | 'indigo'
-    | 'default'
-    | 'gray'
-    | 'yellow'
-    | 'green'
+    /**
+     * The color of the step numbers
+     * Can be one of the theme colors or a CSS color value
+     */
+    color?: string
 }>(), {
     length: 20,
     color: 'brand',
