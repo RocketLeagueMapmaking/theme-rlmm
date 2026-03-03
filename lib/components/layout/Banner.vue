@@ -1,6 +1,6 @@
 <!-- From vitepress issue: https://github.com/faker-js/faker/pull/1487/files -->
 <template>
-    <div v-if="isMounted && banner" ref="el" class="banner" :style="{ background: bgColor }">
+    <div v-if="isMounted && banner && hideAllBanners !== 'true'" ref="el" class="banner" :style="{ background: bgColor }">
         <div class="text">
             <div v-html="html"></div>
             <NotificationAction :action="banner.action" @clicked="() => themeOptions?.onClicked?.(banner!.id)" />
@@ -22,7 +22,7 @@ import { useData } from 'vitepress'
 
 import NotificationAction from './internal/NotificationAction.vue';
 
-import { useNotifications } from '../../composables';
+import { useNotifications, useStorage } from '../../composables';
 import { getThemeColor, renderText } from '../../util';
 import type { BannerNotification, ThemeConfig } from '../../types'
 
@@ -53,6 +53,9 @@ const isMounted = useMounted()
 
 const notifications = useNotifications()
 const { height } = useElementSize(el);
+
+const storage = useStorage()
+const hideAllBanners = storage.useKey<string>(storage.themeKeys.value.hideNotificationBanners, null)
 
 watchEffect(() => {
     if (height.value) {

@@ -15,6 +15,7 @@ export function useStorage<Key extends string = string>() {
     const defaultKeys = Object.freeze({
         hideHomeSteamMaps: 'rlmm-home-hidesteam',
         hideNotificationInbox: 'rlmm-hide-navinbox',
+        hideNotificationBanners: 'rlmm-hide-navbanners',
         hideSidebarAction: 'rlmm-hide-action',
         notificationInboxLastOpened: 'rlmm-navinbox-lastopened',
         useSteamProtocolUrl: 'rlmm-urls-steam',
