@@ -1,12 +1,19 @@
 import { ref, onMounted } from "vue"
 import { useWebNotification } from "@vueuse/core"
-import { type BaseNotification, ThemeNotificationContext } from "../../types"
+
+import {
+    type BaseNotification,
+    ThemeNotificationContext,
+} from "../../types"
 
 interface ThemeNotificationFilterOptions {
+    /** Only show notifications that are marked for the inbox */
     inbox?: boolean
+    /** Whether to sort by start time of the notification */
     sort?: boolean
+    /** Only show notifications that are active (between startTime and end time) */
     active?: boolean
-
+    /** The max items to return, defaults to all items */
     max?: number
 }
 

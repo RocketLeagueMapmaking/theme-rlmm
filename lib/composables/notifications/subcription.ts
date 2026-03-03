@@ -50,7 +50,11 @@ export function useNotificationSubscription<Data = unknown> (options: Subscripti
     }
 
     const webSubcribe = async () => {
-        const subscription = await worker.value?.pushManager?.subscribe({ applicationServerKey: urlBase64ToUint8Array(options.publicKey), userVisibleOnly: true })
+        const subscription = await worker.value?.pushManager?.subscribe({
+            applicationServerKey: urlBase64ToUint8Array(options.publicKey),
+            userVisibleOnly: true,
+        })
+
         console.log([subscription, options.publicKey])
         if (subscription) webSubscription.value = subscription.toJSON()
 

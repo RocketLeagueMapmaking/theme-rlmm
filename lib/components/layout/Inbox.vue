@@ -86,7 +86,7 @@ function resolveNavState <T>(state: NavStateOption<T>): T | undefined {
     return typeof state === 'object' && state != null
         ? 'read' in state || 'unread ' in state
             ? state[unread.value ? 'unread' : 'read']
-            : state
+            : <T>state
         : state
 }
 
