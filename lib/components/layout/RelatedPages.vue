@@ -1,32 +1,58 @@
 <template>
-    <div class="related-pages" v-if="rawOptions !== false && ($frontmatter.related ?? []).length > 0">
-        <p class="related-pages-title">{{ options?.title ?? 'See also' }}</p>
-        <div class="related-page prev-next">
-            <VPLink class="link pager-link next" :href="path.path" v-for="path of ($frontmatter.related ?? []).map(parse)">
+    <div class="related-pages" v-if="isEnabled">
+        <p class="related-pages-title">{{ options?.title ?? defaultTitle }}</p>
+        <div class="related-page prev-next" v-if="style === 'paginate'">
+            <VPLink class="link pager-link next" :href="path.path" v-for="path of relatedPages">
                 <span class="desc" v-if="path.description">{{ path.description }}</span>
                 <span class="title">{{ path.title }}</span>
             </VPLink>
+        </div>
+        <div class="related-page" v-else>
+            <VPFeatures :features="relatedPages.map((page: Exclude<NormalPageRelatedFrontmatter, string>) => ({
+                title: page.title,
+                details: page.description ?? '',
+                link: page.path,
+                linkText: page.linkText ?? options?.linkText ?? defaultLinkText,
+            }))" style="padding: 0; margin-top: 20px;" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { type DefaultTheme, useData } from 'vitepress';
 
-import { VPLink } from '../theme';
+import { VPLink, VPFeatures } from '../theme';
 
+import { useStorage } from '../../composables';
 import { findInSidebar, getSidebarItems } from '../../util';
-import type { ThemeConfig } from '../../types';
+import type { ThemeConfig, NormalPageRelatedFrontmatter } from '../../types';
 
-const { theme } = useData<ThemeConfig>()
+const { theme, frontmatter } = useData<ThemeConfig>()
+const storage = useStorage()
+
+const defaultTitle = 'See also'
+const defaultLinkText = 'Read more'
 
 const rawOptions = theme.value.blocks?.relatedPages
 const options = typeof rawOptions !== 'boolean' ? rawOptions : undefined
 
+const hideStorageOption = storage.useKey<string>(storage.themeKeys.value.hidePageRelatedBlocks, null)
+const isEnabled = computed(() => {
+    return rawOptions !== false
+        && hideStorageOption.value !== 'true'
+        && (frontmatter.value.related ?? []).length > 0
+})
+
 const sidebar = getSidebarItems(theme.value.sidebar)
 
-// TODO: look into built-end stuff / options in frontmatter to improve this data?
-function parse (path: string) {
+const style = options?.style ?? 'paginate'
+const relatedPages = computed(() => (frontmatter.value.related ?? []).map(page => parse(page)))
+
+// TODO: look into built-end stuff to improve this data?
+function parse (path: NormalPageRelatedFrontmatter) {
+    if (typeof path !== 'string') return path
+
     const convert = ({ item, parent }: Record<'item' | 'parent', DefaultTheme.SidebarItem | null>) => ({
         title: item?.text,
         description: options?.useDocFooter ? item?.docFooterText : parent?.text,
@@ -61,6 +87,7 @@ function parse (path: string) {
 .related-pages-title {
     /* border-top: 1px solid var(--vp-c-divider); */
     font-weight: 700;
+    font-size: 1.5rem;
     color: var(--vpc-text-1);
 }
 

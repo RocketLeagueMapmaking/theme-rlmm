@@ -17,6 +17,7 @@ export function useStorage<Key extends string = string>() {
         hideNotificationInbox: 'rlmm-hide-navinbox',
         hideNotificationBanners: 'rlmm-hide-navbanners',
         hideSidebarAction: 'rlmm-hide-action',
+        hidePageRelatedBlocks: 'rlmm-hide-related',
         notificationInboxLastOpened: 'rlmm-navinbox-lastopened',
         useSteamProtocolUrl: 'rlmm-urls-steam',
         watchAllPages: 'rlmm-push-all',
