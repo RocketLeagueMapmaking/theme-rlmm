@@ -97,6 +97,9 @@ export interface FeedbackOptions extends BaseFeedbackOptions<[answer: 'yes' | 'n
 
 export interface RelatedPagesOptions {
     title?: string
+    linkText?: string
+    /** @default 'paginate' */
+    style?: 'paginate' | 'feature'
     transformRoute?: (path: string) =>
         | { title: string, description?: string }
         | undefined
@@ -105,7 +108,7 @@ export interface RelatedPagesOptions {
      * @experimental
      * @param path 
      */
-    transformUnknownPath?: (path) => 
+    transformUnknownPath?: (path: string) => 
         { title: string, description?: string }
     /** @experimental */
     useDocFooter?: boolean

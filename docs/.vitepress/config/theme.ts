@@ -45,6 +45,10 @@ export default <ThemeConfig>{
                     target: '_self',
                 },
                 {
+                    text: 'Changelog',
+                    link: '/changelog',
+                },
+                {
                     text: 'GitHub',
                     items: [
                         {
@@ -180,7 +184,7 @@ export default <ThemeConfig>{
     banner: {
         data: [
             {
-                id: 'local-dev',
+                id: 'banner-local-dev',
                 created_at: 1705000000000,
                 color: 'linear-gradient(90deg, var(--vp-c-red-3) 0%, var(--vp-c-brand-1) 50%, var(--vp-c-red-3) 100%)',
                 text: 'You are browsing the beta docs!',
@@ -231,9 +235,10 @@ export default <ThemeConfig>{
 
     notifications: {
         inbox: {
+            renderTime: true,
             amount: 3,
             renderAction: true,
-            bottomText: 'You can [watch guide pages](/preferences) or follow the [Discord channel](/discord) to follow all framework updates.'
+            bottomText: 'You can [watch guide pages](/preferences), [see the changelog](/changelog) or follow the [Discord channel](/discord) to follow all framework updates.'
         },
 
         data: [

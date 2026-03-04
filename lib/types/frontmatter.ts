@@ -16,6 +16,10 @@ import type {
     Hero,
 } from './theme/home'
 
+export type NormalPageRelatedFrontmatter =
+    | string
+    | { path: string, title: string, description?: string, linkText?: string }
+
 export interface NormalPageFrontmatter extends DefaultNormalPageFrontmatter {
     /**
      * Control whether to show the ask for feedback block is enabled.

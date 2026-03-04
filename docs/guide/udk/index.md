@@ -6,7 +6,9 @@ blocks:
 related:
     - /udk/reference
     - /blender/
-    - /faq/
+    - path: /faq/
+      title: FAQ
+      description: A small description
 ---
 
 # Guide

@@ -52,7 +52,6 @@ export interface ThemeConfig extends DefaultTheme.Config {
      */
     notifications?: ThemeNotificationOptions
 
-
     /**
      * Make the theme switcher component a compact(er) circle
      * @default false

@@ -14,7 +14,7 @@ This theme also exports types for theme configuration and more. The types will b
 
 Requirements:
 
-- node v18+
+- node v20+
 
 ```sh
 # Install

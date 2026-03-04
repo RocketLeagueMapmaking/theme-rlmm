@@ -10,8 +10,10 @@ export interface StorageOptions {
      * @default 
      * { 
      *     hideHomeSteamMaps: 'rlmm-home-hidesteam',
+     *     hideNotificationBanners: 'rlmm-hide-navbanners',
      *     hideNotificationInbox: 'rlmm-hide-navinbox',
      *     hideSidebarAction: 'rlmm-hide-action',
+     *     hidePageRelatedBlocks: 'rlmm-hide-related',
      *     notificationInboxLastOpened: 'rlmm-navinbox-lastopened',
      *     useSteamProtocolUrl: 'rlmm-urls-steam',
      *     watchAllPages: 'rlmm-push-all'
@@ -21,8 +23,10 @@ export interface StorageOptions {
         Record<
             | 'useSteamProtocolUrl'
             | 'hideHomeSteamMaps'
+            | 'hideNotificationBanners'
             | 'hideNotificationInbox'
             | 'hideSidebarAction'
+            | 'hidePageRelatedBlocks'
             | 'notificationInboxLastOpened'
             | 'watchAllPages'
             , string

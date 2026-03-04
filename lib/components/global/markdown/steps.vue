@@ -14,7 +14,7 @@ import { useSlots } from 'vue'
 
 import { getThemeColor } from '../../../util'
 
-const { color, length } = withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
     /**
      * The maximum amount of steps that are rendered
      */
@@ -29,7 +29,7 @@ const { color, length } = withDefaults(defineProps<{
     color: 'brand',
 })
 
-const numbers = Array.from({ length }, (_, i) => i + 1)
+const numbers = Array.from({ length: props.length }, (_, i) => i + 1)
 
 function getSlotName(num: number): string {
     return `step-${num}`
@@ -40,7 +40,7 @@ function hasSlot(num: number): boolean {
 }
 
 function getColor() {
-    return getThemeColor(color)
+    return getThemeColor(props.color)
 }
 </script>
 

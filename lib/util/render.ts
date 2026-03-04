@@ -12,12 +12,6 @@ export const renderIf = (
     node: VNode | (() => VNode)
 ) => condition && condition != undefined ? (typeof node === 'function' ? node() : node) : undefined
 
-/** @deprecated use {@link renderText} instead */
-export const renderHTML = (
-    md: (md: string) => string,
-    text: ThemeText,
-): string => renderText(text)
-
 export const renderText = <ToNode extends boolean = false>(
     text: ThemeText,
     options?: ThemeTextOptions<ToNode>

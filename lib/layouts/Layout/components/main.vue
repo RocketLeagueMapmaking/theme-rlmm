@@ -138,7 +138,7 @@ router.onBeforeRouteChange = async (to) => {
     return redirectRoute(to)
 }
 
-router.onAfterRouteChanged = async (to) => {
+router.onAfterRouteChange = async (to) => {
     await updateSlots()
     await theme.value.router?.onRouteChanged?.(to)
 
