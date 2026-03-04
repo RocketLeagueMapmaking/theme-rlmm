@@ -101,6 +101,7 @@ function getStyle(item) {
 
 .expanded-item-text .description {
     font-size: smaller;
+    font-weight: normal;
 }
 
 /* Link */
