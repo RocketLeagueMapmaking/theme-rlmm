@@ -70,13 +70,18 @@ events:
         link: /events
     dataUrl: https://docs.rocketleaguemapmaking.workers.dev/events?type=contests&scheme=actions
 promotion:
-    image: https://rocketleague.media.zestyio.com/rl_home_f2p-launch_cross_10656.jpg?width=1920&fit=bounds
-    title:
+    - image: https://rocketleague.media.zestyio.com/rl_home_f2p-launch_cross_10656.jpg?width=1920&fit=bounds
+      key: Skillquest
+      title:
         image: https://skillquest.io/wp-content/uploads/2022/08/Skillquest-Coding-Camps-and-Education-for-Rocket-League-Players.png
-    description: Learn map making in a video tutorial course.<br><br>Some more text about the course and why you should choose it over regular videos if you have the money for it
-    actions:
+      description: Learn map making in a video tutorial course.<br><br>Some more text about the course and why you should choose it over regular videos if you have the money for it
+      actions:
         - text: Read more
           href: https://learn.skillquest.io/landing/1699993747535x796931164922708000
+    - key: Creative mode
+      title: Creative mode
+      description: Test
+      actions: []
 sponsors:
     message: Patreon shoutout
     actionLink: https://patreon.com/rocketleaguemapmaking

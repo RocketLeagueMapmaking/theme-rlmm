@@ -8,7 +8,7 @@ import EventShowcase from '../../../components/global/ItemGrid.vue'
 import SteamMaps from '../../../components/global/SteamMaps.vue'
 import { VPFeatures } from '../../../components/export'
 
-import { renderPromotion } from './promotion'
+import { renderPromotions } from './promotion'
 
 import type {
     HomePageFrontmatter,
@@ -43,7 +43,7 @@ export async function renderHomePageSections (
         renderIf(data.resources, () => h(VPFeatures, { features: data.resources ?? [] })),
         // @ts-ignore
         renderIf(data.events, () => h(EventShowcase, events)),
-        renderIf(data.promotion, () => renderPromotion(data.promotion!)),
+        renderIf(data.promotion, () => renderPromotions(data.promotion!, data.promotionOptions)),
         // @ts-ignore
         renderIf(data.sponsors, () => h(VPHomeSponsors, sponsors)),
     ].filter((child): child is NonNullable<typeof child> => child != undefined)

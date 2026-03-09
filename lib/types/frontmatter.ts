@@ -69,7 +69,9 @@ export interface HomePageFrontmatter extends DefaultHomePageFrontmatter {
         dataUrl?: string
     }
 
-    promotion?: PromotionOptions
+    promotion?: PromotionOptions | PromotionOptions[]
+    promotionOptions?: object
+
     events?: EventsOptions
     offlineText?: ThemeText
 }
