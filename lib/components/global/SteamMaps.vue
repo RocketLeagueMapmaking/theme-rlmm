@@ -145,6 +145,10 @@ export interface Props {
      */
     containerStyle?: StyleValue
     /**
+     * Additional search params to use in the request
+     */
+    urlSearchParams?: Record<string, string>
+    /**
      * Method to handle errors / empty responses
      * @param err The error that is thrown
      */
@@ -177,6 +181,7 @@ const props = withDefaults(defineProps<Props>(), {
     maxLengthTitle: 30,
     maxLengthUsername: 24,
     containerStyle: () => ({}),
+    urlSearchParams: () => ({}),
 })
 
 defineSlots<{
@@ -237,7 +242,13 @@ function itemDownloadUrl(map: SteamMap) {
 
 async function fetchSteamMaps(options: Required<Props>) {
     const { amount, handleException } = options
-    const url = `https://ghostrider-05.com/workshop/raw/recent?amount=${amount}&time_key=${currentSortBy.value}`
+
+    const params = new URLSearchParams({
+        ...(options.urlSearchParams ?? {}),
+        amount: amount.toString(),
+        time_key: currentSortBy.value,
+    })
+    const url = `https://ghostrider-05.com/workshop/raw/recent?${params}`
 
     const response = await fetch(url)
         .then(res => res.json() as Promise<SteamMap[]>)
