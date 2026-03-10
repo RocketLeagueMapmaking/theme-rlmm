@@ -1,14 +1,14 @@
-import { onMounted, ref } from "vue"
+import { MaybeRefOrGetter, onMounted, ref } from "vue"
 import { inBrowser, useData } from "vitepress"
 
 import { ThemeConfig } from "../types"
 import { useLocalStorage, useSessionStorage } from "@vueuse/core"
 
-// export type WatchedPages =
-//     | 'all'
-//     | string[]
-
 export type ThemeStorageKeys = NonNullable<Required<NonNullable<ThemeConfig['storage']>['keys']>>
+
+function findKeyByValue <T extends object>(obj: T, value: T[keyof T]) {
+    return Object.entries(obj).find(([_key, val]) => val === value)?.[0]
+}
 
 export function useStorage<Key extends string = string>() {
     const storage = ref<Storage | null>(null)
@@ -23,20 +23,35 @@ export function useStorage<Key extends string = string>() {
         watchAllPages: 'rlmm-push-all',
     })
 
-    const keys = ref<ThemeStorageKeys>(defaultKeys)
+    const { theme } = useData<ThemeConfig>()
+    const options = theme.value.storage?.keys
+
+    const keys = ref<Record<keyof ThemeStorageKeys, string>>(Object.entries(defaultKeys)
+        .reduce((obj, [key, defaultValue]) => {
+            const value = options?.[<keyof ThemeStorageKeys>key]
+            const storageKey = typeof value === 'string' ? value : value?.key
+
+            return {
+                ...obj,
+                [key]: storageKey ?? defaultValue,
+            }
+        }, {} as Record<keyof ThemeStorageKeys, string>))
 
     onMounted(() => {
         if (!inBrowser || !window || !window.localStorage) return console.error('No storage found!')
         storage.value = window.localStorage
-
-        const { theme } = useData<ThemeConfig>()
-        const options = theme.value.storage?.keys
-
-        keys.value = Object.entries(defaultKeys)
-            .reduce((obj, [key, defaultValue]) => ({ ...obj, [key]: options?.[key] ?? defaultValue }), {} as ThemeStorageKeys)
     })
 
-    const get = (key: string | undefined) => key ? storage.value?.getItem(key.toString()) ?? null : null
+    const getDefaultValue = (key: string): string | null => {
+        const optionKey = findKeyByValue(keys.value, key)
+        if (!optionKey) return null
+        const option: ThemeStorageKeys[keyof ThemeStorageKeys] | undefined = options?.[<keyof ThemeStorageKeys>optionKey]
+
+        if (!option || typeof option === 'string') return null
+        else return option.defaultValue ?? null
+    }
+
+    const get = (key: string | undefined) => key ? storage.value?.getItem(key.toString()) ?? getDefaultValue(key) : null
     const toBool = (value: string | null) => value != null ? value === 'true' : undefined
 
     const list = (prefix: string, value?: string) => Object.entries(storage.value ?? {})
@@ -78,8 +93,12 @@ export function useStorage<Key extends string = string>() {
             return list(prefix, value)
         },
 
-        useKey: <T extends string | number>(...params: Parameters<typeof useLocalStorage<T>>) => {
-            return useLocalStorage(params[0], params[1], params[2] ?? { writeDefaults: false })
+        useKey: (...params: Parameters<typeof useLocalStorage<string | null>>) => {
+            const initialValue: MaybeRefOrGetter<string | null> = getDefaultValue(params[0].toString()) ?? params[1]
+            return useLocalStorage<string | null>(params[0].toString(), initialValue, params[2] ?? {
+                writeDefaults: false,
+                listenToStorageChanges: true,
+            })
         },
         useSessionKey: useSessionStorage,
     }

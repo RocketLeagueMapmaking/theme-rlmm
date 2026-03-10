@@ -310,6 +310,12 @@ export default <ThemeConfig>{
     },
 
     storage: {
+        keys: {
+            hideNotificationInbox: {
+                defaultValue: 'true',
+            },
+        },
+
         colorKeys: {
             '--vp-c-brand-1': 'rlmm-accent-color',
             '--vp-button-brand-bg': 'rlmm-accent-color',

@@ -29,7 +29,7 @@ export interface StorageOptions {
             | 'hidePageRelatedBlocks'
             | 'notificationInboxLastOpened'
             | 'watchAllPages'
-            , string
+            , string | { key?: string, defaultValue?: string }
         >
     >
 
