@@ -1,6 +1,6 @@
 {
   "name": "@rocketleaguemapmaking/theme-rlmm",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "type": "module",
   "description": "Theme for rocketleaguemapmaking.com",
   "homepage": "https://theme-rlmm.pages.dev/",
@@ -32,13 +32,13 @@
   "devDependencies": {
     "@types/node": "^20.12.12",
     "typescript": "^5.9.3",
-    "vue": "^3.5.29",
+    "vue": "^3.5.30",
     "vue-docgen-cli": "^4.79.0"
   },
   "dependencies": {
     "@iconify/vue": "^5.0.0",
     "@vueuse/core": "^14.2.1",
-    "marked": "^17.0.3",
+    "marked": "^17.0.4",
     "vitepress": "1.6.4"
   }
 }
