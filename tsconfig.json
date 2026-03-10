@@ -5,6 +5,7 @@
         "moduleResolution": "Node10",
         "resolveJsonModule": true,
         "strictNullChecks": true,
+        "strict": true,
         "skipLibCheck": true
     },
     "exclude": ["./lib/config.ts"]

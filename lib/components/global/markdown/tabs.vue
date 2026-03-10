@@ -53,8 +53,8 @@ const hideSelectorActions = ref(false)
 const justifyTabContent = props.alignLeft ? 'space-start' : props.alignCenter ? 'center' : 'space-between'
 const textMargin = props.alignLeft ? '10px 0 0 0 !important' : '10px auto 0 auto !important'
 
-function toSlug(name: string): string {
-    return 'tab-' + name.replace(/ /g, '_').toLowerCase()
+function toSlug(name: string, prefix = 'tab-'): string {
+    return prefix + name.replace(/ /g, '_').toLowerCase()
 }
 
 function getNames(): string[] {
@@ -73,7 +73,7 @@ function changeActive(index: number | string, resetTimer = true): void {
     active.value = value
 
     if (props.searchParam != null && props.updateSearchParam) {
-        params[props.searchParam] = toSlug(props.tabs[value]).slice(4)
+        params[props.searchParam] = toSlug(props.tabs[value], '')
     }
 
     // Reset switch timer
@@ -108,9 +108,14 @@ onMounted(() => {
     }
 
     if (searchParam != null) {
-        const tabParam = params[searchParam]?.toString()
-        if (tabParam && tabParam.length && props.tabs.map(toSlug).includes(toSlug(tabParam))) {
-            changeActive(tabParam, false)
+        const tabParam: string | undefined = params[searchParam]?.toString()
+
+        if (tabParam && tabParam.length) {
+            const tabSlug = toSlug(tabParam)
+
+            if (props.tabs.some(tab => toSlug(tab) === tabSlug)) {
+                changeActive(tabParam, false)
+            }
         }
     }
 

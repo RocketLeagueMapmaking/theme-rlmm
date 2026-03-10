@@ -17,7 +17,7 @@ export function useWatchedPages(prefix: string = 'rlmm-page-') {
         },
 
         getWatchedPages(): WatchedPages {
-            const isAll = storage.getBoolean(storage.themeKeys.value.watchAllPages) ?? false
+            const isAll = storage.getBoolean(storage.themeKeys.value.watchAllPages, false)
 
             if (isAll) return 'all'
             else return storage.list(prefix, 'true')

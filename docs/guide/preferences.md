@@ -37,7 +37,7 @@ Use greener background
 Use old colors
 </PreferenceSetting>
 
-<PreferenceSetting storeKey="rlmm-accent-color" type="color" cssVariable="--vp-c-brand-1">
+<PreferenceSetting storeKey="rlmm-accent-color" type="color" cssVariable="--vp-c-brand-1" :resetOptions="{ enabled: true }">
 
 Accent color
 </PreferenceSetting>
@@ -66,7 +66,7 @@ Hide sidebar action button
 
 ### Inbox
 
-<PreferenceSetting storeKey="rlmm-hide-navinbox">
+<PreferenceSetting storeKey="rlmm-hide-navinbox" :onChanged="console.log">
 
 Hide notification inbox
 </PreferenceSetting>

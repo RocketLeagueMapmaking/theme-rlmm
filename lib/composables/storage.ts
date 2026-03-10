@@ -70,6 +70,10 @@ export function useStorage<Key extends string = string>() {
             storage.value?.setItem(key, value)
         },
 
+        remove: (key: Key): void => {
+            storage.value?.removeItem(key)
+        },
+
         list: (prefix: string, value?: string): string[] => {
             return list(prefix, value)
         },

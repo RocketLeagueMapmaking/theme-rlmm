@@ -153,7 +153,7 @@ function iterateStorage<T>(
         const key = typeof localKey === 'string' ? localKey : localKey.key
         const defaultValue = typeof localKey !== 'string' ? localKey.defaultValue : undefined
 
-        const stored = storage.useKey<never>(key, null)
+        const stored = storage.useKey(key, null)
         fn(value, stored.value, defaultValue)
     }
 }

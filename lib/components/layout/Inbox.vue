@@ -1,5 +1,5 @@
 <template>
-    <div class="nav-notification-inbox" v-if="hideInbox !== 'true' && options != undefined && $frontmatter.inbox !== false">
+    <div class="nav-notification-inbox" v-if="showInboxSetting && options != undefined && $frontmatter.inbox !== false">
         <div class="nav-notification-inbox-icon" @click="toggle()" ref="inboxIconRef" :style="iconStyle">
             <p v-if="options.nav?.text" v-html="renderText(resolveNavState(options.nav.text) ?? '')"></p>
             <Icon :icon="currentIcon.icon" :color="currentIcon.color" />
@@ -60,8 +60,9 @@ const notifications = useNotifications()
 const storage = useStorage()
 const [open, toggle] = useToggle()
 
-const hideInbox = storage.useKey<string>(storage.themeKeys.value.hideNotificationInbox, null)
-const lastOpened = storage.useKey<string>(storage.themeKeys.value.notificationInboxLastOpened, null)
+const hideLocalStorageSetting = storage.useKey(storage.themeKeys.value.hideNotificationInbox, null)
+const showInboxSetting = computed(() => hideLocalStorageSetting.value !== 'true')
+const lastOpened = storage.useKey(storage.themeKeys.value.notificationInboxLastOpened, null)
 
 const inboxNotifications = notifications.filter(props.notifications, {
     inbox: true,
@@ -85,7 +86,7 @@ const unread = computed(() =>  unreadCount.value > 0)
 function resolveNavState <T>(state: NavStateOption<T>): T | undefined {
     return typeof state === 'object' && state != null
         ? 'read' in state || 'unread ' in state
-            ? state[unread.value ? 'unread' : 'read']
+            ? (<Record<'unread' | 'read', T>>state)[unread.value ? 'unread' : 'read']
             : <T>state
         : state
 }

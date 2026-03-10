@@ -55,7 +55,7 @@ const notifications = useNotifications()
 const { height } = useElementSize(el);
 
 const storage = useStorage()
-const hideAllBanners = storage.useKey<string>(storage.themeKeys.value.hideNotificationBanners, null)
+const hideAllBanners = storage.useKey(storage.themeKeys.value.hideNotificationBanners, null)
 
 watchEffect(() => {
     if (height.value) {

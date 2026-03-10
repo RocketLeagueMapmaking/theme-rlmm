@@ -8,11 +8,11 @@
             </VPLink>
         </div>
         <div class="related-page" v-else>
-            <VPFeatures :features="relatedPages.map((page: Exclude<NormalPageRelatedFrontmatter, string>) => ({
-                title: page.title,
+            <VPFeatures :features="relatedPages.map((page) => ({
+                title: page.title ?? page.path,
                 details: page.description ?? '',
                 link: page.path,
-                linkText: page.linkText ?? options?.linkText ?? defaultLinkText,
+                linkText: ('linkText' in page ? page.linkText : undefined) ?? options?.linkText ?? defaultLinkText,
             }))" style="padding: 0; margin-top: 20px;" />
         </div>
     </div>
@@ -37,7 +37,7 @@ const defaultLinkText = 'Read more'
 const rawOptions = theme.value.blocks?.relatedPages
 const options = typeof rawOptions !== 'boolean' ? rawOptions : undefined
 
-const hideStorageOption = storage.useKey<string>(storage.themeKeys.value.hidePageRelatedBlocks, null)
+const hideStorageOption = storage.useKey(storage.themeKeys.value.hidePageRelatedBlocks, null)
 const isEnabled = computed(() => {
     return rawOptions !== false
         && hideStorageOption.value !== 'true'
@@ -47,7 +47,7 @@ const isEnabled = computed(() => {
 const sidebar = getSidebarItems(theme.value.sidebar)
 
 const style = options?.style ?? 'paginate'
-const relatedPages = computed(() => (frontmatter.value.related ?? []).map(page => parse(page)))
+const relatedPages = computed(() => (<NormalPageRelatedFrontmatter[]>frontmatter.value.related ?? []).map(page => parse(page)))
 
 // TODO: look into built-end stuff to improve this data?
 function parse (path: NormalPageRelatedFrontmatter) {

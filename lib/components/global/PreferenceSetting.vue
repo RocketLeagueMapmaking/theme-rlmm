@@ -6,6 +6,14 @@
             </template>
 
             <template #right>
+                <!-- Reset the value -->
+                <Icon
+                    :icon="resetOptions?.icon ?? 'fa7-solid:trash'"
+                    v-if="resetOptions?.enabled"
+                    @click="reset"
+                    style="margin-right: 20px;"
+                />
+                <!-- Set the value -->
                 <VPSwitchAppearance v-if="isAppearance && type === 'switch'" />
                 <VPSwitch v-else-if="type === 'switch'" :class="{ enabled: value }" v-model="value" @click="onChange" />
                 <input v-else-if="['input', 'color'].includes(type)" :class="{ 'color-action': type === 'color' }"
@@ -51,15 +59,17 @@ const props = withDefaults(defineProps<{
     defaultValue?: SettingValue
     renderValue?: boolean
     documentClassToToggle?: string
+    resetOptions?: {
+        enabled?: boolean
+        icon?: string
+        onReset?: ((data: { key: string }) => void)
+    }
     onChanged?: ((data: { key: string, value: boolean | string | number }) => void)
 }>(), {
     defaultValue: false,
     renderValue: false,
     isAppearance: false,
     type: 'switch',
-    onChanged: ({ key, value }) => {
-        console.debug("Changing preference:", key, value)
-    },
 })
 
 const cssColor = props.cssVariable && props.type === 'color' ? useCssVar(props.cssVariable) : undefined
@@ -81,13 +91,27 @@ function onChange() {
         }
     }
 
-    props.onChanged({ key: props.storeKey, value: newValue })
+    props.onChanged?.({ key: props.storeKey, value: newValue })
+}
+
+function reset () {
+    const options = props.resetOptions
+    if (!options?.enabled) return
+
+    store.remove(props.storeKey)
+    options.onReset?.({ key: props.storeKey })
+
+    if (cssColor) cssColor.value = undefined
 }
 
 onMounted(() => {
-    const storage = useStorage();
-
-    value.value = storage.useKey(props.storeKey, ((cssColor?.value ?? props.defaultValue) as unknown as null)).value ?? <boolean>false
+    const stored = store.useKey(props.storeKey, ((cssColor?.value ?? props.defaultValue) as unknown as null))
+    value.value = (stored.value && props.type === 'switch' ? stored.value === 'true' : stored.value) ?? (<Record<SettingType, string | number | boolean>>{
+        color: '#000',
+        input: '',
+        select: '',
+        switch: false,
+    })[props.type]
 
     if (typeof value.value === 'string' && cssColor) {
         cssColor.value = value.value.toString()
@@ -96,7 +120,7 @@ onMounted(() => {
     }
 
     if (inBrowser) {
-        if (props.documentClassToToggle && value.value === true) {
+        if (props.documentClassToToggle && (value.value === true || value.value === 'true')) {
             document.documentElement.classList.add(props.documentClassToToggle)
         }
     }
