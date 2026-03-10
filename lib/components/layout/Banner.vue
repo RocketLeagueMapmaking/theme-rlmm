@@ -1,6 +1,6 @@
 <!-- From vitepress issue: https://github.com/faker-js/faker/pull/1487/files -->
 <template>
-    <div v-if="isMounted && banner && hideAllBanners !== 'true'" ref="el" class="banner" :style="{ background: bgColor }">
+    <div v-if="isMounted && banner && showBanners" ref="el" class="banner" :style="{ background: bgColor }">
         <div class="text">
             <div v-html="html"></div>
             <NotificationAction :action="banner.action" @clicked="() => themeOptions?.onClicked?.(banner!.id)" />
@@ -55,7 +55,7 @@ const notifications = useNotifications()
 const { height } = useElementSize(el);
 
 const storage = useStorage()
-const hideAllBanners = storage.useKey(storage.themeKeys.value.hideNotificationBanners, null)
+const showBanners = ref(false)
 
 watchEffect(() => {
     if (height.value) {
@@ -111,6 +111,7 @@ const dismiss = () => {
 };
 
 onMounted(() => {
+    showBanners.value = storage.useKey(storage.themeKeys.value.hideNotificationBanners, null).value !== 'true'
     setActiveBanner()
 })
 </script>

@@ -119,6 +119,11 @@ export interface Props {
      */
     disableClick?: boolean
     /**
+     * When clicking on the prev/next map, do not reset the timer.
+     * @default false
+     */
+    disableTimerResetOnClick?: boolean
+    /**
      * Option to disable the component
      */
     enabled?: boolean
@@ -161,6 +166,7 @@ export interface Props {
 }
 
 const active = ref(0), hasSetting = ref(false), containerRef = ref();
+const timer = ref<NodeJS.Timeout>();
 const maps = ref<SteamMap[]>([]);
 
 const platform = usePlatform(), isWindows = computed(() => platform.value === 'Windows');
@@ -174,6 +180,7 @@ const props = withDefaults(defineProps<Props>(), {
     enabled: true,
     iconsEnabled: true,
     disableClick: false,
+    disableTimerResetOnClick: false,
     displayTime: 10_000,
     handleException: console.error,
     addActions: () => [],
@@ -299,6 +306,12 @@ function goToNextMap(isClick?: boolean, dIndex = 1) {
         active.value = (active.value + dIndex >= maps.value.length) ? 0 : (active.value + dIndex)
     else if (dIndex < 0)
         active.value = ((active.value + dIndex) < 0) ? (maps.value.length + dIndex) : active.value + dIndex
+
+    if (isClick && props.displayTime >= 0 && !props.disableTimerResetOnClick) {
+        // reset the timer
+        clearInterval(timer.value)
+        timer.value = setInterval(goToNextMap, props.displayTime)
+    }
 }
 
 const ImgWithPlaceholder = defineComponent<{ image: string }>({
@@ -323,8 +336,8 @@ onMounted(async () => {
 
     maps.value = await fetchSteamMaps(props)
 
-    if (props.displayTime < 0) return
-    setInterval(goToNextMap, props.displayTime)
+    if (props.displayTime <= 0) return
+    timer.value = setInterval(goToNextMap, props.displayTime)
 })
 </script>
 

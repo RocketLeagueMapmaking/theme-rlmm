@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { onClickOutside, useToNumber, useToggle } from '@vueuse/core';
 
 import NotificationAction from './internal/NotificationAction.vue';
@@ -60,7 +60,7 @@ const notifications = useNotifications()
 const storage = useStorage()
 const [open, toggle] = useToggle()
 
-const hideLocalStorageSetting = storage.useKey(storage.themeKeys.value.hideNotificationInbox, null)
+const hideLocalStorageSetting = ref<string | null>('true')
 const showInboxSetting = computed(() => hideLocalStorageSetting.value !== 'true')
 const lastOpened = storage.useKey(storage.themeKeys.value.notificationInboxLastOpened, null)
 
@@ -68,6 +68,10 @@ const inboxNotifications = notifications.filter(props.notifications, {
     inbox: true,
     max: props.options?.amount ?? 0,
     sort: true,
+})
+
+onMounted(() => {
+    hideLocalStorageSetting.value = storage.useKey(storage.themeKeys.value.hideNotificationInbox, null).value
 })
 
 const unreadCount = computed(() => {

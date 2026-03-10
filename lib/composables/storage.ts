@@ -23,29 +23,32 @@ export function useStorage<Key extends string = string>() {
         watchAllPages: 'rlmm-push-all',
     })
 
-    const { theme } = useData<ThemeConfig>()
-    const options = theme.value.storage?.keys
-
-    const keys = ref<Record<keyof ThemeStorageKeys, string>>(Object.entries(defaultKeys)
-        .reduce((obj, [key, defaultValue]) => {
-            const value = options?.[<keyof ThemeStorageKeys>key]
-            const storageKey = typeof value === 'string' ? value : value?.key
-
-            return {
-                ...obj,
-                [key]: storageKey ?? defaultValue,
-            }
-        }, {} as Record<keyof ThemeStorageKeys, string>))
+    const options = ref<Partial<ThemeStorageKeys>>()
+    const keys = ref<Record<keyof ThemeStorageKeys, string>>(defaultKeys)
 
     onMounted(() => {
         if (!inBrowser || !window || !window.localStorage) return console.error('No storage found!')
         storage.value = window.localStorage
+
+        const { theme } = useData<ThemeConfig>()
+        options.value = theme.value.storage?.keys
+
+        keys.value = Object.entries(defaultKeys)
+            .reduce((obj, [key, defaultValue]) => {
+                const value = options.value?.[<keyof ThemeStorageKeys>key]
+                const storageKey = typeof value === 'string' ? value : value?.key
+
+                return {
+                    ...obj,
+                    [key]: storageKey ?? defaultValue,
+                }
+            }, {} as Record<keyof ThemeStorageKeys, string>)
     })
 
     const getDefaultValue = (key: string): string | null => {
         const optionKey = findKeyByValue(keys.value, key)
         if (!optionKey) return null
-        const option: ThemeStorageKeys[keyof ThemeStorageKeys] | undefined = options?.[<keyof ThemeStorageKeys>optionKey]
+        const option: ThemeStorageKeys[keyof ThemeStorageKeys] | undefined = options.value?.[<keyof ThemeStorageKeys>optionKey]
 
         if (!option || typeof option === 'string') return null
         else return option.defaultValue ?? null
